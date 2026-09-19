@@ -34,6 +34,15 @@ Then navigate to `http://localhost:8000`
 **Option 3: VS Code**
 Use the **Live Server** extension and click "Go Live" at the bottom right.
 
+## Validation
+
+The validation suite requires Node.js 20 or newer and has no package dependencies.
+
+```bash
+npm test
+npm run validate:data
+```
+
 ## Development Rules
 - Develop in phases. Do not advance to the next phase without prompt commands.
 - Use `crypto.getRandomValues()` for shuffling, no `Math.random()`.
