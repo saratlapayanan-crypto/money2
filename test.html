@@ -83,8 +83,8 @@
             // 4. Crypto
             const cStatus = document.getElementById('test-crypto-status');
             try {
-                const hash1 = getDeterministicNumber("test|123", 78);
-                const hash2 = getDeterministicNumber("test|123", 78);
+                const hash1 = await getDeterministicNumber("test|123", 78);
+                const hash2 = await getDeterministicNumber("test|123", 78);
                 
                 const array = [1, 2, 3, 4, 5];
                 const shuf1 = [...array]; secureShuffle(shuf1);

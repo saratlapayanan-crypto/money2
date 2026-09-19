@@ -3,7 +3,8 @@ import { getDailyCard } from './engines/daily-engine.js';
 import { getInterpretation } from './engines/interpretation-engine.js';
 import { formatThaiDateDisplay } from './utils/timezone.js';
 import { trackEvent } from './analytics.js';
-import { setupGlobalDecks } from './engines/deck-engine.js';
+import { setupGlobalDecks, getActiveDeckId } from './engines/deck-engine.js';
+import { paintFront } from './art/tarot-art.js';
 
 async function initDailyPage() {
     try {
@@ -37,20 +38,11 @@ async function initDailyPage() {
 
 function renderCard(card) {
     const cardContainer = document.getElementById('card-display');
-    const numberEl = document.getElementById('card-number');
-    const titleEl = document.getElementById('card-title');
-    const symbolEl = document.getElementById('card-symbol');
+    if (!cardContainer) return;
 
-    if (!cardContainer || !titleEl) return;
-
-    const themeClass = card.suit || card.arcana; 
-    cardContainer.className = `card-placeholder mb-6 shadow-lg ${themeClass}`;
-
-    numberEl.textContent = card.number;
-    titleEl.innerHTML = `${card.name}<br><span class="text-sm font-normal">${card.thai_name}</span>`;
-
-    const symbolMap = { 'wands': '♦', 'cups': '♥', 'swords': '⚔', 'pentacles': '⬟', 'major': '✦' };
-    symbolEl.textContent = symbolMap[themeClass] || '✦';
+    // วาดภาพไพ่ด้วยระบบศิลป์ SVG (ตามธีมสำรับที่ใช้งาน)
+    paintFront(cardContainer, card, getActiveDeckId());
+    cardContainer.classList.add('has-svg-art');
 }
 
 function renderEnergies(cardId, interpretations) {
@@ -64,10 +56,10 @@ function renderEnergies(cardId, interpretations) {
     
     const dailyMsg = document.getElementById('daily-message');
     if (dailyMsg) {
-        if (dailyData && dailyData.summary && dailyData.summary !== 'รอการปรับปรุงคำทำนายด้านdaily') {
+        if (dailyData && dailyData.summary && !dailyData.summary.startsWith('รอการปรับปรุง')) {
             dailyMsg.textContent = dailyData.summary;
         } else {
-            dailyMsg.textContent = `คำแนะนำหลัก: ${workData.action}`;
+            dailyMsg.textContent = `คำแนะนำหลักของวันนี้: ${workData.action}`;
         }
     }
 

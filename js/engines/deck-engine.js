@@ -59,6 +59,14 @@ export function getActiveDeck(decks, seasons) {
  */
 export function applyDeckTheme(deckId) {
     document.body.setAttribute('data-deck', deckId);
+    try { localStorage.setItem('tarot_active_deck', deckId); } catch (_) { /* ignore */ }
+}
+
+/**
+ * รหัสสำรับที่ใช้งานอยู่ตอนนี้ (สำหรับระบบวาดภาพไพ่)
+ */
+export function getActiveDeckId() {
+    return document.body.getAttribute('data-deck') || 'standard';
 }
 
 /**

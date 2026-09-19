@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตรวจสำรับไพ่ 78 ใบ - Thai Tarot</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="text-white min-h-screen flex flex-col">
+    <header class="site-header p-4 flex justify-between items-center">
+        <nav>
+            <a href="index.html" class="back-link touch-target">← กลับ</a>
+        </nav>
+        <h1 class="text-2xl font-bold brand-title">สำรับไพ่ 78 ใบ</h1>
+        <div class="w-10"></div>
+    </header>
+
+    <main class="flex-grow p-4 max-w-5xl mx-auto w-full pb-10">
+        <div class="flex flex-wrap gap-2 justify-center mb-6" id="theme-picker"></div>
+        <p class="text-center text-xs text-gray-500 mb-6">ภาพประกอบวาดขึ้นใหม่ทั้งหมด (original vector art) — อ้างอิงสัญลักษณ์ไพ่จาก Wikipedia</p>
+        <div id="cards-preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5"></div>
+    </main>
+
+    <footer class="p-4 text-center border-t border-gold/15 text-xs text-gray-500 mt-auto">
+        <p>&copy; 2026 Thai Tarot.</p>
+    </footer>
+
+    <script type="module" src="js/cards-preview.js"></script>
+</body>
+</html>

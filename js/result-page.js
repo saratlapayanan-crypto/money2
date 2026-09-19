@@ -4,7 +4,8 @@ import { getSession } from './engines/personal-engine.js';
 import { getRemedy, getColorRecommendation } from './engines/remedy-engine.js';
 import { getWallpaper } from './engines/wallpaper-engine.js';
 import { trackEvent } from './analytics.js';
-import { setupGlobalDecks } from './engines/deck-engine.js';
+import { setupGlobalDecks, getActiveDeckId } from './engines/deck-engine.js';
+import { paintFront } from './art/tarot-art.js';
 
 async function initResultPage() {
     try {
@@ -44,7 +45,7 @@ function renderResult(session, cards, interpretations, questionsData, remedies, 
     const qObj = catList.find(q => q.slug === session.subtopic);
     document.getElementById('question-text').textContent = qObj ? qObj.label_th : 'คำถามของคุณ';
 
-    // 2. Render Card Artwork (Placeholder logic)
+    // 2. Render Card Artwork (ระบบศิลป์ SVG ตามธีมสำรับ)
     let cardData = cards.find(c => c.id === session.cardId);
     if (!cardData) {
         const [arcanaSuit, num] = session.cardId.split('-');
@@ -57,16 +58,13 @@ function renderResult(session, cards, interpretations, questionsData, remedies, 
             suit: arcanaSuit === 'major' ? null : arcanaSuit
         };
     }
+    if (cardData.arcana === 'minor' && cardData.number) {
+        cardData.number = Number(cardData.number);
+    }
 
     const cardContainer = document.getElementById('card-display');
-    const themeClass = cardData.suit || cardData.arcana;
-    cardContainer.className = `card-placeholder mb-8 shadow-lg shadow-gold/20 ${themeClass}`;
-    
-    document.getElementById('card-number').textContent = cardData.number;
-    document.getElementById('card-title').innerHTML = `${cardData.name}<br><span class="text-sm font-normal">${cardData.thai_name}</span>`;
-    
-    const symbolMap = { 'wands': '♦', 'cups': '♥', 'swords': '⚔', 'pentacles': '⬟', 'major': '✦' };
-    document.getElementById('card-symbol').textContent = symbolMap[themeClass] || '✦';
+    paintFront(cardContainer, cardData, getActiveDeckId());
+    cardContainer.classList.add('has-svg-art');
 
     // 3. Render Interpretation Contextually
     const interp = getInterpretation(interpretations, session.cardId, session.category, session.subtopic);

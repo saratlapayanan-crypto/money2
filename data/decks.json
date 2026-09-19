@@ -1,14 +1,9 @@
 [
-  {
-    "id": "standard",
-    "name": "Standard Deck (คลาสสิก)"
-  },
-  {
-    "id": "minimalist",
-    "name": "Minimalist Deck (มินิมอล)"
-  },
-  {
-    "id": "festive",
-    "name": "Festive Special (เทศกาล)"
-  }
+  { "id": "standard", "name": "มนตราสยาม (คลาสสิก)" },
+  { "id": "songkran", "name": "สงกรานต์ 💦" },
+  { "id": "loy-krathong", "name": "ลอยกระทง 🏮" },
+  { "id": "halloween", "name": "ฮาโลวีน 🎃" },
+  { "id": "christmas", "name": "คริสต์มาส 🎄" },
+  { "id": "valentine", "name": "วาเลนไทน์ 💝" },
+  { "id": "minimalist", "name": "มินิมอล" }
 ]

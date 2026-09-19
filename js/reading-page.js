@@ -1,7 +1,8 @@
 import { createReadingSession, selectPosition, confirmSelection, getSession } from './engines/personal-engine.js';
 import { loadCards } from './data-loader.js';
 import { trackEvent } from './analytics.js';
-import { setupGlobalDecks } from './engines/deck-engine.js';
+import { setupGlobalDecks, getActiveDeckId } from './engines/deck-engine.js';
+import { paintFront, paintBack, renderBack } from './art/tarot-art.js';
 
 let questionsData = {};
 let mockCardsData = []; // Phase 1 mock cards loaded here
@@ -104,11 +105,17 @@ function showCardSelection() {
     const grid = document.getElementById('cards-grid');
     grid.innerHTML = ''; // Clear previous if any
 
+    // หลังไพ่ลายเทศกาล: ใช้ data-URI เดียวเป็น background ทั้ง 78 ใบ (DOM เบา)
+    const svgStr = renderBack(getActiveDeckId());
+    const bgUrl = `url("data:image/svg+xml,${encodeURIComponent(svgStr)}")`;
+
     for (let i = 0; i < 78; i++) {
         const cardBack = document.createElement('div');
         cardBack.className = 'mini-card-back';
         cardBack.dataset.position = i;
-        
+        cardBack.style.backgroundImage = bgUrl;
+        cardBack.style.backgroundSize = 'cover';
+
         cardBack.addEventListener('click', () => handleCardClick(i));
         grid.appendChild(cardBack);
     }
@@ -147,7 +154,8 @@ function revealCard(cardId) {
 
     const flipContainer = document.getElementById('flip-container');
     const frontEl = document.getElementById('revealed-card-front');
-    
+    const deckId = getActiveDeckId();
+
     // Try to find the real card data from our mock JSON, otherwise use a placeholder fallback
     let cardData = mockCardsData.find(c => c.id === cardId);
     if (!cardData) {
@@ -162,16 +170,15 @@ function revealCard(cardId) {
             suit: arcanaSuit === 'major' ? null : arcanaSuit
         };
     }
+    if (cardData.arcana === 'minor' && cardData.number) {
+        cardData.number = Number(cardData.number);
+    }
 
-    // Map CSS classes
-    const themeClass = cardData.suit || cardData.arcana;
-    frontEl.className = `front card-placeholder ${themeClass}`;
-    
-    document.getElementById('rev-number').textContent = cardData.number;
-    document.getElementById('rev-title').innerHTML = `${cardData.name}<br><span class="text-sm font-normal">${cardData.thai_name}</span>`;
-    
-    const symbolMap = { 'wands': '♦', 'cups': '♥', 'swords': '⚔', 'pentacles': '⬟', 'major': '✦' };
-    document.getElementById('rev-symbol').textContent = symbolMap[themeClass] || '✦';
+    // วาดหลังไพ่/หน้าไพ่ด้วยระบบศิลป์ SVG
+    const backEl = flipContainer?.querySelector('.card-placeholder-back');
+    paintBack(backEl, deckId);
+    paintFront(frontEl, cardData, deckId);
+    frontEl.classList.add('has-svg-art');
 
     // Trigger Flip Animation slightly after render for smooth transition
     setTimeout(() => {

@@ -8,15 +8,23 @@ This document outlines the licenses for third-party assets and libraries used in
   - Source: [https://tailwindcss.com/](https://tailwindcss.com/)
   - Note: Used for styling the application structure and components.
 
-## Fonts
-- **System Defaults**
-  - The application relies on system default fonts (`sans-serif`, standard Thai fonts) and does not currently bundle any external web fonts (e.g., Google Fonts) to minimize payload size and complexity.
+## Fonts (Google Fonts — OFL)
+- **Charm** — หัวเรื่อง/ตัวเลขบนไพ่ (SIL Open Font License)
+- **Noto Sans Thai** — เนื้อความ (SIL Open Font License)
+- โหลดผ่าน Google Fonts CDN ทุกหน้า HTML
 
-## Artwork & Assets (Placeholders)
-- Currently, all card graphics, symbols, and wallpapers are generated using **CSS / HTML placeholders** and standard Unicode characters (e.g., ✦, ♦, ♥, ⚔, ⬟).
-- No external licensed images are present in the MVP repository.
+## Card Artwork (2026-09-19 เป็นต้นไป)
+- ภาพหน้าไพ่ 78 ใบ และหลังไพ่ทั้ง 7 ธีม **วาดขึ้นใหม่เป็น SVG vector ต้นฉบับของโปรเจกต์**
+  (โค้ดล้วนใน `js/art/`) — โดยสไตล์การ์ตูนแบน ไม่มีการคัดลอกภาพจากสำรับใด
+- อ้างอิงเฉพาะ **สัญลักษณ์มาตรฐานของไพ่** (ข้อเท็จจริงสาธารณะ) จาก
+  [Major Arcana — Wikipedia](https://en.wikipedia.org/wiki/Major_Arcana)
+  และข้อมูลเทศกาลจาก [Songkran (Thailand)](https://en.wikipedia.org/wiki/Songkran_(Thailand)) /
+  [Loy Krathong](https://en.wikipedia.org/wiki/Loy_Krathong)
+- รายละเอียดระบบศิลป์: [docs/art-reference.md](docs/art-reference.md)
+- **ไม่ใช้ภาพ Rider–Waite–Smith หรือสำรับลิขสิทธิ์ใด ๆ** ตามที่เคยกำหนดไว้ในหัวข้อ Future Assets
 
-## Future Assets
-Any images, card artwork (e.g., Rider Waite Smith public domain images), or graphical wallpapers added in the future must have their attribution and license appended to this file.
+## Wallpapers / Affiliates
+- ไฟล์ภาพวอลเปเปอร์ (`assets/wallpapers/`) และสินค้าแนะนำเป็นข้อมูลตัวอย่าง (mock) ของ MVP
+  เมื่อใช้ของจริงต้องผนวก attribution ของแต่ละรายการไว้ที่ไฟล์นี้
 
-*Last Updated: 2026-09-16*
+*Last Updated: 2026-09-19*

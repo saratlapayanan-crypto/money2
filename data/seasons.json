@@ -1,23 +1,7 @@
 [
-  {
-    "id": "new-year",
-    "name": "ปีใหม่",
-    "deck_id": "festive",
-    "start": "12-25",
-    "end": "01-05"
-  },
-  {
-    "id": "songkran",
-    "name": "สงกรานต์",
-    "deck_id": "festive",
-    "start": "04-12",
-    "end": "04-16"
-  },
-  {
-    "id": "halloween",
-    "name": "ฮาโลวีน",
-    "deck_id": "minimalist",
-    "start": "10-25",
-    "end": "10-31"
-  }
+  { "id": "new-year", "name": "ปีใหม่/คริสต์มาส", "deck_id": "christmas", "start": "12-20", "end": "01-05" },
+  { "id": "valentine", "name": "วาเลนไทน์", "deck_id": "valentine", "start": "02-10", "end": "02-16" },
+  { "id": "songkran", "name": "สงกรานต์", "deck_id": "songkran", "start": "04-11", "end": "04-17" },
+  { "id": "loy-krathong", "name": "ลอยกระทง", "deck_id": "loy-krathong", "start": "11-01", "end": "11-20" },
+  { "id": "halloween", "name": "ฮาโลวีน", "deck_id": "halloween", "start": "10-24", "end": "10-31" }
 ]

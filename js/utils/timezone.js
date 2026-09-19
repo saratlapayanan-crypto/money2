@@ -15,7 +15,7 @@ export function getThaiDateString() {
  */
 export function formatThaiDateDisplay() {
     const date = new Date();
-    return date.toLocaleDateString('th-TH', { 
+    return date.toLocaleDateString('th-TH', {
         timeZone: 'Asia/Bangkok',
         weekday: 'long',
         year: 'numeric',
@@ -23,3 +23,5 @@ export function formatThaiDateDisplay() {
         day: 'numeric'
     });
 }
+
+export const getBangkokDateString = getThaiDateString;
