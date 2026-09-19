@@ -12,75 +12,89 @@
     <meta property="og:description" content="สุ่มไพ่ 1 ใบจาก 78 ใบ เพื่อหาคำตอบเฉพาะคุณ">
     <meta property="og:url" content="https://thaitarot.com/reading.html">
 
+    <!-- ฟอนต์ไทย: Charm (หัวเรื่อง) + Noto Sans Thai (เนื้อความ) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
     </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-mystic text-white min-h-screen flex flex-col">
-    <header class="p-4 border-b border-white/10 flex justify-between items-center">
+<body class="text-white min-h-screen flex flex-col">
+    <header class="site-header p-4 flex justify-between items-center">
         <nav>
-            <a href="index.html" class="text-gold font-bold touch-target">← กลับ</a>
+            <a href="index.html" class="back-link touch-target">← กลับ</a>
         </nav>
-        <h1 class="text-xl font-bold">ดูไพ่ส่วนตัว</h1>
+        <h1 class="text-2xl font-bold brand-title">ไพ่ส่วนตัว</h1>
         <div class="w-10"></div>
     </header>
 
     <main class="flex-grow p-4 flex flex-col items-center max-w-2xl mx-auto w-full pb-10">
         
-        <!-- Step 1: Category & Subtopic Selection -->
+        <!-- ขั้นที่ 1: เลือกหมวดและคำถาม -->
         <section id="step-1-form" class="w-full flex flex-col items-center">
-            <h2 class="text-2xl text-gold font-bold mb-4">เรื่องที่คุณอยากรู้</h2>
+            <div class="thai-divider mt-2" aria-hidden="true">❈</div>
+            <h2 class="text-3xl text-gold font-bold mb-2">เรื่องที่คุณอยากรู้</h2>
+            <p class="text-sm text-gray-400 mb-6 text-center">เลือกหมวดเรื่อง แล้วตั้งคำถามในใจให้ชัดเจน</p>
             
             <div class="w-full mb-6">
-                <label class="block text-gray-300 mb-2">หมวดหมู่</label>
-                <div class="grid grid-cols-3 gap-2">
-                    <button class="cat-btn bg-white/10 border border-white/20 p-3 rounded" data-category="love">💕 ความรัก</button>
-                    <button class="cat-btn bg-white/10 border border-white/20 p-3 rounded" data-category="finance">💰 การเงิน</button>
-                    <button class="cat-btn bg-white/10 border border-white/20 p-3 rounded" data-category="work">💼 การงาน</button>
+                <label class="block text-gray-300 mb-2 text-sm">หมวดหมู่</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="cat-btn bg-white/10 text-white p-3" data-category="love">💕<br>ความรัก</button>
+                    <button class="cat-btn bg-white/10 text-white p-3" data-category="finance">💰<br>การเงิน</button>
+                    <button class="cat-btn bg-white/10 text-white p-3" data-category="work">💼<br>การงาน</button>
                 </div>
             </div>
 
             <div id="subtopic-container" class="w-full mb-6 hidden">
-                <label class="block text-gray-300 mb-2">คำถามเฉพาะเจาะจง</label>
-                <select id="subtopic-select" class="w-full bg-black/50 border border-white/20 p-3 rounded text-white appearance-none"></select>
+                <label class="block text-gray-300 mb-2 text-sm">คำถามเฉพาะเจาะจง</label>
+                <select id="subtopic-select" class="select-thai w-full appearance-none"></select>
             </div>
 
-            <button id="btn-start-meditation" class="bg-gold text-mystic font-bold py-3 px-8 rounded-full touch-target hidden">เริ่มทำสมาธิ</button>
+            <button id="btn-start-meditation" class="btn-primary py-3 px-10 touch-target hidden">เริ่มทำสมาธิ 🕉️</button>
         </section>
 
-        <!-- Step 2: Meditation & Countdown -->
+        <!-- ขั้นที่ 2: ทำสมาธิ -->
         <section id="step-2-meditation" class="w-full flex flex-col items-center hidden text-center mt-10">
-            <h2 class="text-2xl text-gold font-bold mb-4">ทำสมาธิ</h2>
-            <p class="text-gray-300 mb-6">หลับตา หายใจเข้าลึกๆ นึกถึงคำถามที่คุณต้องการคำตอบ...</p>
-            <div id="countdown" class="text-6xl font-bold text-accent my-8">5</div>
+            <h2 class="text-3xl text-gold font-bold mb-2">สงบจิต สงบใจ</h2>
+            <div class="thai-divider" aria-hidden="true">🌙</div>
+            <p class="text-gray-300 mb-8 leading-relaxed">
+                หลับตา หายใจเข้าลึก ๆ ช้า ๆ<br>
+                นึกถึงคำถามที่คุณอยากรู้คำตอบให้ชัดเจน...
+            </p>
+            <div class="breath-circle" role="timer" aria-label="นับถอยหลังก่อนเปิดไพ่">
+                <div id="countdown">5</div>
+            </div>
         </section>
 
-        <!-- Step 3: Card Selection Grid -->
+        <!-- ขั้นที่ 3: เลือกไพ่จาก 78 ใบ -->
         <section id="step-3-selection" class="w-full flex flex-col items-center hidden">
-            <p class="text-gold font-bold mb-4 text-center">ใช้สัญชาตญาณเลือกไพ่ 1 ใบ</p>
+            <p class="text-gold font-bold mb-2 text-center text-lg">ใช้สัญชาตญาณเลือกไพ่ 1 ใบ</p>
+            <p class="text-xs text-gray-400 mb-5 text-center">ไม่ต้องคิดนาน ให้ใจเป็นผู้เลือก</p>
             <div id="cards-grid" class="cards-grid mb-8">
                 <!-- 78 mini cards injected by JS -->
             </div>
             
             <div id="confirm-container" class="hidden flex flex-col items-center">
-                <p class="text-sm text-gray-300 mb-4">คุณได้เลือกไพ่แล้ว สามารถเปลี่ยนใจได้จนกว่าจะกดยืนยัน</p>
-                <button id="btn-confirm-card" class="bg-gold text-mystic font-bold py-3 px-8 rounded-full touch-target">ยืนยันการเลือกไพ่</button>
+                <p class="text-sm text-gray-300 mb-4 text-center">คุณได้เลือกไพ่แล้ว<br class="sm:hidden">สามารถเปลี่ยนใจได้จนกว่าจะกดยืนยัน</p>
+                <button id="btn-confirm-card" class="btn-primary py-3 px-10 touch-target">ยืนยันการเลือกไพ่ ✦</button>
             </div>
         </section>
 
-        <!-- Step 4: Reveal / Flip -->
+        <!-- ขั้นที่ 4: เปิดเผยไพ่ -->
         <section id="step-4-reveal" class="w-full flex flex-col items-center hidden mt-4">
-            <p class="text-gold font-bold mb-6 text-center">ไพ่ที่คุณเลือกคือ...</p>
+            <p class="text-gold font-bold mb-6 text-center text-lg">ไพ่ที่คุณเลือกคือ...</p>
             
             <article class="flip-container mb-8" id="flip-container">
                 <div class="flipper">
-                    <!-- Back of card -->
+                    <!-- หลังไพ่ -->
                     <div class="back card-placeholder-back">
                         <div class="pattern">❈</div>
                     </div>
-                    <!-- Front of card (Artwork) -->
+                    <!-- หน้าไพ่ -->
                     <div class="front card-placeholder" id="revealed-card-front">
                         <div class="card-number" id="rev-number"></div>
                         <div class="card-symbol" id="rev-symbol"></div>
@@ -90,18 +104,18 @@
             </article>
 
             <nav>
-                <a href="result.html" class="bg-gold text-mystic font-bold py-3 px-8 rounded-full touch-target mt-4" role="button">ดูคำทำนาย</a>
+                <a href="result.html" class="btn-primary inline-block py-3 px-10 touch-target mt-4" role="button">ดูคำทำนาย 🔮</a>
             </nav>
         </section>
 
         <!-- AdSense Placeholder -->
-        <div class="w-full max-w-md mx-auto bg-black/30 border border-dashed border-gray-600 text-gray-500 text-center py-4 my-8 text-sm" aria-label="Advertisement">
+        <div class="w-full max-w-md mx-auto ad-slot text-center py-4 my-8 text-sm" aria-label="Advertisement">
             AdSense Banner (Responsive)
         </div>
 
     </main>
 
-    <footer class="p-4 text-center border-t border-white/10 text-xs text-gray-500 mt-auto">
+    <footer class="p-4 text-center border-t border-gold/15 text-xs text-gray-500 mt-auto">
         <p>&copy; 2026 Thai Tarot.</p>
     </footer>
 

@@ -17,40 +17,67 @@
     <meta property="og:url" content="https://thaitarot.com/">
     <meta property="og:type" content="website">
 
+    <!-- ฟอนต์ไทย: Charm (หัวเรื่อง) + Noto Sans Thai (เนื้อความ) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
     </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-mystic text-white min-h-screen flex flex-col">
-    <header class="p-4 border-b border-white/10 text-center">
-        <h1 class="text-2xl font-bold text-gold">Thai Tarot</h1>
+<body class="text-white min-h-screen flex flex-col">
+    <header class="site-header p-4 text-center">
+        <h1 class="text-3xl font-bold brand-title">✦ Thai Tarot ✦</h1>
+        <p class="text-xs text-gray-400 tracking-wide mt-0.5">มนตราไพ่ยิปซี ฉบับคนไทย</p>
     </header>
 
     <main class="flex-grow p-4 flex flex-col items-center justify-center max-w-md mx-auto w-full">
         <section class="text-center mb-8">
-            <h2 class="text-xl mb-4 font-light text-gray-200">ยินดีต้อนรับสู่พื้นที่แห่งความสงบ</h2>
-            <p class="text-gray-400 text-sm mb-6">ค้นหาคำตอบและพลังบวกให้กับชีวิตคุณในวันนี้</p>
+            <!-- พัดไพ่ประดับ -->
+            <div class="card-fan" aria-hidden="true">
+                <div class="fan-card"></div>
+                <div class="fan-card"></div>
+                <div class="fan-card"></div>
+            </div>
+            <div class="thai-divider" aria-hidden="true">❈</div>
+            <h2 class="text-3xl mb-3 font-bold text-gold">เชิญเข้าสู่พื้นที่แห่งความสงบ</h2>
+            <p class="text-gray-400 text-sm mb-6 leading-relaxed px-2">
+                ตั้งจิตให้นิ่ง แล้วให้ไพ่ยิปซี 78 ใบ<br class="hidden sm:inline">
+                ช่วยหยิบยกคำตอบและพลังบวกสำหรับชีวิตคุณในวันนี้
+            </p>
         </section>
 
-        <nav class="w-full flex flex-col gap-4">
-            <a href="daily.html" class="bg-gold text-mystic font-bold py-4 px-6 rounded-lg touch-target text-center w-full shadow-lg shadow-gold/20 hover:scale-[1.02] transition-transform">
-                ดูไพ่ประจำวัน (Daily Tarot)
+        <nav class="w-full flex flex-col gap-4" aria-label="เมนูหลัก">
+            <a href="daily.html" class="panel group flex items-center gap-4 p-5 touch-target text-left w-full hover:border-gold/60 transition-colors">
+                <span class="text-4xl shrink-0" aria-hidden="true">🌅</span>
+                <span class="flex-grow">
+                    <span class="block text-lg font-bold text-gold">ไพ่ประจำวัน</span>
+                    <span class="block text-sm text-gray-400 mt-0.5">เปิดไพ่ประจำวันเกิดของคุณ พร้อมข้อความเสริมกำลังใจทุกวัน</span>
+                </span>
+                <span class="text-gold/70 group-hover:translate-x-1 transition-transform" aria-hidden="true">❯</span>
             </a>
             
-            <a href="reading.html" class="bg-white/10 text-white font-bold py-4 px-6 rounded-lg touch-target text-center w-full border border-white/20 hover:bg-white/20 transition-colors">
-                ดูไพ่ส่วนตัว (Personal Reading)
+            <a href="reading.html" class="panel group flex items-center gap-4 p-5 touch-target text-left w-full hover:border-gold/60 transition-colors">
+                <span class="text-4xl shrink-0" aria-hidden="true">🔮</span>
+                <span class="flex-grow">
+                    <span class="block text-lg font-bold text-gold">ไพ่ส่วนตัว</span>
+                    <span class="block text-sm text-gray-400 mt-0.5">ตั้งคำถามเรื่องรัก เงิน หรืองาน แล้วเลือกไพ่ด้วยสัญชาตญาณของคุณเอง</span>
+                </span>
+                <span class="text-gold/70 group-hover:translate-x-1 transition-transform" aria-hidden="true">❯</span>
             </a>
         </nav>
         
         <!-- AdSense Placeholder -->
-        <div class="w-full bg-black/30 border border-dashed border-gray-600 text-gray-500 text-center py-4 my-8 text-sm" aria-label="Advertisement">
+        <div class="w-full ad-slot text-center py-4 my-8 text-sm" aria-label="Advertisement">
             AdSense Banner (Responsive)
         </div>
     </main>
     
-    <footer class="p-4 text-center border-t border-white/10 text-xs text-gray-500 mt-auto">
+    <footer class="p-4 text-center border-t border-gold/15 text-xs text-gray-500 mt-auto">
+        <div class="thai-divider" aria-hidden="true">๛</div>
         <p>&copy; 2026 Thai Tarot. All rights reserved.</p>
         <p class="mt-1">ผลลัพธ์เป็นเพียงส่วนเสริมกำลังใจ โปรดใช้วิจารณญาณ</p>
     </footer>

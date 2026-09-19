@@ -12,50 +12,57 @@
     <meta property="og:description" content="เปิดไพ่ยิปซี 1 ใบเพื่อเป็นเข็มทิศประจำวันของคุณ ฟรีทุกวัน">
     <meta property="og:url" content="https://thaitarot.com/daily.html">
 
+    <!-- ฟอนต์ไทย: Charm (หัวเรื่อง) + Noto Sans Thai (เนื้อความ) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
     </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-mystic text-white min-h-screen flex flex-col">
-    <header class="p-4 border-b border-white/10 flex justify-between items-center">
+<body class="text-white min-h-screen flex flex-col">
+    <header class="site-header p-4 flex justify-between items-center">
         <nav>
-            <a href="index.html" class="text-gold font-bold touch-target">← กลับ</a>
+            <a href="index.html" class="back-link touch-target">← กลับ</a>
         </nav>
-        <h1 class="text-xl font-bold">ไพ่ประจำวัน</h1>
+        <h1 class="text-2xl font-bold brand-title">ไพ่ประจำวัน</h1>
         <div class="w-10"></div> <!-- spacer -->
     </header>
 
     <main class="flex-grow p-4 flex flex-col items-center max-w-md mx-auto w-full pb-10">
-        <!-- Date Display -->
-        <p class="text-sm text-gray-400 mb-4" id="daily-date">กำลังโหลด...</p>
+        <!-- วันที่แบบไทย -->
+        <div class="chip mb-5">🌙 <span id="daily-date">กำลังโหลด...</span></div>
         
-        <!-- Card Display -->
+        <!-- ไพ่ประจำวัน -->
         <article id="card-display" class="card-placeholder mb-6 shadow-lg shadow-accent/20">
             <div class="card-number" id="card-number">-</div>
             <div class="card-symbol" id="card-symbol">?</div>
             <div class="card-title" id="card-title">กำลังสับไพ่...</div>
         </article>
 
-        <section class="w-full space-y-4 text-left">
-            <h2 class="text-xl text-gold font-bold">ข้อความประจำวัน</h2>
-            <p class="text-gray-300 italic mb-6" id="daily-message">"กำลังแปลผลไพ่..."</p>
+        <section class="w-full space-y-5 text-left">
+            <div class="panel p-5">
+                <h2 class="text-xl section-title mb-3">ข้อความประจำวัน</h2>
+                <p class="text-gray-300 italic leading-relaxed" id="daily-message">"กำลังแปลผลไพ่..."</p>
+            </div>
             
-            <!-- Energies -->
-            <h3 class="text-lg font-bold text-white border-b border-white/20 pb-2 mt-4">พลังงานในแต่ละด้าน</h3>
+            <!-- พลังงานรายด้าน -->
+            <h3 class="text-xl section-title pb-1 mt-6">พลังงานในแต่ละด้าน</h3>
             
             <div id="energy-container" class="space-y-4">
                 <!-- Dynamically populated by JS -->
             </div>
             
             <nav class="mt-6">
-                <a href="reading.html" class="block w-full text-center bg-transparent border border-gold text-gold font-bold py-3 px-6 rounded-full touch-target hover:bg-gold/10 transition-colors">ดูไพ่ส่วนตัวเพิ่มเติม</a>
+                <a href="reading.html" class="block w-full text-center btn-outline-gold py-3 px-6 touch-target">ดูไพ่ส่วนตัวเพิ่มเติม 🔮</a>
             </nav>
         </section>
 
         <!-- AdSense Placeholder -->
-        <div class="w-full bg-black/30 border border-dashed border-gray-600 text-gray-500 text-center py-4 my-6 text-sm" aria-label="Advertisement">
+        <div class="w-full ad-slot text-center py-4 my-6 text-sm" aria-label="Advertisement">
             AdSense Banner (Responsive)
         </div>
 
@@ -64,7 +71,7 @@
         </section>
     </main>
 
-    <footer class="p-4 text-center border-t border-white/10 text-xs text-gray-500 mt-auto">
+    <footer class="p-4 text-center border-t border-gold/15 text-xs text-gray-500 mt-auto">
         <p>&copy; 2026 Thai Tarot.</p>
     </footer>
 

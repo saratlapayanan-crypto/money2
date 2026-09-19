@@ -81,34 +81,36 @@ function renderEnergies(cardId, interpretations) {
     `;
 }
 
+// ป้ายสถานะแบบไทย ใช้สำนวนแบบหมอดูไทย ๆ
+const STATUS_LABELS = {
+    'positive': { th: 'ดวงเปิด', icon: '🌟', badge: 'border-green-400/40 text-green-300 bg-green-400/10' },
+    'neutral':  { th: 'รอจังหวะ', icon: '🌤️', badge: 'border-yellow-400/40 text-yellow-300 bg-yellow-400/10' },
+    'caution':  { th: 'เดินระวัง', icon: '⚡', badge: 'border-red-400/40 text-red-300 bg-red-400/10' }
+};
+
 function createEnergyHTML(title, titleClass, data) {
     const statusColorMap = {
         'positive': 'text-green-400',
         'neutral': 'text-yellow-400',
         'caution': 'text-red-400'
     };
-    const barColorMap = {
-        'positive': 'bg-green-400',
-        'neutral': 'bg-yellow-400',
-        'caution': 'bg-red-400'
-    };
-    
-    const statusColor = statusColorMap[data.status] || 'text-gray-400';
-    const barColor = barColorMap[data.status] || 'bg-gray-400';
-    const percentage = (data.score / 5) * 100;
+
+    const label = STATUS_LABELS[data.status] || { th: data.status, icon: '✦', badge: 'border-white/30 text-gray-300 bg-white/5' };
+    const starColor = statusColorMap[data.status] || 'text-gray-400';
+    const stars = '★'.repeat(data.score) + '☆'.repeat(5 - data.score);
 
     return `
-    <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-        <h4 class="${titleClass} font-bold mb-1">${title}</h4>
-        <div class="flex justify-between text-sm mb-2">
-            <span class="${statusColor} capitalize">${data.status}</span>
-            <span>${data.score}/5</span>
+    <div class="panel p-4">
+        <div class="flex items-center justify-between mb-2 gap-2">
+            <h4 class="${titleClass} font-bold">${title}</h4>
+            <span class="text-xs px-2.5 py-0.5 rounded-full border shrink-0 ${label.badge}">${label.icon} ${label.th}</span>
         </div>
-        <div class="w-full bg-gray-700 h-2 rounded-full mb-2">
-            <div class="${barColor} h-2 rounded-full" style="width: ${percentage}%"></div>
+        <div class="flex justify-between items-center mb-2">
+            <span class="tracking-[0.25em] ${starColor}" aria-label="พลังงาน ${data.score} จาก 5">${stars}</span>
+            <span class="text-xs text-gray-400">${data.score}/5</span>
         </div>
-        <p class="text-sm text-gray-300 mb-2">${data.summary}</p>
-        ${data.warning ? `<p class="text-xs text-red-400 mb-1">⚠️ ${data.warning}</p>` : ''}
+        <p class="text-sm text-gray-300 leading-relaxed mb-2">${data.summary}</p>
+        ${data.warning ? `<p class="text-xs text-red-400 leading-relaxed">⚠️ ${data.warning}</p>` : ''}
     </div>`;
 }
 

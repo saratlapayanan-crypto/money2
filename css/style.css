@@ -1,23 +1,255 @@
-/* CSS Variables for Premium Mystical Style */
+/* ================================================================
+   Thai Tarot — ธีม "มนตราสยาม" (Siamese Mystic)
+   โทนสี : ค่ำคืนสีครามเข้ม + ทองไทย (temple gold)
+   ฟอนต์ : Charm (หัวเรื่อง) / Noto Sans Thai (เนื้อความ)
+   โหลดฟอนต์ผ่าน <link> ในไฟล์ HTML ทุกหน้า
+   ================================================================ */
+
 :root {
-    --color-bg: #1a1025;
-    --color-text: #f7fafc;
-    --color-primary: #D69E2E; /* Gold */
-    --color-secondary: #9F7AEA; /* Purple */
-    
-    --major-color: linear-gradient(135deg, #44337A, #B794F4);
-    --wands-color: linear-gradient(135deg, #C53030, #ED8936);
-    --cups-color: linear-gradient(135deg, #2A4365, #4299E1);
-    --swords-color: linear-gradient(135deg, #4A5568, #A0AEC0);
-    --pentacles-color: linear-gradient(135deg, #22543D, #48BB78);
-    --card-back-color: linear-gradient(135deg, #1A202C, #2D3748);
+    /* สีหลักของธีม */
+    --color-bg: #120b21;
+    --color-bg-deep: #0c0716;
+    --color-text: #f5efe2;            /* ครีมอ่อน อ่านสบายบนพื้นเข้ม */
+    --color-primary: #e0b64f;         /* ทองไทย */
+    --color-primary-soft: #f2d48a;
+    --color-secondary: #a78bfa;       /* ม่วงมนตรา */
+
+    /* พื้นผิวกระจกและเส้นทอง */
+    --panel-bg: rgba(255, 255, 255, 0.045);
+    --panel-border: rgba(224, 182, 79, 0.22);
+
+    /* ไล่เฉดหลังไพ่แต่ละชุด (เผื่อเงาทองปลายขอบ) */
+    --major-color: linear-gradient(160deg, #3b2a6e 0%, #8a63c9 100%);
+    --wands-color: linear-gradient(160deg, #7c2d2d 0%, #d97b3a 100%);
+    --cups-color: linear-gradient(160deg, #1e3a5f 0%, #5296c7 100%);
+    --swords-color: linear-gradient(160deg, #3a4356 0%, #9aa8be 100%);
+    --pentacles-color: linear-gradient(160deg, #1e4635 0%, #54a87f 100%);
+    --card-back-color:
+        repeating-radial-gradient(circle at 50% 50%,
+            transparent 0 15px, rgba(224, 182, 79, 0.10) 15px 16.5px),
+        radial-gradient(circle at 50% 42%, rgba(224, 182, 79, 0.18) 0%, transparent 58%),
+        linear-gradient(160deg, #2b1e4d 0%, #171029 100%);
 }
 
+/* ---------- พื้นหลังท้องฟ้าค่ำคืน + ดวงดาว ---------- */
 body {
     background-color: var(--color-bg);
+    background-image:
+        radial-gradient(1100px 520px at 50% -8%, rgba(124, 88, 238, 0.26), transparent 65%),
+        radial-gradient(820px 480px at 108% 106%, rgba(224, 182, 79, 0.13), transparent 62%),
+        radial-gradient(620px 420px at -8% 92%, rgba(167, 139, 250, 0.10), transparent 60%);
+    background-attachment: fixed;
     color: var(--color-text);
+    font-family: 'Noto Sans Thai', 'Leelawadee UI', Tahoma, sans-serif;
+    line-height: 1.7; /* ความสูงบรรทัดเผื่อสระ-วรรณยุกต์ภาษาไทย */
 }
 
+/* ม่านดวงดาวกระพริบเบา ๆ */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        radial-gradient(1.4px 1.4px at 18% 22%, rgba(255, 248, 225, 0.8) 50%, transparent 51%),
+        radial-gradient(1px 1px at 42% 68%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
+        radial-gradient(1.2px 1.2px at 66% 14%, rgba(255, 244, 214, 0.65) 50%, transparent 51%),
+        radial-gradient(1px 1px at 82% 46%, rgba(255, 255, 255, 0.45) 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 30% 86%, rgba(255, 248, 225, 0.55) 50%, transparent 51%),
+        radial-gradient(1px 1px at 92% 78%, rgba(255, 255, 255, 0.4) 50%, transparent 51%);
+    background-size: 460px 460px;
+    animation: twinkle 7s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+    from { opacity: 0.55; }
+    to   { opacity: 1; }
+}
+
+::selection {
+    background: rgba(224, 182, 79, 0.35);
+    color: #fff;
+}
+
+/* ---------- ฟอนต์หัวเรื่อง (อักษรไทยหรู) ---------- */
+h1, h2, h3, .font-display {
+    font-family: 'Charm', 'Noto Sans Thai', serif;
+    letter-spacing: 0.01em;
+    line-height: 1.45;
+}
+
+/* ---------- แถบหัวเว็บ / ท้ายเว็บ ---------- */
+.site-header {
+    background: rgba(18, 11, 33, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(224, 182, 79, 0.18);
+}
+
+.brand-title {
+    font-family: 'Charm', 'Noto Sans Thai', serif;
+    font-weight: 700;
+    background: linear-gradient(180deg, #f6dd9a 20%, #e0b64f 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 18px rgba(224, 182, 79, 0.25);
+}
+
+.back-link {
+    color: var(--color-primary);
+    font-weight: 700;
+    transition: opacity 0.15s ease;
+}
+.back-link:hover { opacity: 0.75; }
+
+/* เส้นคั่นลายไทย  ✦ ──── ❈ ──── ✦  */
+.thai-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: rgba(224, 182, 79, 0.75);
+    font-size: 0.85rem;
+    margin: 0.25rem auto 1rem;
+    max-width: 300px;
+}
+.thai-divider::before,
+.thai-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(224, 182, 79, 0.5), transparent);
+}
+
+/* ---------- ปุ่ม ---------- */
+.btn-primary {
+    background: linear-gradient(180deg, #f4d98e 0%, #e0b64f 55%, #cf9c37 100%);
+    color: #2a1a05;
+    border-radius: 999px;
+    font-weight: 700;
+    box-shadow:
+        0 8px 24px rgba(224, 182, 79, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow: 0 12px 30px rgba(224, 182, 79, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-outline-gold {
+    background: rgba(224, 182, 79, 0.06);
+    border: 1px solid rgba(224, 182, 79, 0.55);
+    color: var(--color-primary-soft);
+    border-radius: 999px;
+    font-weight: 700;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+.btn-outline-gold:hover {
+    background: rgba(224, 182, 79, 0.14);
+    transform: translateY(-1px);
+}
+
+/* ปุ่มหมวดคำถาม (reading.html) — JS สลับคลาส bg-gold/text-mystic ให้เอง */
+.cat-btn {
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.05);
+    min-height: 64px;
+    font-weight: 600;
+    transition: all 0.18s ease;
+}
+.cat-btn:hover {
+    border-color: rgba(224, 182, 79, 0.55);
+    transform: translateY(-2px);
+}
+.cat-btn.bg-gold {
+    background: linear-gradient(180deg, #f4d98e, #d9a93f);
+    color: #2a1a05;
+    border-color: transparent;
+    box-shadow: 0 8px 22px rgba(224, 182, 79, 0.35);
+}
+
+/* ---------- ช่องเลือกสำรับไพ่ (แทรกโดย deck-engine.js) ---------- */
+/* ย้ายจาก absolute ให้ไหลในแถว header ปกติ ไม่ทับหัวเรื่อง */
+header div.absolute {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+}
+
+#deck-selector {
+    background: rgba(12, 7, 22, 0.92);
+    border: 1px solid rgba(224, 182, 79, 0.35);
+    color: var(--color-text);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-family: inherit;
+    max-width: 170px;
+}
+#deck-selector:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+#deck-selector option { color: #f5efe2; background: #1a1230; }
+
+/* ---------- พาเนลกระจก ---------- */
+.panel {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--panel-border);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.section-title {
+    color: var(--color-primary);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    margin-left: 0.5rem;
+    background: linear-gradient(90deg, rgba(224, 182, 79, 0.5), transparent);
+}
+
+/* ชิป/ป้ายกำกับ */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 999px;
+    border: 1px solid rgba(224, 182, 79, 0.35);
+    background: rgba(224, 182, 79, 0.08);
+    color: var(--color-primary-soft);
+    font-size: 0.8rem;
+    padding: 0.3rem 0.9rem;
+}
+
+/* ช่องเลือกคำถาม (select) */
+.select-thai {
+    background-color: rgba(12, 7, 22, 0.92);
+    border: 1px solid rgba(224, 182, 79, 0.35);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: var(--color-text);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.select-thai:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(224, 182, 79, 0.15);
+}
+.select-thai option { color: #f5efe2; background: #1a1230; }
+
+/* ---------- การ์ดไพ่ ---------- */
 /* Touch Targets >= 44x44px */
 .touch-target {
     min-height: 44px;
@@ -27,20 +259,34 @@ body {
     justify-content: center;
 }
 
-/* Card Placeholders */
 .card-placeholder, .card-placeholder-back {
     width: 240px;
     height: 380px;
-    border-radius: 12px;
+    border-radius: 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(224, 182, 79, 0.55);
     position: relative;
     color: white;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+    box-shadow:
+        inset 0 0 0 5px rgba(18, 11, 33, 0.35),
+        inset 0 0 0 6px rgba(224, 182, 79, 0.45),
+        0 18px 45px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+}
+
+/* กรอบทองซ้อนชั้นในแบบไพ่ทาโรต์ */
+.card-placeholder::after,
+.card-placeholder-back::after {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(224, 182, 79, 0.30);
+    pointer-events: none;
 }
 
 .card-placeholder.major { background: var(--major-color); }
@@ -52,41 +298,77 @@ body {
 
 .card-number {
     position: absolute;
-    top: 16px;
-    font-size: 1.5rem;
-    font-weight: bold;
+    top: 18px;
+    font-family: 'Charm', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-primary-soft);
+    text-shadow: 0 0 12px rgba(224, 182, 79, 0.55);
 }
 
 .card-symbol {
     font-size: 4rem;
     margin: 20px 0;
+    text-shadow:
+        0 0 18px rgba(255, 244, 214, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 .card-title {
     position: absolute;
-    bottom: 24px;
+    bottom: 26px;
     text-align: center;
-    font-size: 1.25rem;
-    font-weight: bold;
-    line-height: 1.2;
+    font-family: 'Charm', 'Noto Sans Thai', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.25;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
 }
 
 .card-placeholder-back .pattern {
-    font-size: 3rem;
+    font-size: 3.4rem;
     color: var(--color-primary);
-    opacity: 0.7;
+    opacity: 0.85;
+    text-shadow: 0 0 20px rgba(224, 182, 79, 0.45);
 }
 
-/* Phase 11: Multiple Deck Themes */
+/* พัดไพ่ประดับหน้าแรก */
+.card-fan {
+    position: relative;
+    width: 150px;
+    height: 110px;
+    margin: 0 auto 1.5rem;
+}
+.fan-card {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 58px;
+    height: 92px;
+    border-radius: 7px;
+    border: 1px solid rgba(224, 182, 79, 0.5);
+    background:
+        repeating-radial-gradient(circle at 50% 50%,
+            transparent 0 8px, rgba(224, 182, 79, 0.14) 8px 9px),
+        linear-gradient(160deg, #2b1e4d, #171029);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+.fan-card:nth-child(1) { transform: translateX(-50%) rotate(-18deg) translateY(10px); }
+.fan-card:nth-child(2) { transform: translateX(-50%) rotate(0deg); z-index: 1; }
+.fan-card:nth-child(3) { transform: translateX(-50%) rotate(18deg) translateY(10px); }
+
+/* ---------- ธีมสำรองของสำรับไพ่ (Phase 11) ---------- */
 body[data-deck="minimalist"] .card-placeholder {
     background: #2D3748 !important;
     border: 2px solid #A0AEC0 !important;
     box-shadow: none !important;
 }
+body[data-deck="minimalist"] .card-placeholder::after { display: none; }
 body[data-deck="minimalist"] .card-placeholder-back {
     background: #1A202C !important;
     border: 2px solid #4A5568 !important;
 }
+body[data-deck="minimalist"] .card-placeholder-back::after { display: none; }
 
 body[data-deck="festive"] .card-placeholder {
     background: linear-gradient(135deg, #C53030, #276749) !important;
@@ -97,8 +379,9 @@ body[data-deck="festive"] .card-placeholder-back {
     background: #742A2A !important;
     border: 2px solid #F6E05E !important;
 }
+body[data-deck="festive"] .card-placeholder-back::after { display: none; }
 
-/* Phase 4: 78 Cards Mini Grid */
+/* ---------- ตารางไพ่ 78 ใบ (Phase 4) ---------- */
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
@@ -109,30 +392,34 @@ body[data-deck="festive"] .card-placeholder-back {
 .mini-card-back {
     width: 100%;
     aspect-ratio: 2/3;
-    background: var(--card-back-color);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 4px;
+    background:
+        repeating-radial-gradient(circle at 50% 50%,
+            transparent 0 7px, rgba(224, 182, 79, 0.10) 7px 8px),
+        linear-gradient(160deg, #2b1e4d, #1a1230);
+    border: 1px solid rgba(224, 182, 79, 0.28);
+    border-radius: 5px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 .mini-card-back:hover {
     transform: scale(1.1);
     border-color: var(--color-primary);
+    box-shadow: 0 0 12px rgba(224, 182, 79, 0.45);
 }
 .mini-card-back.selected {
     border: 2px solid var(--color-primary);
-    box-shadow: 0 0 10px var(--color-primary);
+    box-shadow: 0 0 16px rgba(224, 182, 79, 0.75);
     transform: translateY(-5px);
 }
 
-/* Phase 4: 3D Flip Animation */
+/* ---------- พลิกไพ่ 3 มิติ (Phase 4) ---------- */
 .flip-container {
     perspective: 1000px;
     width: 240px;
     height: 380px;
 }
 .flipper {
-    transition: 0.8s;
+    transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.25, 1);
     transform-style: preserve-3d;
     position: relative;
     width: 100%;
@@ -148,18 +435,56 @@ body[data-deck="festive"] .card-placeholder-back {
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 12px;
+    border-radius: 14px;
 }
 .front {
-    /* Front contains the card artwork, initially rotated away */
+    /* หน้าไพ่ (ภาพ) เริ่มพลิกซ่อนไว้ */
     transform: rotateY(180deg);
 }
 .back {
-    /* Back is visible first */
+    /* หลังไพ่โผล่ก่อน */
     transform: rotateY(0deg);
 }
 
-/* Phase 12: Reduced Motion Fallback */
+/* ---------- วงกลมหายใจสมาธิ (reading.html) ---------- */
+.breath-circle {
+    width: 168px;
+    height: 168px;
+    margin: 0 auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle,
+        rgba(167, 139, 250, 0.30) 0%,
+        rgba(224, 182, 79, 0.10) 65%,
+        transparent 75%);
+    border: 1px solid rgba(224, 182, 79, 0.45);
+    box-shadow: 0 0 40px rgba(167, 139, 250, 0.25), inset 0 0 30px rgba(224, 182, 79, 0.12);
+    animation: breathe 4s ease-in-out infinite;
+}
+@keyframes breathe {
+    0%, 100% { transform: scale(0.92); }
+    50%      { transform: scale(1.06); }
+}
+.breath-circle #countdown,
+.breath-circle > div {
+    font-family: 'Charm', serif;
+    font-size: 3.4rem;
+    font-weight: 700;
+    color: var(--color-primary-soft);
+    text-shadow: 0 0 22px rgba(224, 182, 79, 0.55);
+}
+
+/* ---------- ช่องโฆษณา ---------- */
+.ad-slot {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+    border-radius: 12px;
+    color: rgba(245, 239, 226, 0.38);
+}
+
+/* ---------- ลดการเคลื่อนไหวสำหรับผู้ใช้ที่ตั้งค่าไว้ (Phase 12) ---------- */
 @media (prefers-reduced-motion: reduce) {
     *, ::before, ::after {
         animation-duration: 0.01ms !important;
