@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ผลลัพธ์คำทำนาย (Tarot Result) - Thai Tarot</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="ผลลัพธ์คำทำนายไพ่ยิปซีของคุณ พร้อมคำแนะนำเพิ่มเติมเพื่อเสริมพลังบวก สีมงคล และวอลเปเปอร์">
+    <link rel="canonical" href="https://thaitarot.com/result.html">
+    <meta property="og:title" content="ผลลัพธ์คำทำนาย - Thai Tarot">
+    <meta property="og:description" content="ตรวจดูคำทำนายของคุณและรับคำแนะนำเชิงบวกเพื่อชีวิตที่ดีขึ้น">
+    <meta property="og:url" content="https://thaitarot.com/result.html">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-mystic text-white min-h-screen flex flex-col">
+    <header class="p-4 border-b border-white/10 flex justify-between items-center">
+        <nav>
+            <a href="index.html" class="text-gold font-bold touch-target">← กลับหน้าหลัก</a>
+        </nav>
+        <h1 class="text-xl font-bold">ผลลัพธ์คำทำนาย</h1>
+        <div class="w-20"></div>
+    </header>
+
+    <main class="flex-grow p-4 flex flex-col items-center max-w-lg mx-auto w-full pb-10">
+        
+        <section class="w-full text-center mb-6">
+            <p class="text-gray-400 text-sm">คำถามของคุณ</p>
+            <h2 class="text-xl text-gold font-bold" id="question-text">กำลังโหลด...</h2>
+        </section>
+
+        <!-- Card Display -->
+        <article id="card-display" class="card-placeholder mb-8 shadow-lg">
+            <div class="card-number" id="card-number">-</div>
+            <div class="card-symbol" id="card-symbol">?</div>
+            <div class="card-title" id="card-title">...</div>
+        </article>
+
+        <!-- Interpretation Display -->
+        <section class="w-full bg-white/5 rounded-xl border border-white/10 p-6 mb-6">
+            <h3 class="text-lg font-bold text-accent mb-4 border-b border-white/10 pb-2">📖 การตีความ (Interpretation)</h3>
+            
+            <div class="mb-4">
+                <p id="interp-summary" class="text-gray-200 leading-relaxed text-lg">กำลังแปลผล...</p>
+            </div>
+
+            <div class="mb-4">
+                <h4 class="text-sm text-gold font-bold mb-1">✅ สิ่งที่ควรทำ (Action)</h4>
+                <p id="interp-action" class="text-sm text-gray-300">...</p>
+            </div>
+
+            <div id="warning-container" class="mb-4 hidden bg-red-900/20 p-3 rounded border border-red-500/30">
+                <h4 class="text-sm text-red-400 font-bold mb-1">⚠️ คำเตือน</h4>
+                <p id="interp-warning" class="text-sm text-red-200">...</p>
+            </div>
+        </section>
+
+        <!-- Remedy / Color / Wallpaper (Phase 8) -->
+        <section class="w-full bg-white/5 rounded-xl border border-white/10 p-6 mb-6">
+            <h3 class="text-lg font-bold text-gray-200 mb-4 border-b border-white/10 pb-2">🔮 คำแนะนำเพิ่มเติม (Remedy & Support)</h3>
+            
+            <article id="remedy-container" class="mb-5">
+                <h4 class="text-md text-gold font-bold mb-2" id="remedy-title">กำลังโหลด...</h4>
+                <p class="text-sm text-gray-300 mb-3" id="remedy-desc"></p>
+                <ul class="list-disc list-inside text-sm text-gray-300 mb-3" id="remedy-items"></ul>
+                
+                <div class="bg-mystic/50 p-3 rounded mb-2">
+                    <p class="text-sm font-bold text-pink-300 mb-1">Affirmation (คำกล่าวบรรดาลใจ)</p>
+                    <p class="text-sm text-gray-300 italic">"<span id="remedy-affirmation"></span>"</p>
+                </div>
+                
+                <div class="bg-mystic/50 p-3 rounded">
+                    <p class="text-sm font-bold text-blue-300 mb-1">Meditation (สมาธิบำบัด)</p>
+                    <p class="text-sm text-gray-300" id="remedy-meditation"></p>
+                </div>
+                <p class="text-xs text-gray-500 mt-2" id="remedy-disclaimer"></p>
+            </article>
+
+            <article id="color-container" class="mb-5 border-t border-white/10 pt-4">
+                <h4 class="text-md text-gold font-bold mb-2">🎨 สีมงคลเสริมพลัง</h4>
+                <div class="flex items-center gap-3">
+                    <div id="color-swatch" class="w-8 h-8 rounded-full border border-white/20 shadow-md"></div>
+                    <div>
+                        <p class="text-sm font-bold text-white" id="color-name"></p>
+                        <p class="text-sm text-gray-400" id="color-meaning"></p>
+                    </div>
+                </div>
+            </article>
+
+            <article id="wallpaper-container" class="border-t border-white/10 pt-4 flex flex-col items-center text-center">
+                <h4 class="text-md text-gold font-bold mb-2">🖼️ วอลเปเปอร์มงคลประจำคำทำนาย</h4>
+                <div class="w-32 h-48 bg-black border border-white/20 rounded-md mb-3 flex items-center justify-center overflow-hidden">
+                    <span class="text-gray-600 text-xs">(Wallpaper Preview)</span>
+                </div>
+                <p class="text-sm text-gray-300 mb-3" id="wallpaper-name"></p>
+                <a href="#" id="wallpaper-download-btn" download class="bg-white/10 border border-white/30 text-white font-bold py-2 px-6 rounded-full text-sm hover:bg-white/20 transition-colors">ดาวน์โหลดฟรี</a>
+            </article>
+        </section>
+
+        <!-- Affiliate Component (Phase 9) -->
+        <section id="affiliate-section" class="w-full bg-gradient-to-r from-gold/10 to-accent/10 rounded-xl border border-gold/30 p-6 mb-6 hidden">
+            <h3 class="text-lg font-bold text-gold mb-2 border-b border-gold/20 pb-2">✨ สิ่งของเสริมกำลังใจ</h3>
+            <p class="text-sm text-gray-300 mb-4">ไอเทมแนะนำเพื่อเสริมพลังตามคำทำนายของคุณ</p>
+            <div id="affiliate-container" class="flex flex-col gap-3">
+                <!-- Dynamically injected -->
+            </div>
+            <p class="text-xs text-gray-500 mt-4 text-center">สินค้าแนะนำเป็นการสนับสนุนเว็บไซต์ ไม่มีผลต่อความแม่นยำของคำทำนาย</p>
+        </section>
+
+        <!-- AdSense Placeholder -->
+        <div class="w-full bg-black/30 border border-dashed border-gray-600 text-gray-500 text-center py-4 mb-8 text-sm" aria-label="Advertisement">
+            AdSense Banner (Responsive)
+        </div>
+
+        <nav class="w-full flex flex-col gap-3">
+            <button id="btn-share" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-full touch-target w-full text-center hidden">🔗 แชร์ผลลัพธ์</button>
+            <a href="reading.html" class="bg-gold text-mystic font-bold py-3 px-6 rounded-full touch-target w-full text-center" role="button">ดูไพ่ใหม่อีกครั้ง</a>
+        </nav>
+
+    </main>
+
+    <footer class="p-4 text-center border-t border-white/10 text-xs text-gray-500 mt-auto">
+        <p>&copy; 2026 Thai Tarot.</p>
+    </footer>
+
+    <script type="module" src="js/result-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "standard",
+    "name": "Standard Deck (คลาสสิก)"
+  },
+  {
+    "id": "minimalist",
+    "name": "Minimalist Deck (มินิมอล)"
+  },
+  {
+    "id": "festive",
+    "name": "Festive Special (เทศกาล)"
+  }
+]

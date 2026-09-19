@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Validation - Thai Tarot</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="robots" content="noindex, nofollow"> <!-- Prevent indexing for test page -->
+    <link rel="canonical" href="https://thaitarot.com/test.html">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-mystic text-white min-h-screen p-4">
+    <header class="max-w-2xl mx-auto border-b border-white/20 pb-4 mb-4">
+        <h1 class="text-2xl font-bold text-gold">System Validation (Phase Check)</h1>
+        <a href="index.html" class="text-sm text-blue-400 underline">กลับหน้าหลัก</a>
+    </header>
+
+    <main class="max-w-2xl mx-auto space-y-4">
+        
+        <section class="bg-white/5 p-4 rounded border border-white/10">
+            <h2 class="text-lg font-bold mb-2 text-accent">1. Data Loading</h2>
+            <div id="test-data-status" class="text-sm font-mono">กำลังตรวจสอบ...</div>
+        </section>
+
+        <section class="bg-white/5 p-4 rounded border border-white/10">
+            <h2 class="text-lg font-bold mb-2 text-accent">2. Timezone (Asia/Bangkok)</h2>
+            <div id="test-tz-status" class="text-sm font-mono">กำลังตรวจสอบ...</div>
+        </section>
+
+        <section class="bg-white/5 p-4 rounded border border-white/10">
+            <h2 class="text-lg font-bold mb-2 text-accent">3. UUID / localStorage</h2>
+            <div id="test-user-status" class="text-sm font-mono">กำลังตรวจสอบ...</div>
+        </section>
+        
+        <section class="bg-white/5 p-4 rounded border border-white/10">
+            <h2 class="text-lg font-bold mb-2 text-accent">4. Crypto Hash / Shuffle</h2>
+            <div id="test-crypto-status" class="text-sm font-mono">กำลังตรวจสอบ...</div>
+        </section>
+
+    </main>
+
+    <script type="module">
+        import { loadCards } from './js/data-loader.js';
+        import { getBangkokDateString, formatThaiDateDisplay } from './js/utils/timezone.js';
+        import { getOrCreateUserId } from './js/utils/user.js';
+        import { getDeterministicNumber, secureShuffle } from './js/utils/crypto.js';
+
+        async function runTests() {
+            // 1. Data
+            const dStatus = document.getElementById('test-data-status');
+            try {
+                const cards = await loadCards();
+                dStatus.innerHTML = `✅ โหลดข้อมูลไพ่สำเร็จ (${cards.length} ใบ)<br>ใบแรก: ${cards[0].name} (${cards[0].id})`;
+            } catch(e) {
+                dStatus.innerHTML = `❌ ${e.message}`;
+            }
+
+            // 2. Timezone
+            const tzStatus = document.getElementById('test-tz-status');
+            try {
+                const iso = getBangkokDateString();
+                const th = formatThaiDateDisplay();
+                tzStatus.innerHTML = `✅ ISO: ${iso}<br>✅ TH: ${th}`;
+            } catch(e) {
+                tzStatus.innerHTML = `❌ ${e.message}`;
+            }
+
+            // 3. UUID
+            const uStatus = document.getElementById('test-user-status');
+            try {
+                const uid = getOrCreateUserId();
+                uStatus.innerHTML = `✅ UserID: ${uid}`;
+            } catch(e) {
+                uStatus.innerHTML = `❌ ${e.message}`;
+            }
+
+            // 4. Crypto
+            const cStatus = document.getElementById('test-crypto-status');
+            try {
+                const hash1 = getDeterministicNumber("test|123", 78);
+                const hash2 = getDeterministicNumber("test|123", 78);
+                
+                const array = [1, 2, 3, 4, 5];
+                const shuf1 = [...array]; secureShuffle(shuf1);
+                
+                cStatus.innerHTML = `✅ Hash 1: ${hash1}<br>✅ Hash 2: ${hash2} (ตรงกัน)<br>✅ Shuffle: ${shuf1.join(',')}`;
+            } catch(e) {
+                cStatus.innerHTML = `❌ ${e.message}`;
+            }
+        }
+
+        runTests();
+    </script>
+</body>
+</html>

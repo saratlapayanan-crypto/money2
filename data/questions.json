@@ -1,0 +1,32 @@
+{
+  "love": [
+    { "slug": "overall", "label_th": "ดวงความรักภาพรวม" },
+    { "slug": "single", "label_th": "คนโสด หาคู่" },
+    { "slug": "relationship", "label_th": "คนมีคู่ ความสัมพันธ์" },
+    { "slug": "talking-stage", "label_th": "กำลังคุยกันอยู่" },
+    { "slug": "ex", "label_th": "แฟนเก่า" },
+    { "slug": "what-do-they-think", "label_th": "เขาคิดอย่างไรกับเรา" },
+    { "slug": "should-we-continue", "label_th": "ควรไปต่อไหม" },
+    { "slug": "new-person", "label_th": "คนใหม่ที่เพิ่งเจอ" }
+  ],
+  "finance": [
+    { "slug": "overall", "label_th": "ดวงการเงินภาพรวม" },
+    { "slug": "lump-sum", "label_th": "โชคลาภ เงินก้อน" },
+    { "slug": "income", "label_th": "รายรับ" },
+    { "slug": "expenses", "label_th": "รายจ่าย" },
+    { "slug": "debt", "label_th": "หนี้สิน" },
+    { "slug": "investment", "label_th": "การลงทุน" },
+    { "slug": "business", "label_th": "ธุรกิจ" },
+    { "slug": "luck", "label_th": "ดวงโชคลาภ" }
+  ],
+  "work": [
+    { "slug": "overall", "label_th": "ดวงการงานภาพรวม" },
+    { "slug": "current-job", "label_th": "งานปัจจุบัน" },
+    { "slug": "job-change", "label_th": "เปลี่ยนงาน" },
+    { "slug": "application", "label_th": "สมัครงาน" },
+    { "slug": "promotion", "label_th": "เลื่อนตำแหน่ง" },
+    { "slug": "boss", "label_th": "หัวหน้า เจ้านาย" },
+    { "slug": "coworkers", "label_th": "เพื่อนร่วมงาน" },
+    { "slug": "business", "label_th": "ธุรกิจส่วนตัว" }
+  ]
+}

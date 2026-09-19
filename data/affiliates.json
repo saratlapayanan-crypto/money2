@@ -1,0 +1,30 @@
+[
+  {
+    "id": "aff-01",
+    "title": "กำไลหินโรสควอตซ์ (Rose Quartz)",
+    "description": "สัญลักษณ์แห่งความรักและการเยียวยาจิตใจ ช่วยเสริมพลังบวกและความเมตตากรุณา",
+    "category": "love",
+    "url": "https://example.com/affiliate/rosequartz"
+  },
+  {
+    "id": "aff-02",
+    "title": "ไพ่ยิปซีชุดมาตรฐาน (Rider Waite Smith)",
+    "description": "สำหรับผู้เริ่มต้นที่ต้องการเรียนรู้และทบทวนความหมายของไพ่เพื่อพัฒนาตนเอง",
+    "category": "general",
+    "url": "https://example.com/affiliate/riderwaite"
+  },
+  {
+    "id": "aff-03",
+    "title": "สมุดบันทึกพลังบวก (Gratitude Journal)",
+    "description": "เครื่องมือช่วยจัดระเบียบความคิดและจดบันทึกสิ่งดีๆ ที่เกิดขึ้นในแต่ละวัน",
+    "category": "work",
+    "url": "https://example.com/affiliate/journal"
+  },
+  {
+    "id": "aff-04",
+    "title": "หินซิทริน (Citrine) เสริมความมั่นใจ",
+    "description": "เครื่องประดับแห่งความสดใส เปรียบดั่งแสงอาทิตย์ที่ให้พลังงานในการเริ่มต้นสิ่งใหม่ๆ",
+    "category": "finance",
+    "url": "https://example.com/affiliate/citrine"
+  }
+]

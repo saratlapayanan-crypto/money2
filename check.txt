@@ -1,0 +1,10 @@
+﻿python :   File "<string>", line 14
+At line:1 char:1
++ python -c "
++ ~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (  File "<string>", line 14:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    print(f'pentacles-1 love summary: {repr(i[" summary\][:60])}')
+                                                                 ^
+SyntaxError: f-string expression part cannot include a backslash

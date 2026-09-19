@@ -1,0 +1,23 @@
+[
+  {
+    "id": "new-year",
+    "name": "ปีใหม่",
+    "deck_id": "festive",
+    "start": "12-25",
+    "end": "01-05"
+  },
+  {
+    "id": "songkran",
+    "name": "สงกรานต์",
+    "deck_id": "festive",
+    "start": "04-12",
+    "end": "04-16"
+  },
+  {
+    "id": "halloween",
+    "name": "ฮาโลวีน",
+    "deck_id": "minimalist",
+    "start": "10-25",
+    "end": "10-31"
+  }
+]

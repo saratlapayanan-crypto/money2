@@ -1,0 +1,30 @@
+[
+  {
+    "wallpaper_id": "wp-love-01",
+    "name_th": "พลังแห่งความเมตตา",
+    "category": "love",
+    "image_url": "assets/wallpapers/wp-love.webp",
+    "theme": "pink"
+  },
+  {
+    "wallpaper_id": "wp-finance-01",
+    "name_th": "ความมั่งคั่งและสายน้ำ",
+    "category": "finance",
+    "image_url": "assets/wallpapers/wp-finance.webp",
+    "theme": "gold"
+  },
+  {
+    "wallpaper_id": "wp-work-01",
+    "name_th": "ความสงบและสติปัญญา",
+    "category": "work",
+    "image_url": "assets/wallpapers/wp-work.webp",
+    "theme": "blue"
+  },
+  {
+    "wallpaper_id": "wp-protection-01",
+    "name_th": "เกราะป้องกันพลังงานลบ",
+    "category": "protection",
+    "image_url": "assets/wallpapers/wp-protection.webp",
+    "theme": "black"
+  }
+]

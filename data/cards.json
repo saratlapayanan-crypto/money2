@@ -1,0 +1,704 @@
+[
+  {
+    "id": "major-0",
+    "number": 0,
+    "name": "The Fool",
+    "thai_name": "คนโง่",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-fool"
+  },
+  {
+    "id": "major-1",
+    "number": 1,
+    "name": "The Magician",
+    "thai_name": "นักมายากล",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-magician"
+  },
+  {
+    "id": "major-2",
+    "number": 2,
+    "name": "The High Priestess",
+    "thai_name": "นักบวชหญิง",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-high-priestess"
+  },
+  {
+    "id": "major-3",
+    "number": 3,
+    "name": "The Empress",
+    "thai_name": "จักรพรรดินี",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-empress"
+  },
+  {
+    "id": "major-4",
+    "number": 4,
+    "name": "The Emperor",
+    "thai_name": "จักรพรรดิ",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-emperor"
+  },
+  {
+    "id": "major-5",
+    "number": 5,
+    "name": "The Hierophant",
+    "thai_name": "สันตะปาปา",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-hierophant"
+  },
+  {
+    "id": "major-6",
+    "number": 6,
+    "name": "The Lovers",
+    "thai_name": "คู่รัก",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-lovers"
+  },
+  {
+    "id": "major-7",
+    "number": 7,
+    "name": "The Chariot",
+    "thai_name": "รถศึก",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-chariot"
+  },
+  {
+    "id": "major-8",
+    "number": 8,
+    "name": "Strength",
+    "thai_name": "พลัง",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "strength"
+  },
+  {
+    "id": "major-9",
+    "number": 9,
+    "name": "The Hermit",
+    "thai_name": "ฤๅษี",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-hermit"
+  },
+  {
+    "id": "major-10",
+    "number": 10,
+    "name": "Wheel of Fortune",
+    "thai_name": "กงล้อโชคชะตา",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "wheel-of-fortune"
+  },
+  {
+    "id": "major-11",
+    "number": 11,
+    "name": "Justice",
+    "thai_name": "ความยุติธรรม",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "justice"
+  },
+  {
+    "id": "major-12",
+    "number": 12,
+    "name": "The Hanged Man",
+    "thai_name": "ผู้ถูกแขวน",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-hanged-man"
+  },
+  {
+    "id": "major-13",
+    "number": 13,
+    "name": "Death",
+    "thai_name": "ความตาย",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "death"
+  },
+  {
+    "id": "major-14",
+    "number": 14,
+    "name": "Temperance",
+    "thai_name": "ความพอดี",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "temperance"
+  },
+  {
+    "id": "major-15",
+    "number": 15,
+    "name": "The Devil",
+    "thai_name": "ปีศาจ",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-devil"
+  },
+  {
+    "id": "major-16",
+    "number": 16,
+    "name": "The Tower",
+    "thai_name": "หอคอย",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-tower"
+  },
+  {
+    "id": "major-17",
+    "number": 17,
+    "name": "The Star",
+    "thai_name": "ดวงดาว",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-star"
+  },
+  {
+    "id": "major-18",
+    "number": 18,
+    "name": "The Moon",
+    "thai_name": "ดวงจันทร์",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-moon"
+  },
+  {
+    "id": "major-19",
+    "number": 19,
+    "name": "The Sun",
+    "thai_name": "ดวงอาทิตย์",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-sun"
+  },
+  {
+    "id": "major-20",
+    "number": 20,
+    "name": "Judgement",
+    "thai_name": "การพิพากษา",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "judgement"
+  },
+  {
+    "id": "major-21",
+    "number": 21,
+    "name": "The World",
+    "thai_name": "โลก",
+    "arcana": "major",
+    "suit": null,
+    "image_key": "the-world"
+  },
+  {
+    "id": "wands-1",
+    "number": 1,
+    "name": "Ace of Wands",
+    "thai_name": "1 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "ace-of-wands"
+  },
+  {
+    "id": "wands-2",
+    "number": 2,
+    "name": "Two of Wands",
+    "thai_name": "2 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "two-of-wands"
+  },
+  {
+    "id": "wands-3",
+    "number": 3,
+    "name": "Three of Wands",
+    "thai_name": "3 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "three-of-wands"
+  },
+  {
+    "id": "wands-4",
+    "number": 4,
+    "name": "Four of Wands",
+    "thai_name": "4 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "four-of-wands"
+  },
+  {
+    "id": "wands-5",
+    "number": 5,
+    "name": "Five of Wands",
+    "thai_name": "5 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "five-of-wands"
+  },
+  {
+    "id": "wands-6",
+    "number": 6,
+    "name": "Six of Wands",
+    "thai_name": "6 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "six-of-wands"
+  },
+  {
+    "id": "wands-7",
+    "number": 7,
+    "name": "Seven of Wands",
+    "thai_name": "7 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "seven-of-wands"
+  },
+  {
+    "id": "wands-8",
+    "number": 8,
+    "name": "Eight of Wands",
+    "thai_name": "8 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "eight-of-wands"
+  },
+  {
+    "id": "wands-9",
+    "number": 9,
+    "name": "Nine of Wands",
+    "thai_name": "9 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "nine-of-wands"
+  },
+  {
+    "id": "wands-10",
+    "number": 10,
+    "name": "Ten of Wands",
+    "thai_name": "10 ไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "ten-of-wands"
+  },
+  {
+    "id": "wands-11",
+    "number": 11,
+    "name": "Page of Wands",
+    "thai_name": "มหาดเล็กไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "page-of-wands"
+  },
+  {
+    "id": "wands-12",
+    "number": 12,
+    "name": "Knight of Wands",
+    "thai_name": "อัศวินไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "knight-of-wands"
+  },
+  {
+    "id": "wands-13",
+    "number": 13,
+    "name": "Queen of Wands",
+    "thai_name": "ราชินีไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "queen-of-wands"
+  },
+  {
+    "id": "wands-14",
+    "number": 14,
+    "name": "King of Wands",
+    "thai_name": "ราชาไม้เท้า",
+    "arcana": "minor",
+    "suit": "wands",
+    "image_key": "king-of-wands"
+  },
+  {
+    "id": "cups-1",
+    "number": 1,
+    "name": "Ace of Cups",
+    "thai_name": "1 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "ace-of-cups"
+  },
+  {
+    "id": "cups-2",
+    "number": 2,
+    "name": "Two of Cups",
+    "thai_name": "2 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "two-of-cups"
+  },
+  {
+    "id": "cups-3",
+    "number": 3,
+    "name": "Three of Cups",
+    "thai_name": "3 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "three-of-cups"
+  },
+  {
+    "id": "cups-4",
+    "number": 4,
+    "name": "Four of Cups",
+    "thai_name": "4 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "four-of-cups"
+  },
+  {
+    "id": "cups-5",
+    "number": 5,
+    "name": "Five of Cups",
+    "thai_name": "5 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "five-of-cups"
+  },
+  {
+    "id": "cups-6",
+    "number": 6,
+    "name": "Six of Cups",
+    "thai_name": "6 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "six-of-cups"
+  },
+  {
+    "id": "cups-7",
+    "number": 7,
+    "name": "Seven of Cups",
+    "thai_name": "7 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "seven-of-cups"
+  },
+  {
+    "id": "cups-8",
+    "number": 8,
+    "name": "Eight of Cups",
+    "thai_name": "8 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "eight-of-cups"
+  },
+  {
+    "id": "cups-9",
+    "number": 9,
+    "name": "Nine of Cups",
+    "thai_name": "9 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "nine-of-cups"
+  },
+  {
+    "id": "cups-10",
+    "number": 10,
+    "name": "Ten of Cups",
+    "thai_name": "10 ถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "ten-of-cups"
+  },
+  {
+    "id": "cups-11",
+    "number": 11,
+    "name": "Page of Cups",
+    "thai_name": "มหาดเล็กถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "page-of-cups"
+  },
+  {
+    "id": "cups-12",
+    "number": 12,
+    "name": "Knight of Cups",
+    "thai_name": "อัศวินถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "knight-of-cups"
+  },
+  {
+    "id": "cups-13",
+    "number": 13,
+    "name": "Queen of Cups",
+    "thai_name": "ราชินีถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "queen-of-cups"
+  },
+  {
+    "id": "cups-14",
+    "number": 14,
+    "name": "King of Cups",
+    "thai_name": "ราชาถ้วย",
+    "arcana": "minor",
+    "suit": "cups",
+    "image_key": "king-of-cups"
+  },
+  {
+    "id": "swords-1",
+    "number": 1,
+    "name": "Ace of Swords",
+    "thai_name": "1 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "ace-of-swords"
+  },
+  {
+    "id": "swords-2",
+    "number": 2,
+    "name": "Two of Swords",
+    "thai_name": "2 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "two-of-swords"
+  },
+  {
+    "id": "swords-3",
+    "number": 3,
+    "name": "Three of Swords",
+    "thai_name": "3 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "three-of-swords"
+  },
+  {
+    "id": "swords-4",
+    "number": 4,
+    "name": "Four of Swords",
+    "thai_name": "4 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "four-of-swords"
+  },
+  {
+    "id": "swords-5",
+    "number": 5,
+    "name": "Five of Swords",
+    "thai_name": "5 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "five-of-swords"
+  },
+  {
+    "id": "swords-6",
+    "number": 6,
+    "name": "Six of Swords",
+    "thai_name": "6 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "six-of-swords"
+  },
+  {
+    "id": "swords-7",
+    "number": 7,
+    "name": "Seven of Swords",
+    "thai_name": "7 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "seven-of-swords"
+  },
+  {
+    "id": "swords-8",
+    "number": 8,
+    "name": "Eight of Swords",
+    "thai_name": "8 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "eight-of-swords"
+  },
+  {
+    "id": "swords-9",
+    "number": 9,
+    "name": "Nine of Swords",
+    "thai_name": "9 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "nine-of-swords"
+  },
+  {
+    "id": "swords-10",
+    "number": 10,
+    "name": "Ten of Swords",
+    "thai_name": "10 ดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "ten-of-swords"
+  },
+  {
+    "id": "swords-11",
+    "number": 11,
+    "name": "Page of Swords",
+    "thai_name": "มหาดเล็กดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "page-of-swords"
+  },
+  {
+    "id": "swords-12",
+    "number": 12,
+    "name": "Knight of Swords",
+    "thai_name": "อัศวินดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "knight-of-swords"
+  },
+  {
+    "id": "swords-13",
+    "number": 13,
+    "name": "Queen of Swords",
+    "thai_name": "ราชินีดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "queen-of-swords"
+  },
+  {
+    "id": "swords-14",
+    "number": 14,
+    "name": "King of Swords",
+    "thai_name": "ราชาดาบ",
+    "arcana": "minor",
+    "suit": "swords",
+    "image_key": "king-of-swords"
+  },
+  {
+    "id": "pentacles-1",
+    "number": 1,
+    "name": "Ace of Pentacles",
+    "thai_name": "1 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "ace-of-pentacles"
+  },
+  {
+    "id": "pentacles-2",
+    "number": 2,
+    "name": "Two of Pentacles",
+    "thai_name": "2 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "two-of-pentacles"
+  },
+  {
+    "id": "pentacles-3",
+    "number": 3,
+    "name": "Three of Pentacles",
+    "thai_name": "3 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "three-of-pentacles"
+  },
+  {
+    "id": "pentacles-4",
+    "number": 4,
+    "name": "Four of Pentacles",
+    "thai_name": "4 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "four-of-pentacles"
+  },
+  {
+    "id": "pentacles-5",
+    "number": 5,
+    "name": "Five of Pentacles",
+    "thai_name": "5 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "five-of-pentacles"
+  },
+  {
+    "id": "pentacles-6",
+    "number": 6,
+    "name": "Six of Pentacles",
+    "thai_name": "6 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "six-of-pentacles"
+  },
+  {
+    "id": "pentacles-7",
+    "number": 7,
+    "name": "Seven of Pentacles",
+    "thai_name": "7 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "seven-of-pentacles"
+  },
+  {
+    "id": "pentacles-8",
+    "number": 8,
+    "name": "Eight of Pentacles",
+    "thai_name": "8 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "eight-of-pentacles"
+  },
+  {
+    "id": "pentacles-9",
+    "number": 9,
+    "name": "Nine of Pentacles",
+    "thai_name": "9 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "nine-of-pentacles"
+  },
+  {
+    "id": "pentacles-10",
+    "number": 10,
+    "name": "Ten of Pentacles",
+    "thai_name": "10 เหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "ten-of-pentacles"
+  },
+  {
+    "id": "pentacles-11",
+    "number": 11,
+    "name": "Page of Pentacles",
+    "thai_name": "มหาดเล็กเหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "page-of-pentacles"
+  },
+  {
+    "id": "pentacles-12",
+    "number": 12,
+    "name": "Knight of Pentacles",
+    "thai_name": "อัศวินเหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "knight-of-pentacles"
+  },
+  {
+    "id": "pentacles-13",
+    "number": 13,
+    "name": "Queen of Pentacles",
+    "thai_name": "ราชินีเหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "queen-of-pentacles"
+  },
+  {
+    "id": "pentacles-14",
+    "number": 14,
+    "name": "King of Pentacles",
+    "thai_name": "ราชาเหรียญ",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "image_key": "king-of-pentacles"
+  }
+]
