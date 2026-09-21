@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { resolveCardAsset } from '../js/art/card-assets.js';
+import { renderCardBack, resolveBackAsset, resolveCardAsset } from '../js/art/card-assets.js';
 
 const card = { id: 'major-0', name_en: 'The Fool', name_th: 'คนโง่', alt_text: 'ภาพไพ่คนโง่' };
 
@@ -22,5 +22,70 @@ test('resolves draft, placeholder, missing, and malformed artwork to a placehold
         const result = resolveCardAsset(candidate, card);
         assert.equal(result.kind, 'placeholder');
         assert.equal(result.src, null);
+    }
+});
+
+function fakeContainer() {
+    const classes = new Set();
+    return {
+        innerHTML: '',
+        child: null,
+        ownerDocument: {
+            createElement(tagName) {
+                return {
+                    tagName: tagName.toUpperCase(),
+                    className: '',
+                    classList: { toggle() {} },
+                    addEventListener() {}
+                };
+            }
+        },
+        classList: {
+            add(value) { classes.add(value); },
+            remove(value) { classes.delete(value); },
+            contains(value) { return classes.has(value); }
+        },
+        replaceChildren(child) {
+            this.child = child;
+            this.innerHTML = '';
+        }
+    };
+}
+
+test('renders an approved back asset as an image', () => {
+    const approved = {
+        id: 'christmas',
+        back: { status: 'approved', asset: 'assets/cards/christmas/back.webp' }
+    };
+    const container = fakeContainer();
+
+    assert.deepEqual(resolveBackAsset(approved), {
+        kind: 'image',
+        src: 'assets/cards/christmas/back.webp',
+        status: 'approved'
+    });
+    renderCardBack(container, approved);
+
+    assert.equal(container.child.tagName, 'IMG');
+    assert.equal(container.child.src, 'assets/cards/christmas/back.webp');
+    assert.equal(container.child.alt, 'Christmas / Winter Solstice card back');
+    assert.equal(container.child.className, 'card-art-image');
+    assert.equal(container.classList.contains('has-svg-art'), false);
+});
+
+test('renders the SVG back placeholder for missing and unapproved assets', () => {
+    for (const deck of [
+        { id: 'christmas', back: { status: 'draft', asset: 'draft.webp' } },
+        { id: 'christmas', back: { status: 'approved', asset: '' } },
+        { id: 'christmas' }
+    ]) {
+        const container = fakeContainer();
+        const result = resolveBackAsset(deck);
+
+        assert.equal(result.kind, 'placeholder');
+        assert.equal(result.src, null);
+        renderCardBack(container, deck);
+        assert.match(container.innerHTML, /^<svg /);
+        assert.equal(container.classList.contains('has-svg-art'), true);
     }
 });
