@@ -18,6 +18,15 @@ const GENERATED_PREVIEWS = {
     }
 };
 
+const GENERATED_CARD_ASSETS = {
+    christmas: {
+        cardId: 'major-0',
+        src: 'output/imagegen/christmas-the-fool-art-nouveau.png',
+        alt: 'ไพ่ The Fool ธีม Christmas / Winter Solstice วาดใหม่สไตล์ Art Nouveau',
+        label: 'The Fool · ไพ่ใบแรกที่สร้างเป็นภาพแยก'
+    }
+};
+
 async function init() {
     try { await setupGlobalDecks(); } catch (_) { /* optional */ }
     currentTheme = getActiveDeckId();
@@ -44,6 +53,12 @@ function renderGrid() {
 
     renderGeneratedPreview();
 
+    const generatedCard = GENERATED_CARD_ASSETS[currentTheme];
+    if (generatedCard) {
+        renderGeneratedCard(grid, generatedCard);
+        return;
+    }
+
     // หลังไพ่ใบแรกของธีม
     const backCell = document.createElement('div');
     backCell.innerHTML = renderCardBack(currentTheme);
@@ -57,6 +72,24 @@ function renderGrid() {
         svg.classList.add('w-full', 'h-auto', 'rounded-lg', 'shadow-lg');
         grid.appendChild(cell);
     });
+}
+
+function renderGeneratedCard(grid, asset) {
+    const section = document.createElement('section');
+    section.className = 'col-span-full rounded-2xl border border-gold/35 bg-black/20 p-4 text-center shadow-xl';
+    section.innerHTML = `
+        <div class="mb-4 flex flex-wrap items-baseline justify-between gap-2 text-left">
+            <h2 class="text-lg font-semibold text-gold">${asset.label}</h2>
+            <span class="text-xs text-gray-400">1 / 78 approved artwork</span>
+        </div>
+        <img src="${asset.src}" alt="${asset.alt}" loading="eager"
+             class="mx-auto w-full max-w-xs rounded-xl border border-gold/35 shadow-2xl" />
+        <p class="mt-4 text-xs leading-6 text-gray-400">
+            ไพ่ใบนี้เป็นภาพ raster ใหม่จริง จึงไม่มี SVG ปะปนในธีม Christmas ตอนนี้
+            ไพ่ที่เหลืออีก 77 ใบจะถูกสร้างและตรวจทีละใบก่อนนำมาแสดง
+        </p>
+    `;
+    grid.appendChild(section);
 }
 
 function renderGeneratedPreview() {
