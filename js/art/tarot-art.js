@@ -7,6 +7,7 @@ import { renderBack } from './backs.js';
 
 // re-export สำหรับผู้ใช้ที่ต้องการสร้าง SVG string เอง (เช่น ทำ data-URI)
 export { renderFront, renderBack };
+export { resolveCardAsset, renderCardFace, renderCardBack as renderResolvedCardBack } from './card-assets.js';
 
 /**
  * เรนเดอร์หน้าไพ่เป็น SVG string
