@@ -1,9 +1,1683 @@
 [
-  { "id": "standard", "name": "มนตราสยาม (คลาสสิก)" },
-  { "id": "songkran", "name": "สงกรานต์ 💦" },
-  { "id": "loy-krathong", "name": "ลอยกระทง 🏮" },
-  { "id": "halloween", "name": "ฮาโลวีน 🎃" },
-  { "id": "christmas", "name": "คริสต์มาส 🎄" },
-  { "id": "valentine", "name": "วาเลนไทน์ 💝" },
-  { "id": "minimalist", "name": "มินิมอล" }
+  {
+    "id": "standard",
+    "name": "มาตรฐาน",
+    "name_en": "Classic",
+    "name_th": "มาตรฐาน"
+  },
+  {
+    "id": "christmas",
+    "name": "คริสต์มาส / เหมายัน",
+    "name_en": "Christmas / Winter Solstice",
+    "name_th": "คริสต์มาส / เหมายัน",
+    "palette": [
+      "#071827",
+      "#1f5132",
+      "#7b2235",
+      "#d8af54"
+    ],
+    "symbols": [
+      "star",
+      "candle",
+      "evergreen",
+      "frost"
+    ],
+    "tone": "ความหวัง ความอบอุ่น และแสงที่กลับคืน",
+    "asset_root": "assets/cards/christmas",
+    "back_asset": "assets/cards/christmas/back.webp",
+    "cards": {
+      "major-0": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-15": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-16": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-17": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-18": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-19": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-20": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-21": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-14": {
+        "status": "placeholder",
+        "asset": null
+      }
+    }
+  },
+  {
+    "id": "valentine",
+    "name": "วาเลนไทน์",
+    "name_en": "Valentine",
+    "name_th": "วาเลนไทน์",
+    "palette": [
+      "#4b1326",
+      "#a53f5b",
+      "#e9a8b6",
+      "#d8af54"
+    ],
+    "symbols": [
+      "rose",
+      "letter",
+      "ribbon",
+      "mirror"
+    ],
+    "tone": "ความสัมพันธ์ ความอ่อนโยน และการรักตนเอง",
+    "asset_root": "assets/cards/valentine",
+    "back_asset": "assets/cards/valentine/back.webp",
+    "cards": {
+      "major-0": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-15": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-16": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-17": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-18": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-19": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-20": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-21": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-14": {
+        "status": "placeholder",
+        "asset": null
+      }
+    }
+  },
+  {
+    "id": "songkran",
+    "name": "สงกรานต์",
+    "name_en": "Songkran",
+    "name_th": "สงกรานต์",
+    "palette": [
+      "#0b6574",
+      "#55c5d1",
+      "#f4eee1",
+      "#e57a65"
+    ],
+    "symbols": [
+      "water",
+      "jasmine",
+      "silver bowl",
+      "renewal"
+    ],
+    "tone": "การชำระล้าง การให้อภัย และการเริ่มต้นใหม่",
+    "asset_root": "assets/cards/songkran",
+    "back_asset": "assets/cards/songkran/back.webp",
+    "cards": {
+      "major-0": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-15": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-16": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-17": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-18": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-19": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-20": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-21": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-14": {
+        "status": "placeholder",
+        "asset": null
+      }
+    }
+  },
+  {
+    "id": "loy-krathong",
+    "name": "ลอยกระทง",
+    "name_en": "Loy Krathong",
+    "name_th": "ลอยกระทง",
+    "palette": [
+      "#131c4a",
+      "#d56a9d",
+      "#397557",
+      "#e7b64c"
+    ],
+    "symbols": [
+      "water",
+      "lotus",
+      "moon",
+      "flame"
+    ],
+    "tone": "การปล่อยวาง ความตั้งใจ และการเดินต่อ",
+    "asset_root": "assets/cards/loy-krathong",
+    "back_asset": "assets/cards/loy-krathong/back.webp",
+    "cards": {
+      "major-0": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-15": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-16": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-17": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-18": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-19": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-20": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-21": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-14": {
+        "status": "placeholder",
+        "asset": null
+      }
+    }
+  },
+  {
+    "id": "halloween",
+    "name": "ฮาโลวีน",
+    "name_en": "Halloween",
+    "name_th": "ฮาโลวีน",
+    "palette": [
+      "#17131c",
+      "#4f2b59",
+      "#b85d2d",
+      "#d1a64c"
+    ],
+    "symbols": [
+      "pumpkin",
+      "black cat",
+      "dry leaves",
+      "threshold"
+    ],
+    "tone": "การเผชิญเงา ความกล้า และสิ่งที่ซ่อนอยู่",
+    "asset_root": "assets/cards/halloween",
+    "back_asset": "assets/cards/halloween/back.webp",
+    "cards": {
+      "major-0": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-15": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-16": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-17": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-18": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-19": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-20": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "major-21": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "wands-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "cups-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "swords-14": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-1": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-2": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-3": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-4": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-5": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-6": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-7": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-8": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-9": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-10": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-11": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-12": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-13": {
+        "status": "placeholder",
+        "asset": null
+      },
+      "pentacles-14": {
+        "status": "placeholder",
+        "asset": null
+      }
+    }
+  }
 ]

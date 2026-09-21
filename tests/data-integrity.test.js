@@ -40,3 +40,15 @@ test('interpretations reference canonical card IDs only', async () => {
         []
     );
 });
+
+test('each festival deck maps all 78 canonical IDs', async () => {
+    const [cards, decks] = await Promise.all([
+        loadJson('data/cards.json'),
+        loadJson('data/decks.json')
+    ]);
+    const cardIds = cards.map((card) => card.id).sort();
+
+    for (const deck of decks.filter((entry) => entry.id !== 'standard')) {
+        assert.deepEqual(Object.keys(deck.cards).sort(), cardIds);
+    }
+});

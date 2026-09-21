@@ -1,9 +1,12 @@
 import { getThaiDateString } from '../utils/timezone.js';
-import { loadDecks, loadSeasons } from '../data-loader.js';
+import { loadCards, loadDecks, loadSeasons } from '../data-loader.js';
+import { resolveDeckId, validateDecks, validateSeasons } from '../domain/decks.js';
 
 export async function setupGlobalDecks() {
     try {
-        const [decks, seasons] = await Promise.all([loadDecks(), loadSeasons()]);
+        const [cards, rawDecks, rawSeasons] = await Promise.all([loadCards(), loadDecks(), loadSeasons()]);
+        const decks = validateDecks(rawDecks, cards);
+        const seasons = validateSeasons(rawSeasons);
         const activeId = getActiveDeck(decks, seasons);
         applyDeckTheme(activeId);
         initDeckSelector(decks);
@@ -21,37 +24,14 @@ const MANUAL_DECK_KEY = 'tarot_manual_deck';
  * Priority: 1. Manual override (localStorage) 2. Seasonal mapping 3. Default ('standard')
  */
 export function getActiveDeck(decks, seasons) {
-    // 1. Manual override
-    const manual = localStorage.getItem(MANUAL_DECK_KEY);
-    if (manual && manual !== 'auto') {
-        const valid = decks.find(d => d.id === manual);
-        if (valid) return valid.id;
-    }
-
-    // 2. Seasonal auto-detect
-    const todayIso = getThaiDateString(); // e.g. "2026-09-16"
-    const mmdd = todayIso.substring(5, 10); // "09-16"
-
-    if (seasons && seasons.length > 0) {
-        for (const season of seasons) {
-            const start = season.start;
-            const end = season.end;
-            let match = false;
-            
-            if (start <= end) {
-                // e.g. "04-12" to "04-16"
-                match = mmdd >= start && mmdd <= end;
-            } else {
-                // e.g. "12-25" to "01-05" (spanning new year)
-                match = mmdd >= start || mmdd <= end;
-            }
-            
-            if (match) return season.deck_id;
-        }
-    }
-
-    // 3. Fallback
-    return 'standard';
+    let manual = null;
+    try { manual = localStorage.getItem(MANUAL_DECK_KEY); } catch (_) { /* storage unavailable */ }
+    return resolveDeckId({
+        decks,
+        seasons,
+        mmdd: getThaiDateString().substring(5, 10),
+        manualId: manual
+    });
 }
 
 /**
@@ -59,7 +39,7 @@ export function getActiveDeck(decks, seasons) {
  */
 export function applyDeckTheme(deckId) {
     document.body.setAttribute('data-deck', deckId);
-    try { localStorage.setItem('tarot_active_deck', deckId); } catch (_) { /* ignore */ }
+    try { localStorage.setItem('tarot_active_deck', deckId); } catch (_) { /* storage unavailable */ }
 }
 
 /**
@@ -103,7 +83,8 @@ export function initDeckSelector(decks) {
     });
 
     // Set selected
-    const manual = localStorage.getItem(MANUAL_DECK_KEY);
+    let manual = null;
+    try { manual = localStorage.getItem(MANUAL_DECK_KEY); } catch (_) { /* storage unavailable */ }
     if (manual && manual !== 'auto' && decks.find(d => d.id === manual)) {
         selector.value = manual;
     } else {
@@ -112,7 +93,8 @@ export function initDeckSelector(decks) {
 
     // Listen for changes
     selector.addEventListener('change', (e) => {
-        localStorage.setItem(MANUAL_DECK_KEY, e.target.value);
+        const selected = decks.some((deck) => deck.id === e.target.value) ? e.target.value : 'auto';
+        try { localStorage.setItem(MANUAL_DECK_KEY, selected); } catch (_) { /* storage unavailable */ }
         window.location.reload(); // Apply changes immediately
     });
 }
