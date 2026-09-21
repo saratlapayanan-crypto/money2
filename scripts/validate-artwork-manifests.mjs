@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
+import { extname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const FESTIVAL_DECK_IDS = Object.freeze([
@@ -11,6 +12,7 @@ export const FESTIVAL_DECK_IDS = Object.freeze([
 ]);
 
 const projectRoot = new URL('../', import.meta.url);
+const projectRootPath = fileURLToPath(projectRoot);
 const STYLE_VERSION = 'seasonal-art-nouveau-v1';
 const VALID_STATUSES = new Set(['placeholder', 'draft', 'approved']);
 const REQUIRED_RECORD_FIELDS = Object.freeze([
@@ -77,25 +79,44 @@ function completeReview(review, isBack) {
     return !isBack || review.checks?.rotation === 'pass';
 }
 
+function resolveApprovedPath(value, rootRelativePath, extension, escapeMessage, formatMessage) {
+    if (!nonEmptyString(value)) fail(formatMessage);
+    const deckRoot = resolve(projectRootPath, rootRelativePath);
+    const candidate = resolve(projectRootPath, value);
+    const relation = relative(deckRoot, candidate);
+    if (!relation || relation === '..' || relation.startsWith(`..${sep}`) || isAbsolute(relation)) {
+        fail(escapeMessage);
+    }
+    if (extname(candidate).toLowerCase() !== extension) fail(formatMessage);
+    return candidate;
+}
+
 function validateApprovedRecord(record, deckId, fileExists) {
     const label = `${deckId}/${record.card_id}`;
     if (!completeReview(record.review, record.card_id === 'back')) {
         fail(`${label} approved entry requires complete review evidence`);
     }
-    if (!nonEmptyString(record.master_png) ||
-        !record.master_png.startsWith(`artwork/masters/${deckId}/`) ||
-        !record.master_png.endsWith('.png') ||
-        !nonEmptyString(record.web_asset) ||
-        !record.web_asset.startsWith(`assets/cards/${deckId}/`) ||
-        !record.web_asset.endsWith('.webp')) {
-        fail(`${label} approved entry requires PNG master and WebP asset paths`);
-    }
-    if (!fileExists(record.master_png) || !fileExists(record.web_asset)) {
+    const formatMessage = `${label} approved entry requires PNG master and WebP asset paths`;
+    const masterPath = resolveApprovedPath(
+        record.master_png,
+        `artwork/masters/${deckId}`,
+        '.png',
+        `${label} approved master path escapes its deck root`,
+        formatMessage
+    );
+    const webAssetPath = resolveApprovedPath(
+        record.web_asset,
+        `assets/cards/${deckId}`,
+        '.webp',
+        `${label} approved web asset path escapes its deck root`,
+        formatMessage
+    );
+    if (!fileExists(masterPath) || !fileExists(webAssetPath)) {
         fail(`${label} approved files do not exist`);
     }
 }
 
-function validateRecord(record, manifest, fileExists) {
+function validateRecord(record, manifest, canonicalCard, fileExists) {
     const label = `${manifest.deck_id}/${record?.card_id ?? 'unknown'}`;
     for (const field of REQUIRED_RECORD_FIELDS) {
         if (!Object.hasOwn(record ?? {}, field)) fail(`${label} is missing ${field}`);
@@ -117,6 +138,21 @@ function validateRecord(record, manifest, fileExists) {
     if (!record.prompt.includes(manifest.season_language) ||
         PROMPT_CONSTRAINTS.some((constraint) => !record.prompt.includes(constraint))) {
         fail(`${label} prompt is missing required constraints`);
+    }
+    if (canonicalCard) {
+        const canonicalSemanticGoal = `Upright: ${canonicalCard.meaning_upright} Reversed boundary: ${canonicalCard.meaning_reversed}`;
+        if (record.semantic_goal !== canonicalSemanticGoal) {
+            fail(`${label} semantic goal drifts from canonical card data`);
+        }
+        if (!record.prompt.includes(canonicalSemanticGoal)) {
+            fail(`${label} prompt omits its canonical semantic goal`);
+        }
+        if (!record.required_symbols.some((symbol) => manifest.symbol_vocabulary.includes(symbol))) {
+            fail(`${label} required symbols do not use the manifest vocabulary`);
+        }
+        if (record.required_symbols.some((symbol) => !record.prompt.includes(symbol))) {
+            fail(`${label} prompt omits a required symbol`);
+        }
     }
     if (record.status === 'placeholder' &&
         (record.master_png !== null || record.web_asset !== null || Object.keys(record.review).length !== 0)) {
@@ -142,6 +178,7 @@ export function validateArtworkManifests({ cards, decks, manifests }, options = 
     }
 
     const canonicalSet = new Set(canonicalIds);
+    const canonicalById = new Map(cards.map((card) => [card.id, card]));
     const allFrontPrompts = new Set();
     for (const manifest of manifests) {
         const deckId = manifest.deck_id;
@@ -166,7 +203,7 @@ export function validateArtworkManifests({ cards, decks, manifests }, options = 
         }
 
         for (const record of manifest.records) {
-            validateRecord(record, manifest, fileExists);
+            validateRecord(record, manifest, canonicalById.get(record.card_id), fileExists);
             if (record.card_id !== 'back') {
                 if (allFrontPrompts.has(record.prompt)) fail(`${deckId}/${record.card_id} has a duplicate front prompt`);
                 allFrontPrompts.add(record.prompt);

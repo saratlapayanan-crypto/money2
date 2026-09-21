@@ -57,6 +57,35 @@ async function loadProductionData() {
     return { cards, decks, manifests };
 }
 
+function approveChristmasFool(production, {
+    masterPng = 'artwork/masters/christmas/major-0-v1.png',
+    webAsset = 'assets/cards/christmas/major-0.webp'
+} = {}) {
+    const record = production.manifests[0].records[0];
+    const runtimeRecord = production.decks.find((deck) => deck.id === 'christmas').cards['major-0'];
+    record.status = 'approved';
+    record.master_png = masterPng;
+    record.web_asset = webAsset;
+    record.review = {
+        reviewer: 'art-reviewer',
+        reviewed_at: '2026-09-21',
+        sha256: 'a'.repeat(64),
+        dimensions: { width: 1024, height: 1536 },
+        checks: {
+            semantic: 'pass',
+            festival: 'pass',
+            style: 'pass',
+            anatomy: 'pass',
+            no_text: 'pass',
+            originality: 'pass',
+            safe_crop: 'pass',
+            thumbnail: 'pass'
+        }
+    };
+    runtimeRecord.status = 'approved';
+    runtimeRecord.asset = webAsset;
+}
+
 test('production manifests start with every canonical front and one back placeholder', async () => {
     const { cards, manifests } = await loadProductionData();
     const expectedIds = [...cards.map((card) => card.id), 'back'].sort();
@@ -181,7 +210,9 @@ test('validator rejects duplicate or under-constrained front prompts', async () 
     const production = await loadProductionData();
 
     const duplicate = structuredClone(production);
-    duplicate.manifests[0].records[1].prompt = duplicate.manifests[0].records[0].prompt;
+    const duplicatePrompt = `${duplicate.manifests[0].records[0].prompt} ${duplicate.manifests[0].records[1].prompt}`;
+    duplicate.manifests[0].records[0].prompt = duplicatePrompt;
+    duplicate.manifests[0].records[1].prompt = duplicatePrompt;
     assert.throws(
         () => validateArtworkManifests(duplicate),
         /duplicate front prompt/
@@ -247,5 +278,53 @@ test('validator rejects season and runtime drift', async () => {
     assert.throws(
         () => validateArtworkManifests(recordDrift),
         /christmas\/major-0 drifts from runtime artwork metadata/
+    );
+});
+
+test('validator rejects canonical semantic-goal drift', async () => {
+    const production = await loadProductionData();
+    production.manifests[0].records[0].semantic_goal = 'A generic celebration unrelated to The Fool.';
+    assert.throws(
+        () => validateArtworkManifests(production),
+        /christmas\/major-0 semantic goal drifts from canonical card data/
+    );
+});
+
+test('validator rejects a prompt that omits the canonical semantic goal', async () => {
+    const production = await loadProductionData();
+    const record = production.manifests[0].records[0];
+    record.prompt = record.prompt.replace(record.semantic_goal, 'A generic celebration unrelated to The Fool.');
+    assert.throws(
+        () => validateArtworkManifests(production),
+        /christmas\/major-0 prompt omits its canonical semantic goal/
+    );
+});
+
+test('validator rejects required symbols outside the manifest vocabulary', async () => {
+    const production = await loadProductionData();
+    production.manifests[0].records[0].required_symbols = ['unrelated decoration'];
+    assert.throws(
+        () => validateArtworkManifests(production),
+        /christmas\/major-0 required symbols do not use the manifest vocabulary/
+    );
+});
+
+test('validator rejects approved paths that traverse outside exact deck roots', async () => {
+    const masterTraversal = await loadProductionData();
+    approveChristmasFool(masterTraversal, {
+        masterPng: 'artwork/masters/christmas/../../halloween/major-0.png'
+    });
+    assert.throws(
+        () => validateArtworkManifests(masterTraversal, { fileExists: () => true }),
+        /christmas\/major-0 approved master path escapes its deck root/
+    );
+
+    const webTraversal = await loadProductionData();
+    approveChristmasFool(webTraversal, {
+        webAsset: 'assets/cards/christmas/../../halloween/major-0.webp'
+    });
+    assert.throws(
+        () => validateArtworkManifests(webTraversal, { fileExists: () => true }),
+        /christmas\/major-0 approved web asset path escapes its deck root/
     );
 });

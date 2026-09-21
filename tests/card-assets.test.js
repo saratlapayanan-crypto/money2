@@ -32,11 +32,15 @@ function fakeContainer() {
         child: null,
         ownerDocument: {
             createElement(tagName) {
+                const listeners = {};
                 return {
                     tagName: tagName.toUpperCase(),
                     className: '',
                     classList: { toggle() {} },
-                    addEventListener() {}
+                    listeners,
+                    addEventListener(type, handler, options) {
+                        listeners[type] = { handler, options };
+                    }
                 };
             }
         },
@@ -88,4 +92,19 @@ test('renders the SVG back placeholder for missing and unapproved assets', () =>
         assert.match(container.innerHTML, /^<svg /);
         assert.equal(container.classList.contains('has-svg-art'), true);
     }
+});
+
+test('restores the SVG back placeholder when an approved image fails to load', () => {
+    const approved = {
+        id: 'christmas',
+        back: { status: 'approved', asset: 'assets/cards/christmas/back.webp' }
+    };
+    const container = fakeContainer();
+
+    renderCardBack(container, approved);
+    assert.equal(typeof container.child.listeners?.error?.handler, 'function');
+    container.child.listeners.error.handler();
+
+    assert.match(container.innerHTML, /^<svg /);
+    assert.equal(container.classList.contains('has-svg-art'), true);
 });
