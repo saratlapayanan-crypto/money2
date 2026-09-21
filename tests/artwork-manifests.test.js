@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { join, relative, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { loadJson } from './helpers/load-json.js';
 import { validateArtworkManifests } from '../scripts/validate-artwork-manifests.mjs';
@@ -46,6 +49,7 @@ const REQUIRED_RECORD_FIELDS = [
     'web_asset',
     'review'
 ];
+const REPOSITORY_ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 async function loadProductionData() {
     const deckIds = Object.keys(SEASONS);
@@ -325,6 +329,52 @@ test('validator rejects approved paths that traverse outside exact deck roots', 
     });
     assert.throws(
         () => validateArtworkManifests(webTraversal, { fileExists: () => true }),
+        /christmas\/major-0 approved web asset path escapes its deck root/
+    );
+});
+
+test('default approved-file checker accepts real files inside exact deck roots', async (context) => {
+    const masterRoot = join(REPOSITORY_ROOT, 'artwork', 'masters', 'christmas');
+    const webRoot = join(REPOSITORY_ROOT, 'assets', 'cards', 'christmas');
+    await Promise.all([
+        mkdir(masterRoot, { recursive: true }),
+        mkdir(webRoot, { recursive: true })
+    ]);
+    const [masterDirectory, webDirectory] = await Promise.all([
+        mkdtemp(join(masterRoot, 'validator-')),
+        mkdtemp(join(webRoot, 'validator-'))
+    ]);
+    context.after(async () => {
+        await Promise.all([
+            rm(masterDirectory, { recursive: true, force: true }),
+            rm(webDirectory, { recursive: true, force: true })
+        ]);
+    });
+
+    const masterFile = join(masterDirectory, 'major-0.png');
+    const webFile = join(webDirectory, 'major-0.webp');
+    await Promise.all([
+        writeFile(masterFile, 'png fixture', 'utf8'),
+        writeFile(webFile, 'webp fixture', 'utf8')
+    ]);
+    const manifestPath = (absolutePath) => relative(REPOSITORY_ROOT, absolutePath).split(sep).join('/');
+    const production = await loadProductionData();
+    approveChristmasFool(production, {
+        masterPng: manifestPath(masterFile),
+        webAsset: manifestPath(webFile)
+    });
+
+    assert.doesNotThrow(() => validateArtworkManifests(production));
+});
+
+test('validator rejects percent-encoded traversal outside the approved web root', async () => {
+    const production = await loadProductionData();
+    approveChristmasFool(production, {
+        webAsset: 'assets/cards/christmas/%2e%2e/%2e%2e/outside.webp'
+    });
+
+    assert.throws(
+        () => validateArtworkManifests(production, { fileExists: () => true }),
         /christmas\/major-0 approved web asset path escapes its deck root/
     );
 });

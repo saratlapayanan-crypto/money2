@@ -81,8 +81,14 @@ function completeReview(review, isBack) {
 
 function resolveApprovedPath(value, rootRelativePath, extension, escapeMessage, formatMessage) {
     if (!nonEmptyString(value)) fail(formatMessage);
+    let decodedValue;
+    try {
+        decodedValue = decodeURIComponent(value);
+    } catch {
+        fail(formatMessage);
+    }
     const deckRoot = resolve(projectRootPath, rootRelativePath);
-    const candidate = resolve(projectRootPath, value);
+    const candidate = resolve(projectRootPath, decodedValue);
     const relation = relative(deckRoot, candidate);
     if (!relation || relation === '..' || relation.startsWith(`..${sep}`) || isAbsolute(relation)) {
         fail(escapeMessage);
@@ -165,7 +171,7 @@ export function validateArtworkManifests({ cards, decks, manifests }, options = 
     if (!Array.isArray(cards) || !Array.isArray(decks) || !Array.isArray(manifests)) {
         fail('Cards, decks, and manifests must be arrays');
     }
-    const fileExists = options.fileExists ?? ((relativePath) => existsSync(new URL(relativePath, projectRoot)));
+    const fileExists = options.fileExists ?? existsSync;
     const canonicalIds = cards.map((card) => card?.id);
     if (canonicalIds.length !== 78 || new Set(canonicalIds).size !== 78 || canonicalIds.some((id) => !nonEmptyString(id))) {
         fail('Canonical card registry must contain 78 unique IDs');
