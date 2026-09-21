@@ -1,3 +1,5 @@
+import { validateCards } from './domain/cards.js';
+
 export async function loadCards() {
     try {
         const response = await fetch('./data/cards.json');
@@ -5,7 +7,7 @@ export async function loadCards() {
         const cards = await response.json();
         
         if (!Array.isArray(cards)) throw new Error("cards.json must return an array");
-        return cards;
+        return validateCards(cards);
     } catch (error) {
         console.error("DataLoader Error (Cards):", error);
         throw error;

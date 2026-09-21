@@ -18,4 +18,25 @@ test('cards.json contains exactly 78 unique canonical card IDs', async () => {
         [...new Set(cards.map((card) => card.id))].sort(),
         expectedIds.sort()
     );
+
+    for (const card of cards) {
+        assert.ok(card.name_en.trim());
+        assert.ok(card.name_th.trim());
+        assert.equal(card.name, card.name_en);
+        assert.equal(card.thai_name, card.name_th);
+        assert.equal(card.number, card.sequence);
+    }
+});
+
+test('interpretations reference canonical card IDs only', async () => {
+    const [cards, interpretations] = await Promise.all([
+        loadJson('data/cards.json'),
+        loadJson('data/interpretations.json')
+    ]);
+    const cardIds = new Set(cards.map((card) => card.id));
+
+    assert.deepEqual(
+        [...new Set(interpretations.map((entry) => entry.card_id).filter((id) => !cardIds.has(id)))],
+        []
+    );
 });
