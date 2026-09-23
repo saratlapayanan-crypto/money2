@@ -1,15 +1,22 @@
 import { loadCards, loadInterpretations } from './data-loader.js';
-import { getDailyCard } from './engines/daily-engine.js';
+import { 
+    getStoredDailyRecord, 
+    saveDailyRecord, 
+    getDailySpreadDeck, 
+    getTimeUntilMidnightBangkok 
+} from './engines/daily-engine.js';
 import { getInterpretation } from './engines/interpretation-engine.js';
 import { formatThaiDateDisplay, getThaiDateString } from './utils/timezone.js';
 import { trackEvent } from './analytics.js';
 import { setupGlobalDecks, getActiveDeckId } from './engines/deck-engine.js';
-import { paintFront, paintBack } from './art/tarot-art.js';
+import { paintFront, paintBack, renderBack } from './art/tarot-art.js';
 import { getDayOfWeekFromDateString, calculateOutfitAdvice } from './domain/lucky-colors.js';
 import { renderMoonRabbitSvg } from './art/moon-rabbit.js';
 import { renderOutfitMannequinSvg, renderShirtIconSvg, renderPantsIconSvg } from './art/outfit-icons.js';
 
-let isFlipped = false;
+let countdownInterval = null;
+let selectedDailyPosition = null;
+let spreadDeckIds = [];
 
 async function initDailyPage() {
     try {
@@ -18,92 +25,106 @@ async function initDailyPage() {
         } catch (deckErr) {
             console.warn("Deck setup failed (non-critical):", deckErr);
         }
+
         const dateElement = document.getElementById('daily-date');
         if (dateElement) dateElement.textContent = formatThaiDateDisplay();
 
-        let [cards, interpretations] = await Promise.all([
+        const [cards, interpretations] = await Promise.all([
             loadCards(),
             loadInterpretations()
         ]);
 
-        await displayDailyCard(cards, interpretations, false);
-        setupDailyRitual();
-
-        const redrawBtn = document.getElementById('btn-redraw-card');
-        if (redrawBtn) {
-            redrawBtn.addEventListener('click', async () => {
-                redrawBtn.disabled = true;
-                redrawBtn.classList.add('opacity-50');
-
-                // Quick tactile flip on redraw
-                const flipContainer = document.getElementById('daily-flip-container');
-                if (flipContainer) flipContainer.classList.remove('flipped');
-                
-                await new Promise(r => setTimeout(r, 260));
-                await displayDailyCard(cards, interpretations, true);
-                
-                if (flipContainer) flipContainer.classList.add('flipped');
-                redrawBtn.disabled = false;
-                redrawBtn.classList.remove('opacity-50');
-            });
+        const record = getStoredDailyRecord();
+        if (record) {
+            // Already drawn today -> show result directly
+            const card = cards.find(c => c.id === record.cardId) || cards[0];
+            showDailyResult(card, interpretations, false);
+        } else {
+            // Not drawn yet -> show interactive 78-card spread fan
+            setupDailySelection(cards, interpretations);
         }
 
     } catch (error) {
         console.error("Failed to initialize daily page:", error);
-        document.getElementById('daily-message').textContent = "เกิดข้อผิดพลาดในการแปลผลไพ่";
+        const msg = document.getElementById('daily-message');
+        if (msg) msg.textContent = "เกิดข้อผิดพลาดในการแปลผลไพ่";
     }
 }
 
-function setupDailyRitual() {
-    const flipContainer = document.getElementById('daily-flip-container');
-    const revealBtn = document.getElementById('btn-reveal-daily');
-    const ritualPrompt = document.getElementById('daily-ritual-prompt');
-    const revealBtnContainer = document.getElementById('daily-reveal-btn-container');
-    const detailsSection = document.getElementById('daily-details-section');
+function setupDailySelection(cards, interpretations) {
+    const selectionSec = document.getElementById('daily-selection-section');
+    const resultSec = document.getElementById('daily-result-section');
+    if (selectionSec) selectionSec.classList.remove('hidden');
+    if (resultSec) resultSec.classList.add('hidden');
 
-    const alreadyFlipped = sessionStorage.getItem('tarot_daily_flipped') === 'true';
+    const ribbon = document.getElementById('daily-spread-ribbon');
+    if (!ribbon) return;
+    ribbon.innerHTML = '';
 
-    function doReveal() {
-        if (isFlipped) return;
-        isFlipped = true;
-        if (flipContainer) flipContainer.classList.add('flipped');
-        if (ritualPrompt) ritualPrompt.classList.add('hidden');
-        if (revealBtnContainer) revealBtnContainer.classList.add('hidden');
-        if (detailsSection) detailsSection.classList.remove('hidden');
+    spreadDeckIds = getDailySpreadDeck();
+    const deckId = getActiveDeckId();
+    const svgStr = renderBack(deckId);
+    const bgUrl = `url("data:image/svg+xml,${encodeURIComponent(svgStr)}")`;
+
+    for (let i = 0; i < spreadDeckIds.length; i++) {
+        const spreadCard = document.createElement('div');
+        spreadCard.className = 'spread-card-item';
+        spreadCard.dataset.position = i;
+        spreadCard.style.backgroundImage = bgUrl;
+        spreadCard.style.zIndex = i + 1;
+        spreadCard.title = `ไพ่ใบที่ ${i + 1}`;
+
+        spreadCard.addEventListener('click', () => handleSpreadCardClick(i));
+        ribbon.appendChild(spreadCard);
+    }
+
+    const confirmBtn = document.getElementById('btn-confirm-daily');
+    if (confirmBtn) {
+        confirmBtn.onclick = () => {
+            if (selectedDailyPosition === null) return;
+            const chosenCardId = spreadDeckIds[selectedDailyPosition];
+            saveDailyRecord(chosenCardId, selectedDailyPosition);
+
+            const chosenCard = cards.find(c => c.id === chosenCardId) || cards[0];
+            trackEvent('draw_daily_card', { card_id: chosenCard.id, card_name: chosenCard.name });
+            showDailyResult(chosenCard, interpretations, true);
+        };
+    }
+}
+
+function handleSpreadCardClick(position) {
+    selectedDailyPosition = position;
+    
+    // Highlight in ribbon
+    const allCards = document.querySelectorAll('.spread-card-item');
+    allCards.forEach(c => c.classList.remove('selected'));
+
+    const selectedEl = document.querySelector(`.spread-card-item[data-position="${position}"]`);
+    if (selectedEl) {
+        selectedEl.classList.add('selected');
         try {
-            sessionStorage.setItem('tarot_daily_flipped', 'true');
+            selectedEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         } catch (_) {}
     }
 
-    if (alreadyFlipped) {
-        doReveal();
-    } else {
-        if (detailsSection) detailsSection.classList.add('hidden');
-        if (flipContainer) {
-            flipContainer.addEventListener('click', doReveal);
-            flipContainer.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    doReveal();
-                }
-            });
-        }
-        if (revealBtn) {
-            revealBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                doReveal();
-            });
-        }
+    const statusEl = document.getElementById('daily-selected-status');
+    if (statusEl) {
+        statusEl.textContent = `คุณเลือกไพ่ใบที่ ${position + 1} เรียบร้อยแล้ว ✨`;
     }
+
+    const confirmCont = document.getElementById('daily-confirm-container');
+    if (confirmCont) confirmCont.classList.remove('hidden');
 }
 
-async function displayDailyCard(cards, interpretations, forceNew = false) {
-    const { card, debugInfo } = await getDailyCard(cards, forceNew);
+function showDailyResult(card, interpretations, animateFlip = false) {
+    const selectionSec = document.getElementById('daily-selection-section');
+    const resultSec = document.getElementById('daily-result-section');
+    if (selectionSec) selectionSec.classList.add('hidden');
+    if (resultSec) resultSec.classList.remove('hidden');
 
     renderCard(card);
     const energies = renderEnergies(card, interpretations);
-    
-    // วิเคราะห์สไตล์การแต่งกายและสีมงคลประจำวันตามพลังงานไพ่
+
     if (energies) {
         const thaiDate = getThaiDateString();
         const dayIndex = getDayOfWeekFromDateString(thaiDate);
@@ -116,10 +137,39 @@ async function displayDailyCard(cards, interpretations, forceNew = false) {
         renderOutfitAdvice(advice);
     }
 
-    renderDebugInfo(debugInfo);
+    // 3D Flip Card Animation
+    const flipContainer = document.getElementById('daily-flip-container');
+    if (flipContainer) {
+        if (animateFlip) {
+            flipContainer.classList.remove('flipped');
+            setTimeout(() => {
+                flipContainer.classList.add('flipped');
+            }, 80);
+        } else {
+            flipContainer.classList.add('flipped');
+        }
+    }
 
-    // Track daily card view
+    startMidnightCountdown();
     trackEvent('view_daily_card', { card_id: card.id, card_name: card.name });
+}
+
+function startMidnightCountdown() {
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    function update() {
+        const countdownEl = document.getElementById('daily-countdown');
+        if (!countdownEl) return;
+        const time = getTimeUntilMidnightBangkok();
+        countdownEl.textContent = time.formatted;
+        if (time.isNextDay) {
+            // Date changed! Refresh page to let user pick today's new card
+            window.location.reload();
+        }
+    }
+
+    update();
+    countdownInterval = setInterval(update, 1000);
 }
 
 function renderCard(card) {

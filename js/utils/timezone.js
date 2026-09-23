@@ -25,3 +25,36 @@ export function formatThaiDateDisplay() {
 }
 
 export const getBangkokDateString = getThaiDateString;
+
+/**
+ * Calculates remaining time until next midnight in Asia/Bangkok (UTC+7).
+ * @returns {{ hours: number, minutes: number, seconds: number, formatted: string, isNextDay: boolean }}
+ */
+export function getTimeUntilMidnightBangkok() {
+    const now = new Date();
+    // Bangkok is strictly UTC+7 all year without DST
+    const nowUtcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+    const bangkokTime = new Date(nowUtcMs + 7 * 3600000);
+
+    const bangkokMidnight = new Date(bangkokTime);
+    bangkokMidnight.setHours(24, 0, 0, 0);
+
+    const diffMs = bangkokMidnight.getTime() - bangkokTime.getTime();
+    if (diffMs <= 0) {
+        return { hours: 0, minutes: 0, seconds: 0, formatted: '00:00:00', isNextDay: true };
+    }
+
+    const totalSeconds = Math.floor(diffMs / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const pad = (n) => String(n).padStart(2, '0');
+    return {
+        hours,
+        minutes,
+        seconds,
+        formatted: `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`,
+        isNextDay: false
+    };
+}
