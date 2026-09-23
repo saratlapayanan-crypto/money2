@@ -12,7 +12,7 @@ const DAILY_SECRET = 'tarot_obfuscated_secret_2026_xyz';
  * @param {Array} cards - The full deck of available cards
  * @returns {Promise<{card: Object, debugInfo: Object|null}>}
  */
-export async function getDailyCard(cards) {
+export async function getDailyCard(cards, forceNew = false) {
     if (!cards || cards.length === 0) {
         throw new Error("No cards available to draw from.");
     }
@@ -20,9 +20,18 @@ export async function getDailyCard(cards) {
     const userId = getOrCreateUserId();
     const thaiDate = getThaiDateString(); // Changes exactly at Asia/Bangkok midnight
     
-    // Seed structure strictly without category
-    // Format: v1|userId|thaiDate|daily|dailySecret
-    const seed = `${DAILY_ALGO_VERSION}|${userId}|${thaiDate}|daily|${DAILY_SECRET}`;
+    let drawCount = 0;
+    try {
+        const stored = sessionStorage.getItem('tarot_daily_draw_count');
+        if (stored) drawCount = parseInt(stored, 10) || 0;
+        if (forceNew) {
+            drawCount += 1;
+            sessionStorage.setItem('tarot_daily_draw_count', String(drawCount));
+        }
+    } catch (_) {}
+
+    // Seed structure: includes userId and drawCount for user diversity and redraw capability
+    const seed = `${DAILY_ALGO_VERSION}|${userId}|${thaiDate}|daily|${drawCount}|${DAILY_SECRET}`;
     
     // Get deterministic index (0 to cards.length - 1)
     const index = await getDeterministicNumber(seed, cards.length);

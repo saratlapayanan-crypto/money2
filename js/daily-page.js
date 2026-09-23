@@ -19,38 +19,53 @@ async function initDailyPage() {
         const dateElement = document.getElementById('daily-date');
         if (dateElement) dateElement.textContent = formatThaiDateDisplay();
 
-        const [cards, interpretations] = await Promise.all([
+        let [cards, interpretations] = await Promise.all([
             loadCards(),
             loadInterpretations()
         ]);
 
-        const { card, debugInfo } = await getDailyCard(cards);
+        await displayDailyCard(cards, interpretations, false);
 
-        renderCard(card);
-        const energies = renderEnergies(card.id, interpretations);
-        
-        // วิเคราะห์สไตล์การแต่งกายและสีมงคลประจำวันตามพลังงานไพ่
-        if (energies) {
-            const thaiDate = getThaiDateString();
-            const dayIndex = getDayOfWeekFromDateString(thaiDate);
-            const advice = calculateOutfitAdvice({
-                dayIndex,
-                loveScore: energies.loveData.score,
-                financeScore: energies.financeData.score,
-                workScore: energies.workData.score
+        const redrawBtn = document.getElementById('btn-redraw-card');
+        if (redrawBtn) {
+            redrawBtn.addEventListener('click', async () => {
+                redrawBtn.disabled = true;
+                redrawBtn.classList.add('opacity-50');
+                await displayDailyCard(cards, interpretations, true);
+                redrawBtn.disabled = false;
+                redrawBtn.classList.remove('opacity-50');
             });
-            renderOutfitAdvice(advice);
         }
-
-        renderDebugInfo(debugInfo);
-
-        // Track daily card view
-        trackEvent('view_daily_card', { card_id: card.id, card_name: card.name });
 
     } catch (error) {
         console.error("Failed to initialize daily page:", error);
         document.getElementById('daily-message').textContent = "เกิดข้อผิดพลาดในการแปลผลไพ่";
     }
+}
+
+async function displayDailyCard(cards, interpretations, forceNew = false) {
+    const { card, debugInfo } = await getDailyCard(cards, forceNew);
+
+    renderCard(card);
+    const energies = renderEnergies(card.id, interpretations);
+    
+    // วิเคราะห์สไตล์การแต่งกายและสีมงคลประจำวันตามพลังงานไพ่
+    if (energies) {
+        const thaiDate = getThaiDateString();
+        const dayIndex = getDayOfWeekFromDateString(thaiDate);
+        const advice = calculateOutfitAdvice({
+            dayIndex,
+            loveScore: energies.loveData.score,
+            financeScore: energies.financeData.score,
+            workScore: energies.workData.score
+        });
+        renderOutfitAdvice(advice);
+    }
+
+    renderDebugInfo(debugInfo);
+
+    // Track daily card view
+    trackEvent('view_daily_card', { card_id: card.id, card_name: card.name });
 }
 
 function renderCard(card) {
