@@ -12,68 +12,197 @@
     <meta property="og:description" content="เปิดไพ่ยิปซี 1 ใบเพื่อเป็นเข็มทิศประจำวันของคุณ ฟรีทุกวัน">
     <meta property="og:url" content="https://thaitarot.com/daily.html">
 
-    <!-- ฟอนต์ไทย: Charm (หัวเรื่อง) + Noto Sans Thai (เนื้อความ) -->
+    <!-- Google Fonts: Mitr (โมเดิร์น สดใส อบอุ่น สไตล์คนรุ่นใหม่) + Outfit (สากล ทันสมัย) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mystic: '#261633',
+                        gold: '#B7791F',
+                        'gold-soft': '#8A5D0B',
+                        accent: '#7E22CE'
+                    }
+                }
+            }
+        }
     </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="text-white min-h-screen flex flex-col">
-    <header class="site-header p-4 flex justify-between items-center">
-        <nav>
-            <a href="index.html" class="back-link touch-target">← กลับ</a>
-        </nav>
-        <h1 class="text-2xl font-bold brand-title">ไพ่ประจำวัน</h1>
-        <div class="w-10"></div> <!-- spacer -->
-    </header>
+<body class="text-[#261633] min-h-screen flex flex-col">
 
-    <main class="flex-grow p-4 flex flex-col items-center max-w-md mx-auto w-full pb-10">
-        <!-- วันที่แบบไทย -->
-        <div class="chip mb-5">🌙 <span id="daily-date">กำลังโหลด...</span></div>
-        
-        <!-- ไพ่ประจำวัน -->
-        <article id="card-display" class="card-placeholder mb-6 shadow-lg shadow-accent/20">
-            <div class="card-number" id="card-number">-</div>
-            <div class="card-symbol" id="card-symbol">?</div>
-            <div class="card-title" id="card-title">กำลังสับไพ่...</div>
-        </article>
+    <div class="mobile-app-shell px-4 pt-3 pb-24">
+        <!-- 1. Header Bar -->
+        <header class="pt-1 pb-3 flex items-center justify-between">
+            <!-- Brand Left with Back Button -->
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="icon-btn-frosted" aria-label="กลับหน้าแรก">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </a>
+                <a href="index.html" class="flex items-center gap-2 no-underline group">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 via-purple-400 to-amber-300 p-[1.2px] shadow-xs flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                        <div class="w-full h-full rounded-full bg-[#FAF5FF] flex items-center justify-center">
+                            <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
+                                <path d="M22 6 C28 11, 28 21, 20 27 C14 31, 7 29, 3 24 C10 26, 17 21, 16 13 C15 7, 10 3, 5 2 C11 -1, 18 1, 22 6 Z" fill="url(#moonBrandGradDaily)" />
+                                <circle cx="21" cy="9" r="1.5" fill="#F59E0B" />
+                                <defs>
+                                    <linearGradient id="moonBrandGradDaily" x1="5" y1="2" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#C084FC" />
+                                        <stop offset="50%" stop-color="#7E22CE" />
+                                        <stop offset="100%" stop-color="#F59E0B" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-0.5">
+                            <span class="text-base font-bold tracking-tight text-[#231230]">money2</span>
+                            <span class="text-amber-500 font-bold text-sm leading-none">+</span>
+                        </div>
+                        <p class="text-[10px] text-[#7A6A8D] font-normal leading-tight">ไพ่ประจำวัน</p>
+                    </div>
+                </a>
+            </div>
 
-        <section class="w-full space-y-5 text-left">
-            <div class="panel p-5">
-                <h2 class="text-xl section-title mb-3">ข้อความประจำวัน</h2>
-                <p class="text-gray-300 italic leading-relaxed" id="daily-message">"กำลังแปลผลไพ่..."</p>
+            <!-- Action Buttons & Theme Selector Pill Right -->
+            <div class="flex items-center gap-1.5">
+                <a href="cards-preview.html" class="icon-btn-frosted" aria-label="ค้นหาหรือดูสำรับ">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </a>
+                <div class="header-theme-pill">
+                    <span class="text-amber-500 text-xs">☀️</span>
+                    <select id="deck-selector" aria-label="เลือกธีมสำรับไพ่">
+                        <option value="auto">Auto (ตามเทศกาล)</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow flex flex-col items-center w-full">
+            <!-- วันที่แบบไทย -->
+            <div class="inline-flex items-center gap-1.5 bg-white/90 border border-purple-200/80 px-3.5 py-1 rounded-full text-xs font-semibold text-[#6D28D9] shadow-xs mb-3 mt-1">
+                <span>☀️</span>
+                <span id="daily-date">กำลังโหลด...</span>
             </div>
             
-            <!-- พลังงานรายด้าน -->
-            <h3 class="text-xl section-title pb-1 mt-6">พลังงานในแต่ละด้าน</h3>
-            
-            <div id="energy-container" class="space-y-4">
-                <!-- Dynamically populated by JS -->
+            <!-- ไพ่ประจำวัน -->
+            <article id="card-display" class="card-placeholder mb-3 shadow-xl shadow-purple-500/10">
+                <div class="card-number" id="card-number">-</div>
+                <div class="card-symbol" id="card-symbol">?</div>
+                <div class="card-title" id="card-title">กำลังสับไพ่...</div>
+            </article>
+
+            <!-- Watermark สำหรับแชร์ลงโซเชียล -->
+            <div class="mb-4 flex items-center justify-center gap-1.5 text-[11px] tracking-wider uppercase text-[#7E22CE] px-3.5 py-1 rounded-full border border-purple-200/80 bg-white/80 shadow-xs">
+                <span class="text-xs text-amber-500">✦</span>
+                <span class="font-semibold">money2 · ไพ่นำทางเพื่อวันพรุ่งนี้ที่ดีกว่า</span>
+                <span class="text-xs text-amber-500">✦</span>
             </div>
-            
-            <nav class="mt-6">
-                <a href="reading.html" class="block w-full text-center btn-outline-gold py-3 px-6 touch-target">ดูไพ่ส่วนตัวเพิ่มเติม 🔮</a>
-            </nav>
-        </section>
 
-        <!-- AdSense Placeholder -->
-        <div class="w-full ad-slot text-center py-4 my-6 text-sm" aria-label="Advertisement">
-            AdSense Banner (Responsive)
-        </div>
+            <section class="w-full space-y-4 text-left">
+                <!-- ข้อความประจำวัน -->
+                <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4">
+                    <div class="flex items-center gap-1.5 pb-2 mb-2 border-b border-purple-100/80">
+                        <span class="text-amber-500 text-sm">✨</span>
+                        <h2 class="text-sm font-bold text-[#231230]">ข้อความประจำวัน</h2>
+                    </div>
+                    <p class="text-[#423154] italic leading-relaxed text-sm font-medium" id="daily-message">"กำลังแปลผลไพ่..."</p>
+                </div>
+                
+                <!-- พลังงานรายด้าน -->
+                <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4">
+                    <div class="flex items-center gap-1.5 pb-2 mb-3 border-b border-purple-100/80">
+                        <span class="text-purple-600 text-sm">🔮</span>
+                        <h3 class="text-sm font-bold text-[#231230]">พลังงานในแต่ละด้าน</h3>
+                    </div>
+                    <div id="energy-container" class="space-y-3">
+                        <!-- Dynamically populated by JS -->
+                    </div>
+                </div>
 
-        <!-- Debug Section -->
-        <section id="debug-section" class="hidden mt-8 w-full bg-black/50 p-4 border border-red-500 text-xs font-mono text-gray-400 rounded-lg overflow-x-auto break-all">
-        </section>
-    </main>
+                <!-- คำแนะนำการแต่งกาย & สีมงคลประจำวัน จากกระต่ายจันทรา -->
+                <div id="outfit-advice-container" class="space-y-3">
+                    <!-- Dynamically populated by JS -->
+                </div>
+                
+                <nav class="pt-2">
+                    <a href="reading.html" class="hero-pill-btn w-full text-center py-3">
+                        <span>เปิดไพ่ส่วนตัวแบบเจาะลึก</span>
+                        <span>→</span>
+                    </a>
+                </nav>
+            </section>
 
-    <footer class="p-4 text-center border-t border-gold/15 text-xs text-gray-500 mt-auto">
-        <p>&copy; 2026 Thai Tarot.</p>
-    </footer>
+            <!-- AdSense Placeholder -->
+            <div class="w-full ad-slot text-center py-3 my-4 text-xs" aria-label="Advertisement">
+                AdSense Banner (Responsive)
+            </div>
+
+            <!-- Debug Section -->
+            <section id="debug-section" class="hidden mt-4 w-full bg-black/50 p-4 border border-red-500 text-xs font-mono text-gray-400 rounded-lg overflow-x-auto break-all">
+            </section>
+        </main>
+
+        <footer class="text-center text-[11px] text-gray-400 py-3 mb-2 mt-auto">
+            <p>&copy; 2026 money2 · Thai Tarot. All rights reserved.</p>
+            <p class="mt-0.5">ผลลัพธ์เป็นส่วนเสริมกำลังใจ โปรดใช้วิจารณญาณ</p>
+        </footer>
+    </div>
+
+    <!-- Fixed Bottom Navigation Bar -->
+    <nav class="bottom-app-nav" aria-label="แถบนำทางหลัก">
+        <a href="index.html" class="bottom-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span class="mt-0.5">หน้าแรก</span>
+        </a>
+
+        <a href="daily.html" class="bottom-nav-item active" aria-current="page">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+            </svg>
+            <span class="mt-0.5 font-semibold">รายวัน</span>
+            <span class="bottom-nav-dot"></span>
+        </a>
+
+        <a href="reading.html" class="bottom-nav-center-elevated" aria-label="เปิดไพ่ส่วนตัว">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2 L13.8 8.2 L20 10 L13.8 11.8 L12 18 L10.2 11.8 L4 10 L10.2 8.2 Z" fill="#FFFFFF" />
+                <circle cx="12" cy="10" r="1.5" fill="#FEF08A" />
+                <path d="M18 4 L18.6 6 L20.6 6.6 L18.6 7.2 L18 9.2 L17.4 7.2 L15.4 6.6 L17.4 6 Z" fill="#FEF08A" />
+            </svg>
+            <span class="text-[9px] font-bold text-white tracking-tight -mt-0.5">เปิดไพ่</span>
+        </a>
+
+        <a href="cards-preview.html" class="bottom-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="12" height="16" rx="2" transform="rotate(-6 3 5)"></rect>
+                <rect x="8" y="3" width="12" height="16" rx="2"></rect>
+            </svg>
+            <span class="mt-0.5">ไพ่ทั้งหมด</span>
+        </a>
+
+        <a href="index.html" class="bottom-nav-item" aria-label="ข้อมูลส่วนตัว">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="mt-0.5">โปรไฟล์</span>
+        </a>
+    </nav>
 
     <script type="module" src="js/daily-page.js"></script>
 </body>

@@ -12,128 +12,265 @@
     <meta property="og:description" content="ตรวจดูคำทำนายของคุณและรับคำแนะนำเชิงบวกเพื่อชีวิตที่ดีขึ้น">
     <meta property="og:url" content="https://thaitarot.com/result.html">
 
-    <!-- ฟอนต์ไทย: Charm (หัวเรื่อง) + Noto Sans Thai (เนื้อความ) -->
+    <!-- Google Fonts: Mitr (โมเดิร์น สดใส อบอุ่น สไตล์คนรุ่นใหม่) + Outfit (สากล ทันสมัย) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mystic: '#261633',
+                        gold: '#B7791F',
+                        'gold-soft': '#8A5D0B',
+                        accent: '#7E22CE'
+                    }
+                }
+            }
+        }
     </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="text-white min-h-screen flex flex-col">
-    <header class="site-header p-4 flex justify-between items-center">
-        <nav class="shrink-0">
-            <a href="index.html" class="back-link touch-target">← กลับ</a>
-        </nav>
-        <h1 class="text-2xl font-bold brand-title text-center leading-tight px-2 whitespace-nowrap">ผลลัพธ์คำทำนาย</h1>
-        <div class="w-10 shrink-0"></div>
-    </header>
+<body class="text-[#261633] min-h-screen flex flex-col">
 
-    <main class="flex-grow p-4 flex flex-col items-center max-w-lg mx-auto w-full pb-10">
-        
-        <section class="w-full text-center mb-6">
-            <div class="thai-divider mt-1" aria-hidden="true">❈</div>
-            <p class="text-gray-400 text-sm">คำถามของคุณ</p>
-            <h2 class="text-2xl text-gold font-bold mt-1" id="question-text">กำลังโหลด...</h2>
-        </section>
-
-        <!-- ไพ่ที่เปิดได้ -->
-        <article id="card-display" class="card-placeholder mb-8 shadow-lg shadow-gold/20">
-            <div class="card-number" id="card-number">-</div>
-            <div class="card-symbol" id="card-symbol">?</div>
-            <div class="card-title" id="card-title">...</div>
-        </article>
-
-        <!-- การตีความ -->
-        <section class="panel w-full p-6 mb-6">
-            <h3 class="text-2xl section-title mb-4 pb-2">📖 การตีความ</h3>
-            
-            <div class="mb-5">
-                <p id="interp-summary" class="text-gray-200 leading-relaxed text-lg">กำลังแปลผล...</p>
-            </div>
-
-            <div class="mb-4 rounded-xl border border-gold/25 bg-gold/5 p-4">
-                <h4 class="text-sm text-gold font-bold mb-1">✅ สิ่งที่ควรทำ</h4>
-                <p id="interp-action" class="text-sm text-gray-300 leading-relaxed">...</p>
-            </div>
-
-            <div id="warning-container" class="mb-4 hidden bg-red-900/25 p-4 rounded-xl border border-red-500/35">
-                <h4 class="text-sm text-red-300 font-bold mb-1">⚠️ คำเตือน</h4>
-                <p id="interp-warning" class="text-sm text-red-200 leading-relaxed">...</p>
-            </div>
-        </section>
-
-        <!-- สิ่งเสริมพลัง (Remedy / สีมงคล / วอลเปเปอร์) -->
-        <section class="panel w-full p-6 mb-6">
-            <h3 class="text-2xl section-title mb-4 pb-2">🔮 สิ่งเสริมพลังบวก</h3>
-            
-            <article id="remedy-container" class="mb-5">
-                <h4 class="text-lg text-gold font-bold mb-2" id="remedy-title">กำลังโหลด...</h4>
-                <p class="text-sm text-gray-300 mb-3 leading-relaxed" id="remedy-desc"></p>
-                <ul class="list-disc list-inside text-sm text-gray-300 mb-4 space-y-1" id="remedy-items"></ul>
-                
-                <div class="rounded-xl border border-pink-300/25 bg-pink-400/5 p-4 mb-3">
-                    <p class="text-sm font-bold text-pink-200 mb-1">🌸 คำกล่าวบรรดาลใจ (Affirmation)</p>
-                    <p class="text-sm text-gray-300 italic leading-relaxed">"<span id="remedy-affirmation"></span>"</p>
-                </div>
-                
-                <div class="rounded-xl border border-accent/25 bg-accent/5 p-4">
-                    <p class="text-sm font-bold text-purple-200 mb-1">🧘 สมาธิบำบัด</p>
-                    <p class="text-sm text-gray-300 leading-relaxed" id="remedy-meditation"></p>
-                </div>
-                <p class="text-xs text-gray-500 mt-3" id="remedy-disclaimer"></p>
-            </article>
-
-            <article id="color-container" class="mb-5 border-t border-gold/15 pt-4">
-                <h4 class="text-lg text-gold font-bold mb-3">🎨 สีมงคลเสริมพลัง</h4>
-                <div class="flex items-center gap-4">
-                    <div id="color-swatch" class="w-12 h-12 rounded-full border-2 border-gold/50 shadow-lg shadow-black/40 shrink-0"></div>
-                    <div>
-                        <p class="text-base font-bold text-white" id="color-name"></p>
-                        <p class="text-sm text-gray-400" id="color-meaning"></p>
+    <div class="mobile-app-shell px-4 pt-3 pb-24">
+        <!-- 1. Header Bar -->
+        <header class="pt-1 pb-3 flex items-center justify-between">
+            <!-- Brand Left with Back Button -->
+            <div class="flex items-center gap-2">
+                <a href="reading.html" class="icon-btn-frosted" aria-label="กลับไปเลือกคำถาม">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </a>
+                <a href="index.html" class="flex items-center gap-2 no-underline group">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 via-purple-400 to-amber-300 p-[1.2px] shadow-xs flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                        <div class="w-full h-full rounded-full bg-[#FAF5FF] flex items-center justify-center">
+                            <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
+                                <path d="M22 6 C28 11, 28 21, 20 27 C14 31, 7 29, 3 24 C10 26, 17 21, 16 13 C15 7, 10 3, 5 2 C11 -1, 18 1, 22 6 Z" fill="url(#moonBrandGradResult)" />
+                                <circle cx="21" cy="9" r="1.5" fill="#F59E0B" />
+                                <defs>
+                                    <linearGradient id="moonBrandGradResult" x1="5" y1="2" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#C084FC" />
+                                        <stop offset="50%" stop-color="#7E22CE" />
+                                        <stop offset="100%" stop-color="#F59E0B" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
                     </div>
-                </div>
-            </article>
-
-            <article id="wallpaper-container" class="border-t border-gold/15 pt-4 flex flex-col items-center text-center">
-                <h4 class="text-lg text-gold font-bold mb-3">🖼️ วอลเปเปอร์มงคลประจำคำทำนาย</h4>
-                <div class="w-32 h-48 rounded-xl border border-gold/40 mb-3 flex items-center justify-center overflow-hidden shadow-lg shadow-black/40"
-                     style="background: repeating-radial-gradient(circle at 50% 45%, transparent 0 10px, rgba(224,182,79,.12) 10px 11px), linear-gradient(160deg,#2b1e4d,#171029);">
-                    <span class="text-gold/70 text-2xl" aria-hidden="true">❈</span>
-                </div>
-                <p class="text-sm text-gray-300 mb-3" id="wallpaper-name"></p>
-                <a href="#" id="wallpaper-download-btn" download class="btn-outline-gold inline-block py-2 px-6 text-sm">ดาวน์โหลดฟรี</a>
-            </article>
-        </section>
-
-        <!-- สินค้าแนะนำ (Affiliate) -->
-        <section id="affiliate-section" class="panel w-full p-6 mb-6 hidden">
-            <h3 class="text-2xl section-title mb-2 pb-2">✨ สิ่งของเสริมกำลังใจ</h3>
-            <p class="text-sm text-gray-400 mb-4">ไอเทมแนะนำเพื่อเสริมพลังตามคำทำนายของคุณ</p>
-            <div id="affiliate-container" class="flex flex-col gap-3">
-                <!-- Dynamically injected -->
+                    <div>
+                        <div class="flex items-center gap-0.5">
+                            <span class="text-base font-bold tracking-tight text-[#231230]">money2</span>
+                            <span class="text-amber-500 font-bold text-sm leading-none">+</span>
+                        </div>
+                        <p class="text-[10px] text-[#7A6A8D] font-normal leading-tight">ผลลัพธ์คำทำนาย</p>
+                    </div>
+                </a>
             </div>
-            <p class="text-xs text-gray-500 mt-4 text-center">สินค้าแนะนำเป็นการสนับสนุนเว็บไซต์ ไม่มีผลต่อความแม่นยำของคำทำนาย</p>
-        </section>
 
-        <!-- AdSense Placeholder -->
-        <div class="w-full ad-slot text-center py-4 mb-8 text-sm" aria-label="Advertisement">
-            AdSense Banner (Responsive)
-        </div>
+            <!-- Action Buttons & Theme Selector Pill Right -->
+            <div class="flex items-center gap-1.5">
+                <a href="cards-preview.html" class="icon-btn-frosted" aria-label="ค้นหาหรือดูสำรับ">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </a>
+                <div class="header-theme-pill">
+                    <span class="text-amber-500 text-xs">☀️</span>
+                    <select id="deck-selector" aria-label="เลือกธีมสำรับไพ่">
+                        <option value="auto">Auto (ตามเทศกาล)</option>
+                    </select>
+                </div>
+            </div>
+        </header>
 
-        <nav class="w-full flex flex-col gap-3">
-            <button id="btn-share" class="btn-outline-gold py-3 px-6 touch-target w-full text-center hidden">🔗 แชร์ผลลัพธ์</button>
-            <a href="reading.html" class="btn-primary block py-3 px-6 touch-target w-full text-center">ดูไพ่ใหม่อีกครั้ง 🔮</a>
-        </nav>
+        <main class="flex-grow flex flex-col items-center w-full">
+            
+            <section class="w-full text-center mb-4 mt-1">
+                <div class="inline-flex items-center gap-1.5 bg-white/90 border border-purple-200/80 px-3.5 py-1 rounded-full text-xs font-semibold text-[#6D28D9] shadow-xs mb-2">
+                    <span>✨</span>
+                    <span>คำถามของคุณ</span>
+                </div>
+                <h2 class="text-lg font-bold text-[#231230] leading-snug px-2" id="question-text">กำลังโหลด...</h2>
+            </section>
 
-    </main>
+            <!-- ไพ่ที่เปิดได้ -->
+            <article id="card-display" class="card-placeholder mb-3 shadow-xl shadow-purple-500/10">
+                <div class="card-number" id="card-number">-</div>
+                <div class="card-symbol" id="card-symbol">?</div>
+                <div class="card-title" id="card-title">...</div>
+            </article>
 
-    <footer class="p-4 text-center border-t border-gold/15 text-xs text-gray-500 mt-auto">
-        <p>&copy; 2026 Thai Tarot.</p>
-    </footer>
+            <!-- Watermark สำหรับแชร์ลงโซเชียล -->
+            <div class="mb-4 flex items-center justify-center gap-1.5 text-[11px] tracking-wider uppercase text-[#7E22CE] px-3.5 py-1 rounded-full border border-purple-200/80 bg-white/80 shadow-xs">
+                <span class="text-xs text-amber-500">✦</span>
+                <span class="font-semibold">money2 · ไพ่นำทางเพื่อวันพรุ่งนี้ที่ดีกว่า</span>
+                <span class="text-xs text-amber-500">✦</span>
+            </div>
+
+            <!-- การตีความ -->
+            <section class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4 sm:p-5 w-full mb-4 space-y-3.5">
+                <div class="flex items-center gap-1.5 pb-2 border-b border-purple-100/80">
+                    <span class="text-purple-600 text-base">📖</span>
+                    <h3 class="text-sm font-bold text-[#231230]">การตีความหมายของไพ่</h3>
+                </div>
+                
+                <div>
+                    <p id="interp-summary" class="text-[#261633] leading-relaxed text-sm sm:text-base font-medium">กำลังแปลผล...</p>
+                </div>
+
+                <div class="rounded-xl border border-amber-300/50 bg-amber-50/60 p-3.5 shadow-xs">
+                    <h4 class="text-xs text-[#8A5D0B] font-bold mb-1 flex items-center gap-1">
+                        <span>✨</span>
+                        <span>แนวทางปฏิบัติที่แนะนำ</span>
+                    </h4>
+                    <p id="interp-action" class="text-xs sm:text-sm text-[#4A3B55] leading-relaxed">...</p>
+                </div>
+
+                <div id="warning-container" class="hidden bg-rose-50 p-3.5 rounded-xl border border-rose-200 shadow-xs">
+                    <h4 class="text-xs text-rose-800 font-bold mb-1 flex items-center gap-1">
+                        <span>⚠️</span>
+                        <span>ข้อควรระวัง</span>
+                    </h4>
+                    <p id="interp-warning" class="text-xs sm:text-sm text-rose-700 leading-relaxed">...</p>
+                </div>
+            </section>
+
+            <!-- สิ่งเสริมพลัง (Remedy / สีมงคล / วอลเปเปอร์) -->
+            <section class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4 sm:p-5 w-full mb-4 space-y-4">
+                <div class="flex items-center gap-1.5 pb-2 border-b border-purple-100/80">
+                    <span class="text-amber-500 text-base">🌟</span>
+                    <h3 class="text-sm font-bold text-[#231230]">สิ่งเสริมพลังใจและเคล็ดลับ</h3>
+                </div>
+                
+                <article id="remedy-container" class="space-y-3">
+                    <div>
+                        <h4 class="text-sm font-bold text-[#231230]" id="remedy-title">กำลังโหลด...</h4>
+                        <p class="text-xs text-[#5C4A6F] leading-relaxed mt-0.5" id="remedy-desc"></p>
+                    </div>
+                    
+                    <ul class="list-disc list-inside text-xs text-[#4A3B55] space-y-1 bg-purple-50/50 p-2.5 rounded-xl border border-purple-100" id="remedy-items"></ul>
+                    
+                    <div class="rounded-xl border border-pink-200 bg-pink-50/70 p-3 shadow-xs">
+                        <p class="text-xs font-bold text-pink-800 mb-1">💖 ข้อคิดเติมพลังใจ (Affirmation)</p>
+                        <p class="text-xs text-[#4A3B55] italic leading-relaxed">"<span id="remedy-affirmation"></span>"</p>
+                    </div>
+                    
+                    <div class="rounded-xl border border-purple-200 bg-purple-50/70 p-3 shadow-xs">
+                        <p class="text-xs font-bold text-purple-800 mb-1">🧘‍♀️ สมาธิบำบัดจิตใจ</p>
+                        <p class="text-xs text-[#4A3B55] leading-relaxed" id="remedy-meditation"></p>
+                    </div>
+                    <p class="text-[10px] text-[#7A6B85]" id="remedy-disclaimer"></p>
+                </article>
+
+                <article id="color-container" class="border-t border-purple-100/80 pt-3">
+                    <h4 class="text-xs font-bold text-[#231230] mb-2">🎨 สีมงคลเสริมพลัง</h4>
+                    <div class="flex items-center gap-3 bg-purple-50/50 p-2.5 rounded-xl border border-purple-100">
+                        <div id="color-swatch" class="w-10 h-10 rounded-full border-2 border-amber-300/80 shadow-sm shrink-0"></div>
+                        <div>
+                            <p class="text-xs font-bold text-[#261633]" id="color-name"></p>
+                            <p class="text-[11px] text-[#7A6B85]" id="color-meaning"></p>
+                        </div>
+                    </div>
+                </article>
+
+                <article id="wallpaper-container" class="border-t border-purple-100/80 pt-3 flex flex-col items-center text-center">
+                    <h4 class="text-xs font-bold text-[#231230] mb-2">📱 วอลเปเปอร์มงคลประจำคำทำนาย</h4>
+                    <div class="w-28 h-40 rounded-xl border border-purple-200/80 mb-2.5 flex items-center justify-center overflow-hidden shadow-sm"
+                         style="background: repeating-radial-gradient(circle at 50% 45%, transparent 0 8px, rgba(214,158,46,.12) 8px 9px), linear-gradient(160deg,#F5EDFF,#FDF9EF);">
+                        <span class="text-purple-600 text-2xl" aria-hidden="true">✦</span>
+                    </div>
+                    <p class="text-xs text-[#4A3B55] font-semibold mb-2" id="wallpaper-name"></p>
+                    <a href="#" id="wallpaper-download-btn" download class="inline-flex items-center gap-1 text-xs font-semibold text-[#7C3AED] bg-white border border-purple-300/80 px-3.5 py-1.5 rounded-full shadow-xs hover:bg-purple-50 transition-all">
+                        <span>ดาวน์โหลดฟรี</span>
+                        <span>↓</span>
+                    </a>
+                </article>
+            </section>
+
+            <!-- สินค้าแนะนำ (Affiliate) -->
+            <section id="affiliate-section" class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4 w-full mb-4 hidden">
+                <h3 class="text-sm font-bold text-[#231230] mb-1">🛍️ ไอเทมเสริมกำลังใจ</h3>
+                <p class="text-xs text-[#7A6B85] mb-3">ไอเทมแนะนำเพื่อเสริมพลังตามคำทำนายของคุณ</p>
+                <div id="affiliate-container" class="flex flex-col gap-2.5">
+                    <!-- Dynamically injected -->
+                </div>
+                <p class="text-[10px] text-[#7A6B85] mt-3 text-center">สินค้าแนะนำเป็นการสนับสนุนเว็บไซต์ ไม่มีผลต่อความแม่นยำของคำทำนาย</p>
+            </section>
+
+            <!-- AdSense Placeholder -->
+            <div class="w-full ad-slot text-center py-3 my-4 text-xs" aria-label="Advertisement">
+                AdSense Banner (Responsive)
+            </div>
+
+            <nav class="w-full flex flex-col gap-2.5 pt-1">
+                <button id="btn-share" class="hero-pill-btn w-full text-center py-3 hidden">
+                    <span>แชร์ผลลัพธ์คำทำนาย ✦</span>
+                </button>
+                <a href="reading.html" class="hero-pill-btn w-full text-center py-3">
+                    <span>เปิดไพ่ถามเรื่องอื่นต่อ</span>
+                    <span>→</span>
+                </a>
+            </nav>
+
+        </main>
+
+        <footer class="text-center text-[11px] text-gray-400 py-3 mb-2 mt-auto">
+            <p>&copy; 2026 money2 · Thai Tarot. All rights reserved.</p>
+            <p class="mt-0.5">ผลลัพธ์เป็นส่วนเสริมกำลังใจ โปรดใช้วิจารณญาณ</p>
+        </footer>
+    </div>
+
+    <!-- Fixed Bottom Navigation Bar -->
+    <nav class="bottom-app-nav" aria-label="แถบนำทางหลัก">
+        <a href="index.html" class="bottom-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span class="mt-0.5">หน้าแรก</span>
+        </a>
+
+        <a href="daily.html" class="bottom-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span class="mt-0.5">รายวัน</span>
+        </a>
+
+        <a href="reading.html" class="bottom-nav-center-elevated" aria-label="เปิดไพ่ส่วนตัว">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2 L13.8 8.2 L20 10 L13.8 11.8 L12 18 L10.2 11.8 L4 10 L10.2 8.2 Z" fill="#FFFFFF" />
+                <circle cx="12" cy="10" r="1.5" fill="#FEF08A" />
+                <path d="M18 4 L18.6 6 L20.6 6.6 L18.6 7.2 L18 9.2 L17.4 7.2 L15.4 6.6 L17.4 6 Z" fill="#FEF08A" />
+            </svg>
+            <span class="text-[9px] font-bold text-white tracking-tight -mt-0.5">เปิดไพ่</span>
+        </a>
+
+        <a href="cards-preview.html" class="bottom-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="12" height="16" rx="2" transform="rotate(-6 3 5)"></rect>
+                <rect x="8" y="3" width="12" height="16" rx="2"></rect>
+            </svg>
+            <span class="mt-0.5">ไพ่ทั้งหมด</span>
+        </a>
+
+        <a href="index.html" class="bottom-nav-item" aria-label="ข้อมูลส่วนตัว">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="mt-0.5">โปรไฟล์</span>
+        </a>
+    </nav>
 
     <script type="module" src="js/result-page.js"></script>
 </body>

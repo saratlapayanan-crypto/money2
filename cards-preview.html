@@ -5,34 +5,223 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ตรวจสำรับไพ่ 78 ใบ - Thai Tarot</title>
 
+    <!-- Google Fonts: Mitr (โมเดิร์น สดใส อบอุ่น สไตล์คนรุ่นใหม่) + Outfit (สากล ทันสมัย) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mystic: '#261633',
+                        gold: '#B7791F',
+                        'gold-soft': '#8A5D0B',
+                        accent: '#7E22CE'
+                    }
+                }
+            }
+        }
     </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="text-white min-h-screen flex flex-col">
-    <header class="site-header p-4 flex justify-between items-center">
-        <nav>
-            <a href="index.html" class="back-link touch-target">← กลับ</a>
-        </nav>
-        <h1 class="text-2xl font-bold brand-title">สำรับไพ่ 78 ใบ</h1>
-        <div class="w-10"></div>
-    </header>
+<body class="text-[#261633] min-h-screen flex flex-col">
 
-    <main class="flex-grow p-4 max-w-5xl mx-auto w-full pb-10">
-        <div class="flex flex-wrap gap-2 justify-center mb-6" id="theme-picker"></div>
-        <p class="text-center text-xs text-gray-500 mb-6">ภาพประกอบวาดขึ้นใหม่ทั้งหมด (original vector art) — อ้างอิงสัญลักษณ์ไพ่จาก Wikipedia</p>
-        <div id="cards-preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5"></div>
-    </main>
+    <div class="max-w-4xl mx-auto px-4 pt-3 pb-24 w-full min-h-screen flex flex-col">
+        <!-- 1. Header Bar -->
+        <header class="pt-1 pb-3 flex items-center justify-between">
+            <!-- Brand Left with Back Button -->
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="icon-btn-frosted" aria-label="กลับหน้าแรก">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </a>
+                <a href="index.html" class="flex items-center gap-2 no-underline group">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 via-purple-400 to-amber-300 p-[1.2px] shadow-xs flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                        <div class="w-full h-full rounded-full bg-[#FAF5FF] flex items-center justify-center">
+                            <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
+                                <path d="M22 6 C28 11, 28 21, 20 27 C14 31, 7 29, 3 24 C10 26, 17 21, 16 13 C15 7, 10 3, 5 2 C11 -1, 18 1, 22 6 Z" fill="url(#moonBrandGradCards)" />
+                                <circle cx="21" cy="9" r="1.5" fill="#F59E0B" />
+                                <defs>
+                                    <linearGradient id="moonBrandGradCards" x1="5" y1="2" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#C084FC" />
+                                        <stop offset="50%" stop-color="#7E22CE" />
+                                        <stop offset="100%" stop-color="#F59E0B" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-0.5">
+                            <span class="text-base font-bold tracking-tight text-[#231230]">money2</span>
+                            <span class="text-amber-500 font-bold text-sm leading-none">+</span>
+                        </div>
+                        <p class="text-[10px] text-[#7A6A8D] font-normal leading-tight">สำรับไพ่ 78 ใบ</p>
+                    </div>
+                </a>
+            </div>
 
-    <footer class="p-4 text-center border-t border-gold/15 text-xs text-gray-500 mt-auto">
-        <p>&copy; 2026 Thai Tarot.</p>
-    </footer>
+            <!-- Action Buttons & Theme Selector Pill Right -->
+            <div class="flex items-center gap-1.5">
+                <div class="header-theme-pill">
+                    <span class="text-amber-500 text-xs">☀️</span>
+                    <select id="deck-selector" aria-label="เลือกธีมสำรับไพ่">
+                        <option value="auto">Auto (ตามเทศกาล)</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow flex flex-col items-center w-full">
+            <section class="w-full text-center mb-3 mt-1">
+                <div class="inline-flex items-center gap-1.5 bg-white/90 border border-purple-200/80 px-3.5 py-1 rounded-full text-xs font-semibold text-[#6D28D9] shadow-xs mb-2">
+                    <span>🃏</span>
+                    <span>สำรับไพ่ทาโรต์ 78 ใบ (Masterpiece Deck)</span>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-bold text-[#231230] leading-snug">ศิลปะภาพวาดมาสเตอร์พีซประจำสำรับ</h2>
+                <p class="text-xs text-[#7A6B85] mt-1 max-w-md mx-auto">ภาพวาดต้นฉบับคุณภาพสูง ปราศจากความขัดแย้งทางศาสนา พร้อมกรอบทองคำเอกลักษณ์เดียวกันทั้งสำรับ</p>
+            </section>
+
+            <!-- Theme Picker Filter Chips -->
+            <div class="flex flex-wrap gap-2 justify-center mb-4 max-w-xl" id="theme-picker"></div>
+
+            <!-- Masterpiece Generation Progress & Quota Reset Countdown Banner -->
+            <div id="status-tracker-card" class="w-full bg-white/85 backdrop-blur-md rounded-2xl border border-amber-300/40 p-4 sm:p-5 shadow-sm mb-5 transition-all">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span id="deck-status-title" class="text-sm font-bold text-[#231230]">สำรับมาตรฐาน: สีน้ำมันเรเนสซองส์อาร์ตนูโว</span>
+                            <span id="deck-badge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 shadow-xs">
+                                ✨ Masterpiece 60 / 78 ใบ (76.9%)
+                            </span>
+                        </div>
+                        <p id="deck-style-desc" class="text-xs text-[#6B5A7D] mt-1 leading-relaxed">
+                            ทุกใบวาดเป็นภาพสีน้ำมันคลาสสิก วิจิตรงดงาม พร้อมกรอบทองคำ 3 ชั้นและซุ้มวิหารสวรรค์เอกลักษณ์เดียวกัน 100%
+                        </p>
+                    </div>
+
+                    <!-- Quota Countdown Clock Pill -->
+                    <div class="flex items-center gap-2 bg-gradient-to-br from-amber-50 via-purple-50 to-amber-100/60 border border-amber-300/70 rounded-xl px-4 py-2 self-stretch sm:self-auto justify-center shadow-xs">
+                        <div class="text-center">
+                            <div class="text-[10px] font-bold text-[#7E22CE] uppercase tracking-wider flex items-center justify-center gap-1">
+                                <span class="animate-spin text-xs">⏳</span>
+                                <span>โควตา AI รอบถัดไป</span>
+                            </div>
+                            <div id="quota-countdown" class="text-lg font-black text-[#B45309] font-mono tracking-tight my-0.5">5d 10:29:00</div>
+                            <div class="text-[9px] text-[#7A6A8D] font-medium">รอบปลดล็อก 28 ก.ย. 20:46 น. (อัตโนมัติ)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar Container -->
+                <div class="w-full bg-purple-100/80 rounded-full h-3 overflow-hidden p-0.5 border border-purple-200/50">
+                    <div id="progress-bar-fill" class="bg-gradient-to-r from-purple-600 via-amber-500 to-yellow-400 h-full rounded-full transition-all duration-700 shadow-xs" style="width: 76.9%;"></div>
+                </div>
+
+                <div class="flex justify-between items-center text-[10px] text-[#8C7B9E] mt-2">
+                    <span id="progress-text-left">🎨 สร้างเสร็จแล้ว 60 / 78 ใบ (Major Arcana ครบ 22 ใบ + Wands ครบ 14 ใบ + Cups ครบ 14 ใบ + Swords 9 ใบ + 1 Ace)</span>
+                    <span id="progress-text-right" class="font-semibold text-amber-800">รอคิว AI 18 ใบ</span>
+                </div>
+            </div>
+
+            <!-- Tab Filters (Zero Cartoon Stick Figures) -->
+            <div class="flex flex-wrap items-center justify-center gap-2 mb-5 w-full" id="preview-tabs">
+                <button class="preview-tab active px-4 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-purple-600 to-amber-600 text-white shadow-md transition-all flex items-center gap-1.5 cursor-pointer" data-tab="completed">
+                    <span>✨ ไพ่ Masterpiece สำเร็จแล้ว</span>
+                    <span class="bg-white/25 px-2 py-0.5 rounded-full text-[10px] font-bold" id="count-completed">60</span>
+                </button>
+                <button class="preview-tab px-4 py-2 rounded-xl text-xs font-semibold bg-white/90 hover:bg-white text-[#5C4A6F] border border-purple-200/80 shadow-xs transition-all flex items-center gap-1.5 cursor-pointer" data-tab="queued">
+                    <span>⏳ คิวรอสร้างภาพ AI (รอบ 28 ก.ย.)</span>
+                    <span class="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-[10px] font-bold" id="count-queued">18</span>
+                </button>
+                <button class="preview-tab px-4 py-2 rounded-xl text-xs font-semibold bg-white/90 hover:bg-white text-[#5C4A6F] border border-purple-200/80 shadow-xs transition-all flex items-center gap-1.5 cursor-pointer" data-tab="all">
+                    <span>🗂️ ทั้งสำรับ 78 ใบ</span>
+                    <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-[10px] font-bold">78</span>
+                </button>
+            </div>
+
+            <p class="text-center text-[11px] text-[#8C7B9E] mb-4">
+                ✦ ลวดลายกรอบ 3 ชั้นและซุ้มวิหารสวรรค์คงที่ทุกใบเพื่อความกลมกลืน · ไร้ภาพพระหรือสัญลักษณ์ศาสนา ✦
+            </p>
+
+            <!-- 78 Cards Preview Grid -->
+            <div id="cards-preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4 w-full"></div>
+
+            <!-- Card Detail Modal -->
+            <div id="card-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs opacity-0 pointer-events-none transition-opacity duration-200" aria-hidden="true">
+                <div class="bg-white/95 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 shadow-2xl border border-amber-300/40 relative transform scale-95 transition-transform duration-200" id="card-modal-content">
+                    <button id="modal-close-btn" class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors" aria-label="ปิด">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                    <div id="modal-body" class="flex flex-col items-center">
+                        <!-- Dynamic Modal Content -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- AdSense Placeholder -->
+            <div class="w-full ad-slot text-center py-3 my-6 text-xs" aria-label="Advertisement">
+                AdSense Banner (Responsive)
+            </div>
+        </main>
+
+        <footer class="text-center text-[11px] text-gray-400 py-3 mb-2 mt-auto">
+            <p>&copy; 2026 money2 · Thai Tarot. All rights reserved.</p>
+            <p class="mt-0.5">ผลลัพธ์เป็นส่วนเสริมกำลังใจ โปรดใช้วิจารณญาณ</p>
+        </footer>
+    </div>
+
+    <!-- Fixed Bottom Navigation Bar -->
+    <nav class="bottom-app-nav" aria-label="แถบนำทางหลัก">
+        <a href="index.html" class="bottom-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span class="mt-0.5">หน้าแรก</span>
+        </a>
+
+        <a href="daily.html" class="bottom-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span class="mt-0.5">รายวัน</span>
+        </a>
+
+        <a href="reading.html" class="bottom-nav-center-elevated" aria-label="เปิดไพ่ส่วนตัว">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2 L13.8 8.2 L20 10 L13.8 11.8 L12 18 L10.2 11.8 L4 10 L10.2 8.2 Z" fill="#FFFFFF" />
+                <circle cx="12" cy="10" r="1.5" fill="#FEF08A" />
+                <path d="M18 4 L18.6 6 L20.6 6.6 L18.6 7.2 L18 9.2 L17.4 7.2 L15.4 6.6 L17.4 6 Z" fill="#FEF08A" />
+            </svg>
+            <span class="text-[9px] font-bold text-white tracking-tight -mt-0.5">เปิดไพ่</span>
+        </a>
+
+        <a href="cards-preview.html" class="bottom-nav-item active" aria-current="page">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="3" y="5" width="12" height="16" rx="2" transform="rotate(-6 3 5)"></rect>
+                <rect x="8" y="3" width="12" height="16" rx="2"></rect>
+            </svg>
+            <span class="mt-0.5 font-semibold">ไพ่ทั้งหมด</span>
+            <span class="bottom-nav-dot"></span>
+        </a>
+
+        <a href="index.html" class="bottom-nav-item" aria-label="ข้อมูลส่วนตัว">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="mt-0.5">โปรไฟล์</span>
+        </a>
+    </nav>
 
     <script type="module" src="js/cards-preview.js?v=art-pilot-2"></script>
 </body>

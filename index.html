@@ -3,97 +3,624 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thai Tarot - ดูดวงไพ่ยิปซีออนไลน์แบบร่วมสมัย</title>
+    <title>money2 - ไพ่นำทาง เพื่อวันพรุ่งนี้ที่ดีกว่า | Thai Tarot</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="ดูดวงไพ่ยิปซีออนไลน์แบบร่วมสมัย (Thai Tarot) ดูดวงรายวันและดูดวงส่วนตัวฟรี ด้วยความหมายไพ่เชิงบวกและเป็นเหตุเป็นผล">
-    <meta name="keywords" content="ดูดวง, ไพ่ยิปซี, ทาโรต์, ดูดวงความรัก, ดูดวงการเงิน, ดูดวงการงาน">
+    <meta name="description" content="money2 ไพ่นำทาง เพื่อวันพรุ่งนี้ที่ดีกว่า ดูดวงไพ่ยิปซีออนไลน์ ดูไพ่ประจำวัน ความรัก การเงิน การงาน พร้อมคำแนะนำสีมงคล">
+    <meta name="keywords" content="money2, ดูดวง, ไพ่ยิปซี, ทาโรต์, ดูดวงความรัก, ดูดวงการเงิน, ดูดวงการงาน, ไพ่ประจำวัน, สีมงคล">
     <link rel="canonical" href="https://thaitarot.com/">
     
     <!-- Open Graph (OG) -->
-    <meta property="og:title" content="Thai Tarot - ดูดวงไพ่ยิปซีออนไลน์แบบร่วมสมัย">
-    <meta property="og:description" content="บริการดูไพ่ยิปซีออนไลน์ ดูดวงรายวัน และรับคำแนะนำดีๆ เสริมพลังบวกให้กับชีวิตคุณได้ทุกวัน ฟรี">
-    <meta property="og:image" content="https://thaitarot.com/assets/og-image.jpg">
+    <meta property="og:title" content="money2 - ไพ่นำทาง เพื่อวันพรุ่งนี้ที่ดีกว่า">
+    <meta property="og:description" content="ทุกคำถาม มีคำตอบจากไพ่เสมอ TAROT FOR A BRIGHTER YOU เปิดไพ่ประจำวันและเปิดไพ่ส่วนตัวฟรี">
+    <meta property="og:image" content="https://thaitarot.com/assets/cards/standard/major-1.jpg">
     <meta property="og:url" content="https://thaitarot.com/">
     <meta property="og:type" content="website">
 
-    <!-- ฟอนต์ไทย: Charm (หัวเรื่อง) + Noto Sans Thai (เนื้อความ) -->
+    <!-- Google Fonts: Mitr (หัวข้อไทยทันสมัย สดใส อบอุ่น) + Outfit (สากล โมเดิร์น) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mystic: '#261633',
+                        gold: '#B7791F',
+                        'gold-soft': '#8A5D0B',
+                        accent: '#7E22CE'
+                    }
+                }
+            }
+        }
     </script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="text-white min-h-screen flex flex-col">
-    <header class="site-header p-4 flex items-center">
-        <div class="flex-1 min-w-0"></div>
-        <div class="text-center px-2">
-            <h1 class="text-3xl font-bold brand-title">✦ Thai Tarot ✦</h1>
-            <p class="text-xs text-gray-400 tracking-wide mt-0.5">มนตราไพ่ยิปซี ฉบับคนไทย</p>
-        </div>
-        <div class="flex-1 min-w-0"></div>
-    </header>
+<body class="text-[#261633] min-h-screen flex flex-col">
 
-    <main class="flex-grow p-4 flex flex-col items-center justify-center max-w-md mx-auto w-full">
-        <section class="text-center mb-8">
-            <!-- พัดไพ่ประดับ -->
-            <div class="card-fan" aria-hidden="true">
-                <div class="fan-card"></div>
-                <div class="fan-card"></div>
-                <div class="fan-card"></div>
+    <div class="mobile-app-shell px-4 pt-3 pb-24">
+        <!-- 1. Header Bar -->
+        <header class="pt-1 pb-3 flex items-start justify-between">
+            <!-- Brand Left -->
+            <a href="index.html" class="flex items-center gap-2.5 no-underline group">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-600 via-purple-400 to-amber-300 p-[1.5px] shadow-sm shadow-purple-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <div class="w-full h-full rounded-full bg-[#FAF5FF] flex items-center justify-center">
+                        <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+                            <path d="M22 6 C28 11, 28 21, 20 27 C14 31, 7 29, 3 24 C10 26, 17 21, 16 13 C15 7, 10 3, 5 2 C11 -1, 18 1, 22 6 Z" fill="url(#moonBrandGrad)" />
+                            <circle cx="21" cy="9" r="1.5" fill="#F59E0B" />
+                            <defs>
+                                <linearGradient id="moonBrandGrad" x1="5" y1="2" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#C084FC" />
+                                    <stop offset="50%" stop-color="#7E22CE" />
+                                    <stop offset="100%" stop-color="#F59E0B" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-0.5">
+                        <h1 class="app-brand-title">money2</h1>
+                        <span class="text-amber-500 font-bold text-lg leading-none">+</span>
+                    </div>
+                    <p class="text-[11px] text-[#7A6A8D] font-normal leading-tight">ไพ่นำทาง เพื่อวันพรุ่งนี้ที่ดีกว่า</p>
+                </div>
+            </a>
+
+            <!-- Action Buttons & Tagline Right -->
+            <div class="flex flex-col items-end gap-1.5">
+                <div class="flex items-center gap-1.5">
+                    <button id="btn-search" class="icon-btn-frosted" aria-label="ค้นหาไพ่หรือหัวข้อ">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                    <button id="btn-notification" class="icon-btn-frosted" aria-label="การแจ้งเตือน">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-badge-dot"></span>
+                    </button>
+                    <div class="header-theme-pill">
+                        <span class="text-amber-500 text-xs">☀️</span>
+                        <select id="deck-selector" aria-label="เลือกธีมสำรับไพ่">
+                            <option value="auto">Auto (ตามเทศกาล)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="header-tagline-block">
+                    <div>ทุกคำถาม</div>
+                    <div class="font-medium text-[#4A3860]">มีคำตอบจากไพ่เสมอ</div>
+                    <div class="latin-tagline">TAROT FOR A BRIGHTER YOU</div>
+                </div>
             </div>
-            <div class="thai-divider" aria-hidden="true">❈</div>
-            <h2 class="text-3xl mb-3 font-bold text-gold">เชิญเข้าสู่พื้นที่แห่งความสงบ</h2>
-            <p class="text-gray-400 text-sm mb-6 leading-relaxed px-2">
-                ตั้งจิตให้นิ่ง แล้วให้ไพ่ยิปซี 78 ใบ<br class="hidden sm:inline">
-                ช่วยหยิบยกคำตอบและพลังบวกสำหรับชีวิตคุณในวันนี้
-            </p>
+        </header>
+
+        <!-- 2. Hero Section (Tilted Card + Daily Tarot Widget) -->
+        <section class="hero-lifestyle-container mt-1 mb-4">
+            <!-- Decorative Lavender Sprigs & Cloud Background -->
+            <div class="hero-lifestyle-bg-elements">
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-purple-300/30 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-10 right-0 w-32 h-32 bg-amber-200/30 rounded-full blur-xl"></div>
+                
+                <svg class="absolute bottom-0 left-0 w-36 h-28 opacity-75 pointer-events-none" viewBox="0 0 160 110" fill="none">
+                    <path d="M10 110 Q25 60 40 40 Q45 35 50 30" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" />
+                    <ellipse cx="50" cy="30" rx="4" ry="7" fill="#C084FC" transform="rotate(25 50 30)" />
+                    <ellipse cx="44" cy="40" rx="3.5" ry="6" fill="#A855F7" transform="rotate(-30 44 40)" />
+                    <ellipse cx="56" cy="42" rx="3.5" ry="6" fill="#A855F7" transform="rotate(40 56 42)" />
+                    <ellipse cx="38" cy="55" rx="3.5" ry="6" fill="#9333EA" transform="rotate(-35 38 55)" />
+                    <ellipse cx="52" cy="56" rx="3.5" ry="6" fill="#9333EA" transform="rotate(35 52 56)" />
+                    
+                    <path d="M25 110 Q50 65 70 48" stroke="#7C3AED" stroke-width="1.6" stroke-linecap="round" />
+                    <ellipse cx="70" cy="48" rx="3.5" ry="6" fill="#C084FC" transform="rotate(20 70 48)" />
+                    <ellipse cx="62" cy="58" rx="3" ry="5.5" fill="#A855F7" transform="rotate(-25 62 58)" />
+                    <ellipse cx="74" cy="60" rx="3" ry="5.5" fill="#9333EA" transform="rotate(35 74 60)" />
+
+                    <!-- Fluffy cloud puff -->
+                    <path d="M-10 110 C-5 95, 20 90, 35 98 C45 88, 75 88, 85 100 C95 95, 115 100, 120 110 Z" fill="#FFFFFF" fill-opacity="0.85" />
+                </svg>
+            </div>
+
+            <!-- Content Row -->
+            <div class="relative z-10 flex items-center gap-3">
+                <!-- Tilted Featured Card -->
+                <a href="daily.html" class="hero-tilted-card group block" title="คลิกเพื่อเปิดไพ่ประจำวัน">
+                    <img src="assets/cards/standard/major-1.jpg" alt="Featured Tarot Card - The Magician" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="absolute inset-0 bg-gradient-to-t from-purple-950/50 via-transparent to-transparent"></div>
+                    <div class="absolute bottom-1.5 inset-x-0 text-center">
+                        <span class="text-[9px] font-bold text-amber-200 uppercase tracking-wider bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-xs">I · THE MAGICIAN</span>
+                    </div>
+                </a>
+
+                <!-- Floating Daily Tarot Widget -->
+                <div class="hero-daily-widget">
+                    <div>
+                        <div class="flex items-center justify-between gap-1 pb-1.5 border-b border-purple-100/70">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-amber-500 text-sm">☀️</span>
+                                <h2 class="text-xs sm:text-sm font-bold text-[#231230]">ไพ่ประจำวัน</h2>
+                            </div>
+                            <span id="hero-daily-date" class="text-[10px] text-[#7C6C8F] font-medium">31 มี.ค. 2569</span>
+                        </div>
+
+                        <p id="hero-quote-text" class="text-[11px] sm:text-[12px] text-[#423154] leading-relaxed my-2 font-normal">
+                            วันนี้แสงสว่างกำลังนำทางคุณ<br>
+                            โอกาสใหม่กำลังเข้ามา<br>
+                            จงเปิดใจรับสิ่งดี ๆ
+                        </p>
+                    </div>
+
+                    <div>
+                        <a href="daily.html" class="hero-pill-btn w-full">
+                            <span>เปิดไพ่วันนี้</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carousel Indicator Dots -->
+            <div class="carousel-dots relative z-10" id="hero-carousel-dots">
+                <button class="carousel-dot active" data-index="0" aria-label="สไลด์ 1"></button>
+                <button class="carousel-dot" data-index="1" aria-label="สไลด์ 2"></button>
+                <button class="carousel-dot" data-index="2" aria-label="สไลด์ 3"></button>
+                <button class="carousel-dot" data-index="3" aria-label="สไลด์ 4"></button>
+            </div>
         </section>
 
-        <nav class="w-full flex flex-col gap-4" aria-label="เมนูหลัก">
-            <a href="daily.html" class="panel group flex items-center gap-4 p-5 touch-target text-left w-full hover:border-gold/60 transition-colors">
-                <span class="text-4xl shrink-0" aria-hidden="true">🌅</span>
-                <span class="flex-grow">
-                    <span class="block text-lg font-bold text-gold">ไพ่ประจำวัน</span>
-                    <span class="block text-sm text-gray-400 mt-0.5">เปิดไพ่ประจำวันเกิดของคุณ พร้อมข้อความเสริมกำลังใจทุกวัน</span>
-                </span>
-                <span class="text-gold/70 group-hover:translate-x-1 transition-transform" aria-hidden="true">❯</span>
-            </a>
-            
-            <a href="reading.html" class="panel group flex items-center gap-4 p-5 touch-target text-left w-full hover:border-gold/60 transition-colors">
-                <span class="text-4xl shrink-0" aria-hidden="true">🔮</span>
-                <span class="flex-grow">
-                    <span class="block text-lg font-bold text-gold">ไพ่ส่วนตัว</span>
-                    <span class="block text-sm text-gray-400 mt-0.5">ตั้งคำถามเรื่องรัก เงิน หรืองาน แล้วเลือกไพ่ด้วยสัญชาตญาณของคุณเอง</span>
-                </span>
-                <span class="text-gold/70 group-hover:translate-x-1 transition-transform" aria-hidden="true">❯</span>
+        <!-- 3. 4-Category Grid -->
+        <section class="grid grid-cols-4 gap-2 sm:gap-2.5 mb-4" aria-label="หมวดหมู่การทำนาย">
+            <!-- Work -->
+            <a href="reading.html?category=work" class="category-card group">
+                <div class="w-10 h-10 rounded-2xl bg-purple-100/80 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform shadow-xs">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                </div>
+                <span class="font-bold text-xs text-[#231230] mt-2">การงาน</span>
+                <span class="text-[9px] text-[#7A6A8D] leading-snug mt-0.5">เส้นทางอาชีพ<br>และความก้าวหน้า</span>
             </a>
 
-            <a href="cards-preview.html" class="panel group flex items-center gap-4 p-5 touch-target text-left w-full hover:border-gold/60 transition-colors">
-                <span class="text-4xl shrink-0" aria-hidden="true">🃏</span>
-                <span class="flex-grow">
-                    <span class="block text-lg font-bold text-gold">ชมสำรับไพ่ทั้ง 78 ใบ</span>
-                    <span class="block text-sm text-gray-400 mt-0.5">อดิเรกคลาสสิก — เปลี่ยนธีมเทศกาลไทยและสากลได้ตามใจ</span>
-                </span>
-                <span class="text-gold/70 group-hover:translate-x-1 transition-transform" aria-hidden="true">❯</span>
+            <!-- Finance -->
+            <a href="reading.html?category=finance" class="category-card group">
+                <div class="w-10 h-10 rounded-2xl bg-amber-100/80 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <ellipse cx="12" cy="7" rx="8" ry="3.5" fill="none" stroke="currentColor"></ellipse>
+                        <path d="M4 7v5c0 1.93 3.58 3.5 8 3.5s8-1.57 8-3.5V7"></path>
+                        <path d="M4 12v5c0 1.93 3.58 3.5 8 3.5s8-1.57 8-3.5V12"></path>
+                    </svg>
+                </div>
+                <span class="font-bold text-xs text-[#231230] mt-2">การเงิน</span>
+                <span class="text-[9px] text-[#7A6A8D] leading-snug mt-0.5">รายได้ โอกาส<br>และความมั่งคั่ง</span>
             </a>
-        </nav>
-        
-        <!-- AdSense Placeholder -->
-        <div class="w-full ad-slot text-center py-4 my-8 text-sm" aria-label="Advertisement">
+
+            <!-- Love -->
+            <a href="reading.html?category=love" class="category-card group">
+                <div class="w-10 h-10 rounded-2xl bg-pink-100/80 flex items-center justify-center text-pink-500 group-hover:scale-110 transition-transform shadow-xs">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+                <span class="font-bold text-xs text-[#231230] mt-2">ความรัก</span>
+                <span class="text-[9px] text-[#7A6A8D] leading-snug mt-0.5">คนโสด คนมีคู่<br>ความสัมพันธ์</span>
+            </a>
+
+            <!-- Mind -->
+            <a href="daily.html" class="category-card group">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-100/80 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform shadow-xs">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22v-9"></path>
+                        <path d="M12 13c0-4.97 4.03-9 9-9 0 4.97-4.03 9-9 9z"></path>
+                        <path d="M12 17c0-3.31-2.69-6-6-6 0 3.31 2.69 6 6 6z"></path>
+                    </svg>
+                </div>
+                <span class="font-bold text-xs text-[#231230] mt-2">ใจของเรา</span>
+                <span class="text-[9px] text-[#7A6A8D] leading-snug mt-0.5">สุขภาพจิต<br>และพลังบวก</span>
+            </a>
+        </section>
+
+        <!-- 4. Personal Reading Banner ("เปิดไพ่ส่วนตัว") -->
+        <section class="mb-4">
+            <div class="personal-banner-card">
+                <!-- Mystical Artwork: Hands holding glowing moon crystal sphere -->
+                <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-purple-300/40 via-purple-100/60 to-white flex-shrink-0 flex items-center justify-center overflow-hidden border border-purple-200/70 relative shadow-xs">
+                    <svg width="88" height="88" viewBox="0 0 100 100" fill="none">
+                        <!-- Ambient Glow -->
+                        <circle cx="50" cy="50" r="32" fill="url(#orbLightGrad)" opacity="0.6" />
+                        
+                        <!-- Lavender branch framing -->
+                        <path d="M15 90 Q22 65 30 50" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" />
+                        <ellipse cx="26" cy="58" rx="2" ry="4" fill="#A855F7" transform="rotate(-30 26 58)" />
+                        <ellipse cx="32" cy="52" rx="2" ry="4" fill="#C084FC" transform="rotate(30 32 52)" />
+                        
+                        <path d="M85 90 Q78 65 70 50" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" />
+                        <ellipse cx="74" cy="58" rx="2" ry="4" fill="#A855F7" transform="rotate(30 74 58)" />
+                        <ellipse cx="68" cy="52" rx="2" ry="4" fill="#C084FC" transform="rotate(-30 68 52)" />
+
+                        <!-- Crystal sphere / orb -->
+                        <circle cx="50" cy="46" r="26" fill="url(#orbGlassGrad)" stroke="#E9D5FF" stroke-width="1.5" />
+                        
+                        <!-- Crescent moon inside orb -->
+                        <path d="M54 28 C64 33, 64 55, 52 61 C45 64, 38 60, 36 56 C44 57, 50 51, 49 42 C48 35, 43 31, 38 30 C43 27, 49 26, 54 28 Z" fill="url(#crystalMoonGold)" />
+                        
+                        <!-- Sparkles inside sphere -->
+                        <path d="M56 34 L57 37 L60 38 L57 39 L56 42 L55 39 L52 38 L55 37 Z" fill="#FFFFFF" />
+                        <circle cx="42" cy="48" r="1.2" fill="#FFFFFF" />
+                        <circle cx="58" cy="52" r="1" fill="#FDE68A" />
+
+                        <!-- Delicate cupping hands -->
+                        <path d="M22 76 C28 72, 38 68, 44 65 C47 64, 49 68, 46 71 C40 76, 32 82, 28 88" stroke="#7E22CE" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6" />
+                        <path d="M78 76 C72 72, 62 68, 56 65 C53 64, 51 68, 54 71 C60 76, 68 82, 72 88" stroke="#7E22CE" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6" />
+
+                        <defs>
+                            <radialGradient id="orbLightGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#FAF5FF" />
+                                <stop offset="60%" stop-color="#C084FC" />
+                                <stop offset="100%" stop-color="#7E22CE" stop-opacity="0" />
+                            </radialGradient>
+                            <radialGradient id="orbGlassGrad" cx="35%" cy="30%" r="70%">
+                                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+                                <stop offset="45%" stop-color="#EDE9FE" stop-opacity="0.8" />
+                                <stop offset="90%" stop-color="#C084FC" stop-opacity="0.6" />
+                                <stop offset="100%" stop-color="#7E22CE" stop-opacity="0.4" />
+                            </radialGradient>
+                            <linearGradient id="crystalMoonGold" x1="38" y1="28" x2="64" y2="61" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#FEF08A" />
+                                <stop offset="60%" stop-color="#F59E0B" />
+                                <stop offset="100%" stop-color="#D97706" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+
+                <!-- Text & Action -->
+                <div class="flex-1 min-w-0">
+                    <a href="reading.html" class="inline-flex items-center gap-1 font-bold text-sm text-[#231230] hover:text-[#7C3AED] transition-colors">
+                        <span>เปิดไพ่ส่วนตัว</span>
+                        <span class="text-[#7C3AED] text-xs font-bold">›</span>
+                    </a>
+                    <p class="text-[11px] text-[#6C5C80] leading-snug mt-0.5">
+                        ถามได้ทุกเรื่องที่อยู่ในใจ<br>
+                        รับคำทำนายเฉพาะคุณ จากไพ่และนักพยากรณ์
+                    </p>
+                    <a href="reading.html" class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#7C3AED] bg-white border border-purple-300/80 px-3 py-1 rounded-full shadow-xs hover:bg-purple-50 transition-all mt-2">
+                        <span>เริ่มดูดวงส่วนตัว</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 78 Cards Showcase ("สำรับไพ่ 78 ใบ") -->
+        <section class="mb-4">
+            <div class="flex items-baseline justify-between mb-1 px-0.5">
+                <div>
+                    <h2 class="font-bold text-sm sm:text-base text-[#231230]">สำรับไพ่ 78 ใบ</h2>
+                    <p class="text-[11px] text-[#7A6A8D]">ค้นหาความหมายของไพ่แต่ละใบ เพื่อเข้าใจตัวเองให้ลึกขึ้น</p>
+                </div>
+                <a href="cards-preview.html" class="text-xs font-semibold text-[#7C3AED] hover:underline flex-shrink-0">
+                    ดูทั้งหมด →
+                </a>
+            </div>
+
+            <!-- Horizontal Scroll Cards Gallery -->
+            <div class="cards-horizontal-gallery mt-1.5">
+                <!-- 0 The Fool -->
+                <a href="cards-preview.html#card-major-0" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-0.jpg" alt="0 The Fool" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">0 THE FOOL</span>
+                </a>
+
+                <!-- 1 The Magician -->
+                <a href="cards-preview.html#card-major-1" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-1.jpg" alt="I The Magician" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">I THE MAGICIAN</span>
+                </a>
+
+                <!-- 2 The High Priestess -->
+                <a href="cards-preview.html#card-major-2" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-2.jpg" alt="II The High Priestess" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">II PRIESTESS</span>
+                </a>
+
+                <!-- 3 The Empress -->
+                <a href="cards-preview.html#card-major-3" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-3.jpg" alt="III The Empress" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">III THE EMPRESS</span>
+                </a>
+
+                <!-- 4 The Emperor -->
+                <a href="cards-preview.html#card-major-4" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-4.jpg" alt="IV The Emperor" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">IV THE EMPEROR</span>
+                </a>
+
+                <!-- 5 The Sage -->
+                <a href="cards-preview.html#card-major-5" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-5.jpg" alt="V The Sage" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">V THE SAGE</span>
+                </a>
+
+                <!-- 6 The Lovers -->
+                <a href="cards-preview.html#card-major-6" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-6.jpg" alt="VI The Lovers" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">VI THE LOVERS</span>
+                </a>
+
+                <!-- 7 The Chariot -->
+                <a href="cards-preview.html#card-major-7" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-7.jpg" alt="VII The Chariot" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">VII THE CHARIOT</span>
+                </a>
+
+                <!-- 8 Strength -->
+                <a href="cards-preview.html#card-major-8" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-8.jpg" alt="VIII Strength" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">VIII STRENGTH</span>
+                </a>
+
+                <!-- 9 The Hermit -->
+                <a href="cards-preview.html#card-major-9" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-9.jpg" alt="IX The Hermit" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">IX THE HERMIT</span>
+                </a>
+
+                <!-- 10 Wheel of Fortune -->
+                <a href="cards-preview.html#card-major-10" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-10.jpg" alt="X Wheel of Fortune" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">X WHEEL</span>
+                </a>
+
+                <!-- 11 Justice -->
+                <a href="cards-preview.html#card-major-11" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-11.jpg" alt="XI Justice" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">XI JUSTICE</span>
+                </a>
+
+                <!-- 12 The Hanged Man -->
+                <a href="cards-preview.html#card-major-12" class="gallery-card-item">
+                    <div class="gallery-card-img-wrap">
+                        <img src="assets/cards/standard/major-12.jpg" alt="XII The Hanged Man" loading="lazy">
+                    </div>
+                    <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">XII HANGED MAN</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 6. Inspirational Quote Banner -->
+        <section class="mb-4">
+            <div class="quote-banner-card p-3.5 flex items-center justify-between relative">
+                <!-- Quote Text -->
+                <div class="z-10 max-w-[62%] pr-2">
+                    <p class="text-xs sm:text-[13px] font-medium text-[#2E1642] italic leading-relaxed">
+                        “ ไม่ว่าวันนี้จะเป็นอย่างไร<br>
+                        พรุ่งนี้ก็ยังมีหวังเสมอ ”
+                    </p>
+                    <div class="w-8 h-[1px] bg-purple-300 my-1.5"></div>
+                    <p class="text-[10px] text-[#7A6A8D] font-normal">
+                        ไพ่นำทาง...เพื่อวันพรุ่งนี้ที่ดีกว่า
+                    </p>
+                </div>
+
+                <!-- Vista Art: Girl looking at crescent moon over twilight lake -->
+                <div class="w-28 h-20 rounded-xl overflow-hidden flex-shrink-0 relative shadow-xs">
+                    <svg class="w-full h-full" viewBox="0 0 140 100" fill="none" preserveAspectRatio="xMidYMid slice">
+                        <!-- Twilight Gradient Sky -->
+                        <rect width="140" height="100" fill="url(#twilightSkyGrad)" />
+                        
+                        <!-- Distant mountain ridges and cedar silhouettes -->
+                        <path d="M0 72 Q35 56 70 66 T140 60 L140 100 L0 100 Z" fill="#9F7AEA" opacity="0.35" />
+                        <path d="M12 72 L16 58 L20 72 Z" fill="#7C3AED" opacity="0.3" />
+                        <path d="M30 73 L34 62 L38 73 Z" fill="#7C3AED" opacity="0.3" />
+
+                        <!-- Glowing Crescent Moon in Sky -->
+                        <path d="M56 18 C64 21, 64 36, 55 41 C50 43, 44 41, 42 38 C48 39, 52 35, 51 28 C50 23, 46 20, 42 19 C46 17, 51 16, 56 18 Z" fill="#FEF08A" filter="url(#moonGlowFilter)" />
+                        <circle cx="70" cy="24" r="0.8" fill="#FFFFFF" opacity="0.8" />
+                        <circle cx="85" cy="18" r="0.7" fill="#FFFFFF" opacity="0.8" />
+                        <circle cx="28" cy="22" r="0.6" fill="#FEF08A" opacity="0.8" />
+
+                        <!-- Calm Water & Reflections -->
+                        <rect y="68" width="140" height="32" fill="url(#waterGrad)" />
+                        <ellipse cx="54" cy="74" rx="14" ry="1.5" fill="#FEF08A" opacity="0.3" />
+                        <ellipse cx="54" cy="78" rx="8" ry="1" fill="#FEF08A" opacity="0.2" />
+
+                        <!-- Balcony / Shoreline -->
+                        <path d="M70 100 C80 85, 110 80, 140 82 L140 100 Z" fill="#4C1D95" opacity="0.75" />
+
+                        <!-- Silhouette of girl looking at the moon -->
+                        <path d="M98 100 C96 90, 94 82, 98 75 C100 70, 106 68, 110 70 C114 68, 120 70, 122 75 C126 82, 124 90, 122 100 Z" fill="#2E1065" />
+                        <circle cx="110" cy="64" r="6.5" fill="#2E1065" />
+                        <path d="M104 64 C100 72, 96 82, 102 92 C104 88, 108 82, 106 72 Z" fill="#1E0B40" />
+                        <path d="M116 64 C120 72, 124 82, 118 92 C116 88, 112 82, 114 72 Z" fill="#1E0B40" />
+                        <path d="M102 78 C108 76, 112 76, 118 78" stroke="#A78BFA" stroke-width="1.2" stroke-linecap="round" />
+
+                        <defs>
+                            <linearGradient id="twilightSkyGrad" x1="0" y1="0" x2="140" y2="100" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#E9D5FF" />
+                                <stop offset="50%" stop-color="#F5D0FE" />
+                                <stop offset="100%" stop-color="#FECDD3" />
+                            </linearGradient>
+                            <linearGradient id="waterGrad" x1="70" y1="68" x2="70" y2="100" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#C084FC" stop-opacity="0.8" />
+                                <stop offset="100%" stop-color="#7E22CE" stop-opacity="0.9" />
+                            </linearGradient>
+                            <filter id="moonGlowFilter" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="1.5" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- AdSense Slot Placeholder -->
+        <div class="w-full ad-slot text-center py-3 my-3 text-xs" aria-label="Advertisement">
             AdSense Banner (Responsive)
         </div>
-    </main>
-    
-    <footer class="p-4 text-center border-t border-gold/15 text-xs text-gray-500 mt-auto">
-        <div class="thai-divider" aria-hidden="true">๛</div>
-        <p>&copy; 2026 Thai Tarot. All rights reserved.</p>
-        <p class="mt-1">ผลลัพธ์เป็นเพียงส่วนเสริมกำลังใจ โปรดใช้วิจารณญาณ</p>
-    </footer>
+
+        <footer class="text-center text-[11px] text-gray-400 py-3 mb-2">
+            <p>&copy; 2026 money2 · Thai Tarot. All rights reserved.</p>
+            <p class="mt-0.5">ผลลัพธ์เป็นส่วนเสริมกำลังใจ โปรดใช้วิจารณญาณ</p>
+        </footer>
+    </div>
+
+    <!-- 7. Fixed Bottom Navigation Bar -->
+    <nav class="bottom-app-nav" aria-label="แถบนำทางหลัก">
+        <!-- Home (Active) -->
+        <a href="index.html" class="bottom-nav-item active" aria-current="page">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="mt-0.5 font-semibold">หน้าแรก</span>
+            <span class="bottom-nav-dot"></span>
+        </a>
+
+        <!-- Daily -->
+        <a href="daily.html" class="bottom-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span class="mt-0.5">รายวัน</span>
+        </a>
+
+        <!-- Center Elevated Button: Open Reading -->
+        <a href="reading.html" class="bottom-nav-center-elevated" aria-label="เปิดไพ่ส่วนตัว">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2 L13.8 8.2 L20 10 L13.8 11.8 L12 18 L10.2 11.8 L4 10 L10.2 8.2 Z" fill="#FFFFFF" />
+                <circle cx="12" cy="10" r="1.5" fill="#FEF08A" />
+                <path d="M18 4 L18.6 6 L20.6 6.6 L18.6 7.2 L18 9.2 L17.4 7.2 L15.4 6.6 L17.4 6 Z" fill="#FEF08A" />
+            </svg>
+            <span class="text-[9px] font-bold text-white tracking-tight -mt-0.5">เปิดไพ่</span>
+        </a>
+
+        <!-- All 78 Cards -->
+        <a href="cards-preview.html" class="bottom-nav-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="12" height="16" rx="2" transform="rotate(-6 3 5)"></rect>
+                <rect x="8" y="3" width="12" height="16" rx="2"></rect>
+            </svg>
+            <span class="mt-0.5">ไพ่ทั้งหมด</span>
+        </a>
+
+        <!-- Profile / Settings -->
+        <button id="btn-profile-nav" class="bottom-nav-item" aria-label="ข้อมูลส่วนตัว">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="mt-0.5">โปรไฟล์</span>
+        </button>
+    </nav>
+
+    <!-- Modals (Search, Notification, Profile) -->
+    <!-- 1. Search Modal -->
+    <div id="search-modal" class="app-modal-overlay" aria-hidden="true" role="dialog">
+        <div class="app-modal-card p-5">
+            <div class="flex items-center justify-between pb-3 border-b border-purple-100">
+                <div class="flex items-center gap-2">
+                    <span class="text-purple-600">🔍</span>
+                    <h3 class="font-bold text-base text-[#231230]">ค้นหาไพ่ & หมวดคำถาม</h3>
+                </div>
+                <button class="modal-close-btn text-gray-400 hover:text-gray-700 text-lg px-2">✕</button>
+            </div>
+            <div class="mt-3">
+                <input type="text" id="search-input" placeholder="พิมพ์ชื่อไพ่ เช่น Fool, Magician หรือ ความรัก, การเงิน..." class="w-full px-3.5 py-2.5 rounded-xl border border-purple-200 text-sm focus:outline-none focus:border-purple-500 bg-purple-50/50">
+            </div>
+            <div id="search-results" class="mt-3 max-h-60 overflow-y-auto space-y-1.5 text-xs">
+                <div class="p-2 text-gray-400 text-center">พิมพ์เพื่อค้นหาไพ่ทั้ง 78 ใบ</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Notification Modal -->
+    <div id="notification-modal" class="app-modal-overlay" aria-hidden="true" role="dialog">
+        <div class="app-modal-card p-5">
+            <div class="flex items-center justify-between pb-3 border-b border-purple-100">
+                <div class="flex items-center gap-2">
+                    <span class="text-amber-500 text-base">🔔</span>
+                    <h3 class="font-bold text-base text-[#231230]">ข้อความนำทางวันนี้</h3>
+                </div>
+                <button class="modal-close-btn text-gray-400 hover:text-gray-700 text-lg px-2">✕</button>
+            </div>
+            <div class="mt-3 space-y-2.5 text-xs text-[#4A3B5C]">
+                <div class="p-3 bg-purple-50 rounded-xl border border-purple-100">
+                    <div class="font-bold text-[#6D28D9] mb-1">✨ พลังบวกประจำวัน</div>
+                    <p class="leading-relaxed">ดวงดาวและดวงจันทร์กำลังเปล่งประกาย จงเชื่อมั่นในพลังและศักยภาพของตัวคุณเอง สิ่งดีงามกำลังเดินทางมาถึง</p>
+                </div>
+                <div class="p-3 bg-amber-50 rounded-xl border border-amber-100">
+                    <div class="font-bold text-[#B45309] mb-1">👔 เคล็ดลับสีมงคลประจำวัน</div>
+                    <p class="leading-relaxed">อย่าลืมเปิดไพ่ประจำวันเพื่อรับคำแนะนำการแมตช์สีเสื้อผ้าเสริมดวงในเรื่องที่คุณต้องการมากที่สุดวันนี้</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Profile Modal -->
+    <div id="profile-modal" class="app-modal-overlay" aria-hidden="true" role="dialog">
+        <div class="app-modal-card p-5">
+            <div class="flex items-center justify-between pb-3 border-b border-purple-100">
+                <div class="flex items-center gap-2">
+                    <span class="text-purple-600 text-base">👤</span>
+                    <h3 class="font-bold text-base text-[#231230]">โปรไฟล์ & การตั้งค่า</h3>
+                </div>
+                <button class="modal-close-btn text-gray-400 hover:text-gray-700 text-lg px-2">✕</button>
+            </div>
+            <div class="mt-4 flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-purple-500 to-amber-300 p-0.5 shadow-md mb-2">
+                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center text-2xl">
+                        🐰
+                    </div>
+                </div>
+                <h4 class="font-bold text-sm text-[#231230]">เพื่อนร่วมทางกระต่ายจันทรา</h4>
+                <span class="text-[11px] text-[#7A6A8D] mt-0.5">สถานะ: พลังใจเต็มเปี่ยม ✦</span>
+
+                <div class="w-full mt-4 space-y-2 text-left text-xs">
+                    <a href="daily.html" class="flex items-center justify-between p-2.5 bg-purple-50/70 hover:bg-purple-100/70 rounded-xl border border-purple-100 transition-colors">
+                        <span class="font-medium text-[#4A3B5C]">☀️ ไพ่ประจำวันวันนี้</span>
+                        <span class="text-purple-600 font-bold">เปิดแล้ว ›</span>
+                    </a>
+                    <a href="cards-preview.html" class="flex items-center justify-between p-2.5 bg-purple-50/70 hover:bg-purple-100/70 rounded-xl border border-purple-100 transition-colors">
+                        <span class="font-medium text-[#4A3B5C]">🃏 เลือกเปลี่ยนธีมสำรับไพ่</span>
+                        <span class="text-purple-600 font-bold">ดูสำรับ ›</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="js/app.js"></script>
 </body>

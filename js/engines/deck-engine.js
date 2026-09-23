@@ -61,18 +61,23 @@ export function initDeckSelector(decks) {
         if (!header) return;
 
         const container = document.createElement('div');
-        container.className = 'absolute top-4 right-4 md:static md:ml-auto';
+        container.className = 'header-theme-pill flex items-center gap-1 bg-white border border-amber-300/80 rounded-full px-2.5 py-1 text-xs font-semibold shadow-xs';
         
+        const sun = document.createElement('span');
+        sun.className = 'text-amber-500 text-xs';
+        sun.textContent = '☀️';
+        container.appendChild(sun);
+
         selector = document.createElement('select');
         selector.id = 'deck-selector';
-        selector.className = 'bg-mystic border border-white/20 text-xs text-white p-1 rounded focus:outline-none focus:border-gold';
+        selector.className = 'bg-transparent text-[11px] font-medium text-[#231230] focus:outline-none cursor-pointer border-none p-0';
         
         container.appendChild(selector);
         header.appendChild(container);
     }
 
     // Clear existing
-    selector.innerHTML = '<option value="auto">🌟 Auto (ตามเทศกาล)</option>';
+    selector.innerHTML = '<option value="auto">Auto (ตามเทศกาล)</option>';
     
     // Add available decks
     decks.forEach(deck => {

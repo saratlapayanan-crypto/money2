@@ -147,10 +147,10 @@ function renderAffiliates(category, affiliates) {
     
     selected.forEach(aff => {
         const itemHtml = `
-            <div class="bg-white/10 p-4 rounded border border-white/20 flex flex-col gap-2 hover:bg-white/20 transition-colors">
-                <h4 class="text-sm font-bold text-white">${aff.title}</h4>
-                <p class="text-xs text-gray-300">${aff.description}</p>
-                <a href="${aff.url}" data-aff-id="${aff.id}" target="_blank" rel="nofollow sponsored noopener" class="affiliate-link text-xs text-gold underline mt-1 block">ดูรายละเอียดเพิ่มเติม</a>
+            <div class="bg-white/90 p-4 rounded-xl border border-purple-100/80 shadow-xs flex flex-col gap-2 hover:shadow-md hover:border-amber-300/60 transition-all">
+                <h4 class="text-sm font-bold text-[#261633]">${aff.title}</h4>
+                <p class="text-xs text-[#4A3B55] leading-relaxed">${aff.description}</p>
+                <a href="${aff.url}" data-aff-id="${aff.id}" target="_blank" rel="nofollow sponsored noopener" class="affiliate-link text-xs text-[#8A5D0B] font-semibold underline mt-1 block">ดูรายละเอียดเพิ่มเติม ✦</a>
             </div>
         `;
         container.insertAdjacentHTML("beforeend", itemHtml);

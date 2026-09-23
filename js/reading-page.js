@@ -35,19 +35,29 @@ async function init() {
 function setupCategoryListeners() {
     const catBtns = document.querySelectorAll('.cat-btn');
     catBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', () => {
             // Update active state
             catBtns.forEach(b => {
-                b.classList.remove('bg-gold', 'text-mystic');
-                b.classList.add('bg-white/10', 'text-white');
+                b.classList.remove('bg-gold');
             });
-            e.target.classList.remove('bg-white/10', 'text-white');
-            e.target.classList.add('bg-gold', 'text-mystic');
+            btn.classList.add('bg-gold');
 
-            const category = e.target.dataset.category;
+            const category = btn.dataset.category;
             populateSubtopics(category);
         });
     });
+
+    // Auto-select category if passed in URL query param (?category=work|finance|love)
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const catParam = urlParams.get('category');
+        if (catParam) {
+            const matchingBtn = document.querySelector(`.cat-btn[data-category="${catParam}"]`);
+            if (matchingBtn) {
+                matchingBtn.click();
+            }
+        }
+    } catch (_) {}
 }
 
 function populateSubtopics(category) {

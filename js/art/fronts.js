@@ -1,536 +1,825 @@
 /* ================================================================
-   หน้าไพ่ 78 ใบ — original cartoon SVG art (แนวการ์ตูนไทย)
-   องค์ประกอบสัญลักษณ์อ้างอิง: Wikipedia "Major Arcana"
-   ภาพวาดทั้งหมดเป็น vector ต้นฉบับของโปรเจกต์นี้
+   หน้าไพ่ 78 ใบ — Modern Celestial Tarot with Siamese Filigree
+   ดีไซน์สไตล์อาร์ตนูโว ซุ้มวิหารสวรรค์ (Cathedral Arch) ลายเส้นทองอร่าม
+   ใช้สัญลักษณ์สากลแท้ของไพ่ทาโรต์ ไร้หน้าการ์ตูนอิโมจิ คงความขลัง สง่างาม
+   พร้อมลายน้ำแบรนด์ "✦ THAI TAROT · MOON RABBIT ✦" สำหรับแชร์ลงโซเชียล
    ================================================================ */
+
 import {
     g, circle, ell, rect, rrect, line, path, poly, txt,
-    star, sparkle, heart, flame, crescent, bat, snowflake,
-    corners, sunburst, wave, toRoman, face
+    star, sparkle, heart, flame, crescent, bat, snowflake, drop,
+    corners, sunburst, wave, toRoman
 } from './helpers.js';
 import { getTheme } from './themes.js';
+import {
+    drawFoolFigure, drawMagicianFigure, drawPriestessFigure, drawEmpressFigure,
+    drawEmperorFigure, drawHierophantFigure, drawLoversFigures, drawChariotFigure,
+    drawStrengthFigure, drawHermitFigure, drawJusticeFigure, drawHangedManFigure,
+    drawDeathFigure, drawTemperanceFigure, drawDevilFigure, drawStarFigure,
+    drawMoonFigure, drawSunFigure, drawJudgementFigure, drawWorldFigure,
+    drawCourtFigure
+} from './figures.js';
+import { renderMinorScene } from './minor-scenes.js';
+import {
+    renderDeckBorder,
+    renderDeckArch,
+    renderDeckNumeralBadge,
+    renderDeckCartouche
+} from './borders.js';
 
 const W = 240, H = 380;
-const SKIN = '#ffd9b3';
-const HAIR = '#3b2a20';
+const CX = W / 2;
 
-/* ---------- ไอคอนชุดไพ่ (suit icons) วาดที่จุดกำเนิด สูง ~30 ---------- */
+/** ภาพวาด Masterpiece ลายเส้นอาร์ตนูโวคลาสสิกที่ผ่านการอนุมัติครบ 22 Major Arcana + 4 Aces */
+export const APPROVED_CARD_ASSETS = {
+    'major-0': 'assets/cards/standard/major-0.jpg',
+    'major-1': 'assets/cards/standard/major-1.jpg',
+    'major-2': 'assets/cards/standard/major-2.jpg',
+    'major-3': 'assets/cards/standard/major-3.jpg',
+    'major-4': 'assets/cards/standard/major-4.jpg',
+    'major-5': 'assets/cards/standard/major-5.jpg',
+    'major-6': 'assets/cards/standard/major-6.jpg',
+    'major-7': 'assets/cards/standard/major-7.jpg',
+    'major-8': 'assets/cards/standard/major-8.jpg',
+    'major-9': 'assets/cards/standard/major-9.jpg',
+    'major-10': 'assets/cards/standard/major-10.jpg',
+    'major-11': 'assets/cards/standard/major-11.jpg',
+    'major-12': 'assets/cards/standard/major-12.jpg',
+    'major-13': 'assets/cards/standard/major-13.jpg',
+    'major-14': 'assets/cards/standard/major-14.jpg',
+    'major-15': 'assets/cards/standard/major-15.jpg',
+    'major-16': 'assets/cards/standard/major-16.jpg',
+    'major-17': 'assets/cards/standard/major-17.jpg',
+    'major-18': 'assets/cards/standard/major-18.jpg',
+    'major-19': 'assets/cards/standard/major-19.jpg',
+    'major-20': 'assets/cards/standard/major-20.jpg',
+    'major-21': 'assets/cards/standard/major-21.jpg',
+    'wands-1': 'assets/cards/standard/wands-1.jpg',
+    'wands-2': 'assets/cards/standard/wands-2.jpg',
+    'wands-3': 'assets/cards/standard/wands-3.jpg',
+    'wands-4': 'assets/cards/standard/wands-4.jpg',
+    'wands-5': 'assets/cards/standard/wands-5.jpg',
+    'wands-6': 'assets/cards/standard/wands-6.jpg',
+    'wands-7': 'assets/cards/standard/wands-7.jpg',
+    'wands-8': 'assets/cards/standard/wands-8.jpg',
+    'wands-9': 'assets/cards/standard/wands-9.jpg',
+    'wands-10': 'assets/cards/standard/wands-10.jpg',
+    'wands-11': 'assets/cards/standard/wands-11.jpg',
+    'wands-12': 'assets/cards/standard/wands-12.jpg',
+    'wands-13': 'assets/cards/standard/wands-13.jpg',
+    'wands-14': 'assets/cards/standard/wands-14.jpg',
+    'cups-1': 'assets/cards/standard/cups-1.jpg',
+    'cups-2': 'assets/cards/standard/cups-2.jpg',
+    'cups-3': 'assets/cards/standard/cups-3.jpg',
+    'cups-4': 'assets/cards/standard/cups-4.jpg',
+    'cups-5': 'assets/cards/standard/cups-5.jpg',
+    'cups-6': 'assets/cards/standard/cups-6.jpg',
+    'cups-7': 'assets/cards/standard/cups-7.jpg',
+    'cups-8': 'assets/cards/standard/cups-8.jpg',
+    'cups-9': 'assets/cards/standard/cups-9.jpg',
+    'cups-10': 'assets/cards/standard/cups-10.jpg',
+    'cups-11': 'assets/cards/standard/cups-11.jpg',
+    'cups-12': 'assets/cards/standard/cups-12.jpg',
+    'cups-13': 'assets/cards/standard/cups-13.jpg',
+    'cups-14': 'assets/cards/standard/cups-14.jpg',
+    'swords-1': 'assets/cards/standard/swords-1.jpg',
+    'swords-2': 'assets/cards/standard/swords-2.jpg',
+    'swords-3': 'assets/cards/standard/swords-3.jpg',
+    'swords-4': 'assets/cards/standard/swords-4.jpg',
+    'swords-5': 'assets/cards/standard/swords-5.jpg',
+    'swords-6': 'assets/cards/standard/swords-6.jpg',
+    'swords-7': 'assets/cards/standard/swords-7.jpg',
+    'swords-8': 'assets/cards/standard/swords-8.jpg',
+    'swords-9': 'assets/cards/standard/swords-9.jpg',
+    'pentacles-1': 'assets/cards/standard/pentacles-1.jpg',
+};
+
+/* ---------- ไอคอน 4 ธาตุประจำชุดไพ่ (Suit Relics) ---------- */
+
+/** ไม้เท้าแห่งแสงและเปลวเพลิงศักดิ์สิทธิ์ (Wands - Fire) */
 function wandIcon(t) {
-    const gold = t.suitGold, hot = t.suits.wands;
+    const gold = t.suitGold, fire = t.suits.wands;
     return g(
-        line(0, 15, 0, -8, { stroke: gold, 'stroke-width': 5, 'stroke-linecap': 'round' }) +
-        circle(0, -8, 3.4, { fill: gold }) +
-        path('M 0 -22 C 7 -26, 9 -18, 3 -16 C 8 -15, 5 -9, 0 -13 C -5 -9, -8 -15, -3 -16 C -9 -18, -7 -26, 0 -22 Z', { fill: hot }) +
-        sparkle(0, -26, 4.5, gold, 0.9),
+        // ก้านไม้เท้าทองคำพร้อมตาใบผลิ
+        line(0, 18, 0, -10, { stroke: gold, 'stroke-width': 4, 'stroke-linecap': 'round' }) +
+        circle(0, 18, 2.5, { fill: gold }) +
+        path('M 0 5 Q -6 0, -3 -6 Q 0 -1, 0 5 Z', { fill: '#6ab04c' }) +
+        path('M 0 -2 Q 6 -7, 3 -13 Q 0 -8, 0 -2 Z', { fill: '#6ab04c' }) +
+        // หัวไม้เท้าดอกบัวตูมเปล่งเปลวไฟ
+        circle(0, -10, 4.5, { fill: gold }) +
+        path('M 0 -25 C 8 -30, 9 -20, 3 -17 C 8 -16, 5 -10, 0 -14 C -5 -10, -8 -16, -3 -17 C -9 -20, -8 -30, 0 -25 Z', { fill: fire }) +
+        circle(0, -19, 2.2, { fill: '#ffffff' }) +
+        sparkle(0, -28, 5, '#ffffff', 0.95),
         {}
     );
 }
+
+/** ถ้วยทองคำศักดิ์สิทธิ์บรรจุน้ำทิพย์ (Cups - Water) */
 function cupIcon(t) {
-    const gold = t.suitGold, blue = t.suits.cups;
+    const gold = t.suitGold, water = t.suits.cups;
     return g(
-        path('M -11 -14 L 11 -14 C 11 -2, 5 5, 0 6 C -5 5, -11 -2, -11 -14 Z', { fill: gold }) +
-        ell(0, -14, 11, 2.6, { fill: blue }) +
-        line(0, 6, 0, 13, { stroke: gold, 'stroke-width': 4 }) +
-        ell(0, 16, 8, 2.8, { fill: gold }) +
-        circle(0, -6, 3, { fill: t.bg[0], opacity: 0.5 }),
+        // ลำตัวถ้วยทรงบงกช
+        path('M -13 -12 L 13 -12 C 13 2, 7 9, 0 10 C -7 9, -13 2, -13 -12 Z', { fill: gold }) +
+        ell(0, -12, 13, 3.2, { fill: water }) +
+        // หูถ้วยปีกหงส์
+        path('M -13 -8 C -18 -4, -18 3, -11 6', { stroke: gold, 'stroke-width': 2.2, fill: 'none' }) +
+        path('M 13 -8 C 18 -4, 18 3, 11 6', { stroke: gold, 'stroke-width': 2.2, fill: 'none' }) +
+        // ก้านและฐาน
+        line(0, 10, 0, 18, { stroke: gold, 'stroke-width': 4.5 }) +
+        ell(0, 19, 10, 3.2, { fill: gold }) +
+        circle(0, -1, 2.8, { fill: '#ffffff', opacity: 0.8 }) +
+        sparkle(0, -16, 3.5, '#ffffff', 0.9),
         {}
     );
 }
+
+/** ดาบเหล็กกล้าแห่งปัญญาและความจริง (Swords - Air) */
 function swordIcon(t) {
-    const steel = t.suits.swords, gold = t.suitGold, grip = t.ribbon || '#c0392b';
+    const steel = t.suits.swords, gold = t.suitGold;
     return g(
-        poly('0,-26 4.5,-8 4.5,8 -4.5,8 -4.5,-8', { fill: steel }) +
-        line(-9, 9, 9, 9, { stroke: gold, 'stroke-width': 4, 'stroke-linecap': 'round' }) +
-        line(0, 9, 0, 18, { stroke: grip, 'stroke-width': 4 }) +
-        circle(0, 20, 3.4, { fill: gold }),
+        // ใบมีดคมสองด้าน
+        poly('0,-28 5,-8 4,11 -4,11 -5,-8', { fill: steel }) +
+        line(0, -25, 0, 11, { stroke: '#ffffff', 'stroke-width': 1.2, opacity: 0.9 }) +
+        // โกร่งดาบปีกทอง
+        path('M -12 11 Q 0 8, 12 11 L 10 14 Q 0 12, -10 14 Z', { fill: gold }) +
+        // ด้ามจับและหัวด้าม
+        line(0, 12, 0, 22, { stroke: '#4a2810', 'stroke-width': 3.8 }) +
+        circle(0, 24, 3.8, { fill: gold }) +
+        sparkle(0, -28, 4.5, '#ffffff', 0.95),
         {}
     );
 }
+
+/** เหรียญตราทองคำประทับดาวห้าแฉก (Pentacles - Earth) */
 function coinIcon(t) {
     const gold = t.suitGold, green = t.suits.pentacles;
     return g(
-        circle(0, 0, 14, { fill: gold }) +
-        circle(0, 0, 10.5, { fill: 'none', stroke: t.bg[1], 'stroke-width': 1.6 }) +
-        star(0, 0, 8.5, 3.4, 5, -90, { fill: 'none', stroke: t.bg[1], 'stroke-width': 1.6 }) +
-        circle(0, 0, 2.4, { fill: green }),
+        circle(0, 0, 15, { fill: gold }) +
+        circle(0, 0, 12.2, { fill: 'none', stroke: 'rgba(25,12,35,0.7)', 'stroke-width': 1.4 }) +
+        // ดาว 5 แฉกแห่งธาตุทั้ง 5
+        star(0, 0, 9.8, 3.8, 5, -90, { fill: 'none', stroke: 'rgba(25,12,35,0.85)', 'stroke-width': 1.6 }) +
+        circle(0, 0, 2.6, { fill: green }) +
+        sparkle(0, 0, 3, '#ffffff', 0.8),
         {}
     );
 }
+
 const SUIT_ICONS = { wands: wandIcon, cups: cupIcon, swords: swordIcon, pentacles: coinIcon };
 
-/* ---------- ผังจัดวาง pips 1–10 (พื้นที่ศิลป์ 160×165) ---------- */
+/* ---------- ผังจัดวางตำแหน่งไพ่แต้ม 1–10 (Pips 1-10) ---------- */
 const PIPS = {
-    1: [[80, 82, 1.75]],
-    2: [[80, 40, 1.05], [80, 124, 1.05]],
-    3: [[80, 30, 1.05], [44, 122, 1.05], [116, 122, 1.05]],
-    4: [[52, 42, 1.05], [108, 42, 1.05], [52, 124, 1.05], [108, 124, 1.05]],
-    5: [[52, 32, 1], [108, 32, 1], [80, 78, 1], [52, 128, 1], [108, 128, 1]],
-    6: [[52, 32, 0.95], [108, 32, 0.95], [52, 82, 0.95], [108, 82, 0.95], [52, 132, 0.95], [108, 132, 0.95]],
-    7: [[80, 24, 0.9], [52, 58, 0.9], [108, 58, 0.9], [52, 104, 0.9], [108, 104, 0.9], [80, 140, 0.9], [80, 81, 0.9]],
-    8: [[52, 26, 0.85], [108, 26, 0.85], [52, 66, 0.85], [108, 66, 0.85], [52, 106, 0.85], [108, 106, 0.85], [52, 144, 0.85], [108, 144, 0.85]],
-    9: [[45, 30, 0.85], [80, 30, 0.85], [115, 30, 0.85], [45, 82, 0.85], [80, 82, 0.85], [115, 82, 0.85], [45, 134, 0.85], [80, 134, 0.85], [115, 134, 0.85]],
-    10: [[80, 24, 0.75], [58, 58, 0.75], [102, 58, 0.75], [36, 96, 0.75], [80, 96, 0.75], [124, 96, 0.75], [28, 136, 0.75], [69, 136, 0.75], [110, 136, 0.75], [148, 136, 0.75]],
+    1: [[CX, 175, 1.85, 0]],
+    2: [[CX, 130, 1.2, 0], [CX, 220, 1.2, 180]],
+    3: [[CX, 120, 1.1, 0], [CX - 40, 215, 1.1, -15], [CX + 40, 215, 1.1, 15]],
+    4: [[CX - 42, 130, 1.1, 0], [CX + 42, 130, 1.1, 0], [CX - 42, 220, 1.1, 0], [CX + 42, 220, 1.1, 0]],
+    5: [[CX - 42, 120, 1, 0], [CX + 42, 120, 1, 0], [CX, 175, 1.25, 0], [CX - 42, 230, 1, 0], [CX + 42, 230, 1, 0]],
+    6: [[CX - 42, 120, 0.95, 0], [CX + 42, 120, 0.95, 0], [CX - 42, 175, 0.95, 0], [CX + 42, 175, 0.95, 0], [CX - 42, 230, 0.95, 0], [CX + 42, 230, 0.95, 0]],
+    7: [[CX, 110, 0.95, 0], [CX - 42, 148, 0.9, 0], [CX + 42, 148, 0.9, 0], [CX, 180, 0.95, 0], [CX - 42, 215, 0.9, 0], [CX + 42, 215, 0.9, 0], [CX, 245, 0.9, 0]],
+    8: [[CX - 42, 115, 0.88, 0], [CX + 42, 115, 0.88, 0], [CX - 42, 155, 0.88, 0], [CX + 42, 155, 0.88, 0], [CX - 42, 195, 0.88, 0], [CX + 42, 195, 0.88, 0], [CX - 42, 235, 0.88, 0], [CX + 42, 235, 0.88, 0]],
+    9: [[CX - 44, 115, 0.85, 0], [CX, 115, 0.85, 0], [CX + 44, 115, 0.85, 0], [CX - 44, 175, 0.85, 0], [CX, 175, 0.95, 0], [CX + 44, 175, 0.85, 0], [CX - 44, 235, 0.85, 0], [CX, 235, 0.85, 0], [CX + 44, 235, 0.85, 0]],
+    10: [[CX, 108, 0.8, 0], [CX - 44, 138, 0.8, 0], [CX + 44, 138, 0.8, 0], [CX - 22, 172, 0.8, 0], [CX + 22, 172, 0.8, 0], [CX, 204, 0.8, 0], [CX - 44, 204, 0.8, 0], [CX + 44, 204, 0.8, 0], [CX - 25, 240, 0.8, 0], [CX + 25, 240, 0.8, 0]],
 };
 
-/* ---------- การ์ดสำคัญ (Page/Knight/Queen/King) ---------- */
-function courtArt(kind, suit, t) {
-    const suitColor = t.suits[suit];
+/* ---------- ไพ่บุคคล (Court Cards: Page, Knight, Queen, King) ---------- */
+function courtArt(kind, suit, t, deckId = 'standard') {
     const gold = t.suitGold;
-    let headgear = '';
-    if (kind === 11) { // Page — หมวกแก๊ป + ขนนก
-        headgear = g(
-            path(`M -13 -19 Q 0 -30, 13 -19 L 13 -14 Q 0 -19, -13 -14 Z`, { fill: suitColor }) +
-            path('M 10 -18 Q 20 -30, 24 -24 Q 16 -22, 12 -16 Z', { fill: gold }),
-            { transform: 'translate(80 47)' }
+    const cy = 175;
+    const suitCol = t.suits[suit] || gold;
+
+    // ฉากพื้นหลังเฉพาะบุคคล
+    let courtBackdrop = '';
+    if (kind === 11) {
+        // Page: ลานระเบียงชมวิวทิวทัศน์
+        courtBackdrop = (
+            path('M 32 235 Q 120 220, 208 235 L 208 284 L 32 284 Z', { fill: '#334155', opacity: 0.35 }) +
+            line(32, 235, 208, 235, { stroke: gold, 'stroke-width': 1.5 })
         );
-    } else if (kind === 12) { // Knight — หมวกกันน็อค + ขนนกแดง
-        headgear = g(
-            rrect(-13, -24, 26, 12, 5, { fill: t.suits.swords }) +
-            path('M 0 -24 C 4 -36, 14 -38, 18 -30 C 10 -30, 6 -26, 4 -22 Z', { fill: t.ribbon || '#c0392b' }),
-            { transform: 'translate(80 47)' }
+    } else if (kind === 12) {
+        // Knight: ธงศึกโบกสะบัดและเส้นสปีดเคลื่อนที่รวดเร็ว
+        courtBackdrop = (
+            path(`M ${CX - 15} 120 L ${CX + 52} 105 L ${CX + 35} 130 L ${CX + 52} 145 L ${CX - 15} 135 Z`, { fill: suitCol, opacity: 0.85 }) +
+            line(CX - 15, 95, CX - 15, 210, { stroke: gold, 'stroke-width': 2 }) +
+            circle(CX - 15, 95, 3.5, { fill: gold })
         );
-    } else if (kind === 13) { // Queen — มงกุฎโค้ง + ผ้าคลุม
-        headgear = g(
-            path('M -13 -18 Q -13 -27, -6 -24 Q 0 -32, 6 -24 Q 13 -27, 13 -18 Z', { fill: gold }) +
-            circle(0, -30, 2.2, { fill: t.sparkle }),
-            { transform: 'translate(80 47)' }
+    } else if (kind === 13) {
+        // Queen: พนักพิงบัลลังก์ศิลาสลักลวดลายวิจิตร
+        courtBackdrop = (
+            rect(CX - 38, 125, 76, 120, { fill: '#1e293b', stroke: gold, 'stroke-width': 2, rx: 8 }) +
+            path(`M ${CX - 38} 125 Q ${CX} 102, ${CX + 38} 125`, { stroke: gold, 'stroke-width': 2.5, fill: 'none' }) +
+            circle(CX, 114, 4, { fill: gold }) +
+            rect(CX - 45, 240, 90, 15, { fill: '#0f172a', stroke: gold, 'stroke-width': 1.2 })
         );
-    } else { // King — มงกุกแหลม + เครา
-        headgear = g(
-            poly('-13,-18 0,-36 13,-18', { fill: gold }) +
-            circle(-6, -20, 1.8, { fill: t.sparkle }) + circle(6, -20, 1.8, { fill: t.sparkle }),
-            { transform: 'translate(80 47)' }
+    } else if (kind === 14) {
+        // King: บัลลังก์จักรพรรดิและเสาราชสำนักทองคำคู่
+        courtBackdrop = (
+            rect(CX - 42, 115, 84, 130, { fill: '#0f172a', stroke: gold, 'stroke-width': 2.2, rx: 6 }) +
+            path(`M ${CX - 42} 115 L ${CX} 92 L ${CX + 42} 115 Z`, { fill: suitCol, stroke: gold, 'stroke-width': 1.5 }) +
+            star(CX, 102, 5, 2.5, 5, -90, { fill: gold }) +
+            rect(CX - 48, 242, 96, 16, { fill: '#334155', stroke: gold, 'stroke-width': 1.5 })
         );
     }
-    const beard = kind === 14 ? path('M -9 8 Q 0 26, 9 8 Q 0 14, -9 8 Z', { fill: '#d8d3c8', transform: 'translate(80 52)' }) : '';
-    const veil = kind === 13 ? path('M -16 -12 Q 0 -22, 16 -12 L 14 6 Q 0 -2, -14 6 Z', { fill: t.sparkle, opacity: 0.35, transform: 'translate(80 50)' }) : '';
 
     return g(
-        // เมดัลลิออนพื้นหลัง
-        circle(80, 78, 62, { fill: t.bg[0], opacity: 0.55 }) +
-        circle(80, 78, 62, { fill: 'none', stroke: t.frameSoft, 'stroke-width': 1.5 }) +
-        // ลำตัว/เสื้อคลุม
-        path('M 80 34 C 52 38, 40 78, 34 132 L 126 132 C 120 78, 108 38, 80 34 Z', { fill: suitColor }) +
-        path('M 80 34 L 66 132 L 94 132 Z', { fill: t.bg[1], opacity: 0.35 }) +
-        // อินทรียวัตถุประจำชุดบนอก
-        g(SUIT_ICONS[suit](t), { transform: 'translate(80 96) scale(0.9)' }) +
-        // สร้อย
-        path('M 62 52 Q 80 66, 98 52', { stroke: gold, 'stroke-width': 2.5, fill: 'none' }) +
-        // หน้า + ผม
-        face(80, 47, 17, SKIN, { blush: true }) +
-        path('M 63 44 C 62 26, 98 26, 97 44 C 94 34, 66 34, 63 44 Z', { fill: HAIR }) +
-        veil + beard + headgear,
+        // รัศมีฉากหลัง
+        circle(CX, cy, 64, { fill: 'none', stroke: t.frameSoft, 'stroke-width': 1 }) +
+        courtBackdrop +
+        // ซุ้มเสาค้ำราชสำนัก
+        line(CX - 58, cy - 50, CX - 58, cy + 65, { stroke: gold, 'stroke-width': 2, opacity: 0.6 }) +
+        line(CX + 58, cy - 50, CX + 58, cy + 65, { stroke: gold, 'stroke-width': 2, opacity: 0.6 }) +
+        // ตัวละครราชสำนักแท้ตามเทศกาล
+        drawCourtFigure(kind, suit, deckId, t) +
+        // สัญลักษณ์ธาตุประจำสำรับที่ถือ/สถิต
+        g(SUIT_ICONS[suit](t), { transform: `translate(${CX + 38} ${cy + 42}) scale(0.9)` }) +
+        sparkle(CX - 40, cy - 40, 4, t.sparkle, 0.8) +
+        sparkle(CX + 40, cy - 40, 4, t.sparkle, 0.8),
         {}
     );
 }
 
-/* ---------- Major Arcana 22 ใบ (องค์ประกอบอ้างอิง Wikipedia) ---------- */
+function lotusRing(cx, cy, r, petalLen, petalW, color, count = 8, opacity = 0.8) {
+    let out = '';
+    for (let i = 0; i < count; i++) {
+        const deg = (i * 360) / count;
+        out += g(
+            path(
+                `M 0 0 C ${-petalW} ${-petalLen * 0.4}, ${-petalW * 0.7} ${-petalLen * 0.85}, 0 ${-petalLen} ` +
+                `C ${petalW * 0.7} ${-petalLen * 0.85}, ${petalW} ${-petalLen * 0.4}, 0 0 Z`,
+                { fill: color, opacity }
+            ),
+            { transform: `translate(${cx} ${cy}) rotate(${deg}) translate(0 ${-r})` }
+        );
+    }
+    return out;
+}
+
+/* ================================================================
+   Major Arcana 22 ใบ (0 ถึง XXI)
+   สัญลักษณ์แท้ระดับสากล ไม่ใช้การ์ตูนอีโมจิ
+   ================================================================ */
 const MAJORS = {
-    0: (t) => // The Fool — คนหนุ่มเฝือกผา + สุนัข + ถุงผูกไม้
-        g(
-            poly('92,92 160,92 160,165 60,165', { fill: '#8a6b4f' }) +
-            poly('92,92 160,92 160,104 104,104', { fill: '#a3835f', opacity: 0.6 }) +
-            circle(24, 22, 11, { fill: '#f6d98a' }) + sunburst(24, 22, 22, t.suitGold, 8, 1.6) +
-            face(102, 52, 13, SKIN, { blush: true }) +
-            path('M 102 66 C 90 70, 86 84, 88 92 L 116 92 C 118 80, 112 70, 102 66 Z', { fill: '#e8b84f' }) +
-            line(112, 46, 132, 30, { stroke: '#8a6b4f', 'stroke-width': 3, 'stroke-linecap': 'round' }) +
-            circle(136, 26, 9, { fill: t.suits.pentacles }) +
-            line(96, 74, 78, 80, { stroke: SKIN, 'stroke-width': 5, 'stroke-linecap': 'round' }) +
-            circle(74, 78, 4, { fill: '#ffffff' }) + circle(74, 78, 2, { fill: '#f3a3a3' }) +
-            ell(116, 118, 14, 8, { fill: '#d9a066' }) +
-            circle(130, 112, 7, { fill: '#d9a066' }) +
-            poly('132,106 138,112 130,114', { fill: '#b57f4a' }) +
-            path('M 102 124 Q 92 118, 94 112', { stroke: '#d9a066', 'stroke-width': 3, fill: 'none' }) +
-            sparkle(40, 130, 5, t.sparkle, 0.8) + sparkle(140, 60, 5, t.sparkle, 0.7),
+    0: (t, deckId = 'standard') => { // The Fool: หน้าผาสีทอง + ตะวันรุ่งโรจน์ + สุนัขเทพสีขาว + ถุงไม้เท้านักเดินทาง
+        return g(
+            // ดวงอาทิตย์สีทองมุมบน
+            circle(60, 105, 20, { fill: t.suitGold, opacity: 0.9 }) +
+            sunburst(60, 105, 36, t.frameSoft, 12, 1.5) +
+            // เทือกเขาไกล
+            poly('35,210 85,155 135,210', { fill: 'rgba(255,255,255,0.08)' }) +
+            poly('105,210 155,165 205,210', { fill: 'rgba(255,255,255,0.05)' }) +
+            // หน้าผาสูงชัน
+            path('M 125 185 L 205 185 L 205 255 L 95 255 Q 115 220, 125 185 Z', { fill: '#7f5539' }) +
+            path('M 125 185 L 205 185 L 205 195 L 118 195 Z', { fill: t.suitGold, opacity: 0.8 }) +
+            // นักเดินทางตามเทศกาล
+            drawFoolFigure(deckId, t),
             {}
-        ),
-    1: (t) => // The Magician — สัญลักษณ์อนันต์ + โต๊ะ 4 ธาตุ + ไม้กายสิทธิ์
-        g(
-            path('M 66 18 C 66 8, 80 8, 80 18 C 80 8, 94 8, 94 18 C 94 28, 80 32, 80 40 C 80 32, 66 28, 66 18 Z', { fill: t.suitGold, transform: 'translate(0 -4)' }) +
-            face(80, 58, 13, SKIN) +
-            path('M 80 72 C 62 76, 56 100, 58 124 L 102 124 C 104 100, 98 76, 80 72 Z', { fill: '#f2ead8' }) +
-            path('M 80 72 C 92 78, 100 96, 102 124 L 80 124 Z', { fill: t.suits.wands, opacity: 0.85 }) +
-            line(94, 66, 118, 38, { stroke: '#8a6b4f', 'stroke-width': 3.5, 'stroke-linecap': 'round' }) +
-            sparkle(121, 33, 7, t.suitGold) +
-            line(66, 82, 52, 104, { stroke: SKIN, 'stroke-width': 5, 'stroke-linecap': 'round' }) +
-            rrect(38, 124, 84, 10, 3, { fill: t.suitGold }) +
-            line(46, 134, 46, 148, { stroke: '#8a6b4f', 'stroke-width': 4 }) + line(114, 134, 114, 148, { stroke: '#8a6b4f', 'stroke-width': 4 }) +
-            g(SUIT_ICONS.cups(t), { transform: 'translate(56 112) scale(0.5)' }) +
-            g(SUIT_ICONS.pentacles(t), { transform: 'translate(80 111) scale(0.5)' }) +
-            g(SUIT_ICONS.swords(t), { transform: 'translate(102 112) scale(0.5)' }),
+        );
+    },
+
+    1: (t, deckId = 'standard') => { // The Magician: อนันต์ (Infinity) + แท่นบูชา 4 ธาตุ + ไม้กายสิทธิ์ชี้ฟ้าดิน
+        return g(
+            // สัญลักษณ์ Infinity เหนือเศียร
+            path('M 100 102 C 100 92, 112 92, 120 102 C 128 92, 140 92, 140 102 C 140 112, 128 112, 120 102 C 112 112, 100 112, 100 102 Z', { fill: 'none', stroke: t.suitGold, 'stroke-width': 2.6 }) +
+            sparkle(120, 102, 4, '#ffffff', 0.9) +
+            // ผู้วิเศษตามเทศกาล
+            drawMagicianFigure(deckId, t) +
+            // แท่นบูชาหินศักดิ์สิทธิ์
+            rrect(60, 195, 120, 45, 4, { fill: 'rgba(25,12,38,0.85)', stroke: t.frame, 'stroke-width': 1.4 }) +
+            line(50, 195, 190, 195, { stroke: t.suitGold, 'stroke-width': 3 }) +
+            // 4 ธาตุศักดิ์สิทธิ์บนแท่นบูชา: ไม้เท้า, ถ้วย, ดาบ, เหรียญ
+            g(wandIcon(t), { transform: 'translate(78 180) scale(0.6)' }) +
+            g(cupIcon(t), { transform: 'translate(106 182) scale(0.65)' }) +
+            g(swordIcon(t), { transform: 'translate(134 180) scale(0.6)' }) +
+            g(coinIcon(t), { transform: 'translate(162 184) scale(0.65)' }),
             {}
-        ),
-    2: (t) => // High Priestess — สองเสา + ผ้าม่าน + จันทร์เสี้ยว + ม้วนหนังสือ
-        g(
-            rrect(28, 20, 18, 130, 5, { fill: t.suits.swords, opacity: 0.9 }) +
-            rrect(114, 20, 18, 130, 5, { fill: t.suits.swords, opacity: 0.55 }) +
-            path('M 46 26 Q 80 6, 114 26 L 114 120 Q 80 132, 46 120 Z', { fill: t.sparkle, opacity: 0.16 }) +
-            face(80, 56, 12, SKIN) +
-            path('M 80 70 C 60 74, 56 100, 60 126 L 100 126 C 104 100, 100 74, 80 70 Z', { fill: t.suits.cups }) +
-            rrect(96, 84, 16, 12, 4, { fill: t.suitGold }) + circle(95, 90, 2, { fill: t.suitGold }) + circle(113, 90, 2, { fill: t.suitGold }) +
-            crescent(80, 136, 11, t.suitGold) +
-            circle(58, 40, 3, { fill: t.suits.wands, opacity: 0.8 }) + circle(102, 44, 3, { fill: t.suits.wands, opacity: 0.8 }),
+        );
+    },
+
+    2: (t, deckId = 'standard') => { // The High Priestess: เสาคู่ B & J + ม่านผลทับทิม + มงกุฎดวงจันทร์ฮาธอร์ + ม้วนคัมภีร์ TORA
+        return g(
+            // เสาดำ B (Boaz) ด้านซ้าย
+            rect(42, 95, 20, 150, { fill: '#1a1a1a', stroke: t.frameSoft, 'stroke-width': 1 }) +
+            txt(52, 175, 'B', { fill: '#ffffff', 'font-size': 14, 'font-family': "'Cinzel', serif", 'font-weight': 700 }) +
+            // เสาขาว J (Jachin) ด้านขวา
+            rect(178, 95, 20, 150, { fill: '#dfe6e9', stroke: t.frame, 'stroke-width': 1 }) +
+            txt(188, 175, 'J', { fill: '#2d3436', 'font-size': 14, 'font-family': "'Cinzel', serif", 'font-weight': 700 }) +
+            // ม่านประดับทับทิม
+            rect(64, 98, 112, 144, { fill: 'rgba(40,15,55,0.75)' }) +
+            [115, 140, 165].map(y => sparkle(CX, y, 4, t.sparkle, 0.7)).join('') +
+            // พระแม่นักบวชนั่งสง่าตามเทศกาล
+            drawPriestessFigure(deckId, t) +
+            // มงกุฎเขาควายและดวงจันทร์เต็มดวง (Hathor Horns & Moon)
+            circle(CX, 118, 6.5, { fill: '#ffffff' }) +
+            path(`M ${CX - 14} 124 Q ${CX} 130, ${CX + 14} 124 Q ${CX} 120, ${CX - 14} 124 Z`, { fill: t.suitGold }) +
+            // เข็มกลัดดวงดาราสวรรค์บนพระอุระ (Celestial Diamond Star Brooch)
+            sparkle(CX, 160, 4.5, '#ffffff', 0.95) +
+            circle(CX, 160, 2, { fill: t.suitGold }) +
+            // ดวงจันทร์เสี้ยวเรืองแสงที่พระบาท
+            crescent(CX, 232, 15, t.suitGold) +
+            // ม้วนคัมภีร์ TORA ในตัก
+            rrect(CX - 16, 178, 32, 12, 3, { fill: '#f8f9fa', stroke: t.frame, 'stroke-width': 1 }) +
+            txt(CX, 187, 'TORA', { fill: '#2d3436', 'font-size': 6.5, 'font-family': "'Cinzel', serif", 'font-weight': 700 }),
             {}
-        ),
-    3: (t) => // The Empress — มงกุฎดาว ทุ่งข้าวสาลี โล่ห์หัวใจสัญลักษณ์ศุกร์
-        g(
-            star(80, 22, 5, 2, 5, -90, { fill: t.suitGold }) +
-            star(64, 28, 5, 2, 5, -90, { fill: t.suitGold }) + star(96, 28, 5, 2, 5, -90, { fill: t.suitGold }) +
-            face(80, 52, 13, SKIN, { blush: true }) +
-            path('M 80 68 C 62 72, 58 98, 62 130 L 98 130 C 102 98, 98 72, 80 68 Z', { fill: t.suits.pentacles }) +
-            heart(80, 100, 13, { fill: '#f2ead8' }) +
-            circle(80, 98, 3.4, { stroke: t.suits.wands, 'stroke-width': 2, fill: 'none' }) +
-            line(80, 101, 80, 108, { stroke: t.suits.wands, 'stroke-width': 2 }) +
-            g([0, 1, 2, 3].map(i => ell(i * 6, 18 - i * 4, 3.2, 5, { fill: '#f1c40f' })).join('') + line(0, 20, 0, 46, { stroke: '#c79a2e', 'stroke-width': 2 }), { transform: 'translate(38 104)' }) +
-            g([0, 1, 2, 3].map(i => ell(-i * 6, 18 - i * 4, 3.2, 5, { fill: '#f1c40f' })).join('') + line(0, 20, 0, 46, { stroke: '#c79a2e', 'stroke-width': 2 }), { transform: 'translate(122 104)' }),
+        );
+    },
+
+    3: (t, deckId = 'standard') => { // The Empress: มงกุฎดวงดาว 12 ดวง + โล่ตราสัญลักษณ์วีนัส + รวงข้าวทองคำ + คทาราชินี
+        return g(
+            // วงรัศมีดวงดาว 12 ดวง
+            [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map(a => {
+                const rad = (a * Math.PI) / 180;
+                return sparkle(CX + 32 * Math.cos(rad), 132 + 32 * Math.sin(rad), 3, t.suitGold, 0.85);
+            }).join('') +
+            // จักรพรรดินีประทับบนบัลลังก์ตามเทศกาล
+            drawEmpressFigure(deckId, t) +
+            // คทาทองคำในพระหัตถ์
+            line(CX + 14, 155, CX + 34, 125, { stroke: t.suitGold, 'stroke-width': 2.5 }) +
+            circle(CX + 34, 125, 4.5, { fill: t.suitGold }) +
+            // โล่รูปหัวใจสลักตราสัญลักษณ์วีนัส (♀)
+            path(`M ${CX - 26} 190 A 10 10 0 0 1 ${CX - 6} 190 A 10 10 0 0 1 ${CX + 14} 190 Q ${CX - 6} 222, ${CX - 6} 222 Q ${CX - 26} 190, ${CX - 26} 190 Z`, { fill: '#d63031', transform: `translate(-10 0)` }) +
+            circle(CX - 16, 196, 4, { fill: 'none', stroke: t.suitGold, 'stroke-width': 1.2 }) +
+            line(CX - 16, 200, CX - 16, 206, { stroke: t.suitGold, 'stroke-width': 1.2 }) +
+            line(CX - 19, 203, CX - 13, 203, { stroke: t.suitGold, 'stroke-width': 1.2 }) +
+            // ทุ่งรวงข้าวทองคำที่พระบาท
+            [CX - 50, CX - 30, CX + 30, CX + 50].map(x =>
+                path(`M ${x} 245 Q ${x - 5} 225, ${x} 215 Q ${x + 5} 225, ${x} 245 Z`, { fill: '#f1c40f' })
+            ).join(''),
             {}
-        ),
-    4: (t) => // The Emperor — บัลลังก์หัวแกะ คทา อาภรณ์แดง
-        g(
-            rrect(40, 18, 80, 108, 8, { fill: t.suits.wands, opacity: 0.85 }) +
-            circle(48, 26, 7, { fill: t.suitGold }) + path('M 44 24 C 38 18, 44 14, 47 20', { stroke: t.suitGold, 'stroke-width': 2.5, fill: 'none' }) +
-            circle(112, 26, 7, { fill: t.suitGold }) + path('M 116 24 C 122 18, 116 14, 113 20', { stroke: t.suitGold, 'stroke-width': 2.5, fill: 'none' }) +
-            face(80, 54, 13, SKIN) +
-            path('M 92 44 Q 108 40, 112 30', { stroke: HAIR, 'stroke-width': 3, fill: 'none' }) +
-            path('M 80 68 C 66 72, 62 96, 64 122 L 96 122 C 98 96, 94 72, 80 68 Z', { fill: '#b03a3a' }) +
-            path('M 71 76 L 80 76 L 80 122 L 66 122 Z', { fill: t.suitGold, opacity: 0.4 }) +
-            line(100, 84, 116, 60, { stroke: t.suitGold, 'stroke-width': 3.5, 'stroke-linecap': 'round' }) +
-            circle(118, 57, 4.5, { fill: t.suitGold }) +
-            rrect(30, 126, 100, 8, 3, { fill: t.suitGold, opacity: 0.7 }),
+        );
+    },
+
+    4: (t, deckId = 'standard') => { // The Emperor: บัลลังก์หินแกะสลักหัวแกะราศีเมษ + คทา Ankh + ลูกโลกจักรพรรดิ + ขุนเขาสีชาด
+        return g(
+            // เทือกเขาสีชาดคมแกร่ง
+            poly('35,210 90,135 145,210', { fill: '#c0392b', opacity: 0.65 }) +
+            poly('100,210 155,145 205,210', { fill: '#962d22', opacity: 0.8 }) +
+            // บัลลังก์หินทรงลูกบาศก์
+            rect(65, 130, 110, 115, { fill: '#4a4a4a', stroke: t.frame, 'stroke-width': 1.5 }) +
+            // หัวแกะราศีเมษสีทอง 2 มุมบนของบัลลังก์
+            circle(72, 136, 6, { fill: t.suitGold }) + circle(168, 136, 6, { fill: t.suitGold }) +
+            // องค์จักรพรรดิตามเทศกาล
+            drawEmperorFigure(deckId, t) +
+            // คทา Ankh สัญลักษณ์แห่งชีวิตนิรันดร์
+            circle(CX + 24, 160, 4.5, { fill: 'none', stroke: t.suitGold, 'stroke-width': 2 }) +
+            line(CX + 24, 165, CX + 24, 185, { stroke: t.suitGold, 'stroke-width': 2 }) +
+            line(CX + 19, 172, CX + 29, 172, { stroke: t.suitGold, 'stroke-width': 2 }) +
+            // ลูกโลกจักรพรรดิ (Orb of Sovereignty) ในมือซ้าย
+            circle(CX - 24, 178, 6.5, { fill: t.suitGold }) +
+            line(CX - 24, 168, CX - 24, 172, { stroke: t.suitGold, 'stroke-width': 1.5 }),
             {}
-        ),
-    5: (t) => // The Hierophant — ไม้กางเขนสามชั้น กุญแจไขว้ ศิษย์สองข้าง
-        g(
-            face(80, 50, 13, SKIN) +
-            path('M 80 64 C 64 68, 60 92, 62 120 L 98 120 C 100 92, 96 68, 80 64 Z', { fill: t.suitGold }) +
-            path('M 80 64 L 80 120', { stroke: t.bg[1], 'stroke-width': 1.5, opacity: 0.5 }) +
-            line(58, 24, 58, 148, { stroke: t.suitGold, 'stroke-width': 3.5 }) +
-            line(50, 40, 66, 40, { stroke: t.suitGold, 'stroke-width': 3 }) + line(50, 56, 66, 56, { stroke: t.suitGold, 'stroke-width': 3 }) + line(50, 72, 66, 72, { stroke: t.suitGold, 'stroke-width': 3 }) +
-            line(66, 132, 94, 120, { stroke: t.suitGold, 'stroke-width': 2.5 }) + line(66, 120, 94, 132, { stroke: t.suitGold, 'stroke-width': 2.5 }) +
-            circle(69, 132, 4, { fill: 'none', stroke: t.suitGold, 'stroke-width': 2 }) + circle(91, 132, 4, { fill: 'none', stroke: t.suitGold, 'stroke-width': 2 }) +
-            face(32, 116, 7, SKIN) + circle(32, 106, 2.5, { fill: 'none', stroke: t.suitGold, 'stroke-width': 1.2 }) +
-            face(128, 116, 7, SKIN) + circle(128, 106, 2.5, { fill: 'none', stroke: t.suitGold, 'stroke-width': 1.2 }),
+        );
+    },
+
+    5: (t, deckId = 'standard') => { // The Hierophant / The Celestial Sage: เสาแห่งสัจธรรม + คทาดาราศาสตร์วงแหวน + ม้วนคัมภีร์ดาราศาสตร์ + กุญแจทองแห่งปัญญา
+        return g(
+            // เสาหินแห่งสัจธรรมและความรู้คู่
+            rect(46, 95, 16, 145, { fill: '#64748B', opacity: 0.85 }) +
+            rect(178, 95, 16, 145, { fill: '#64748B', opacity: 0.85 }) +
+            line(46, 100, 62, 100, { stroke: t.suitGold, 'stroke-width': 1.5 }) +
+            line(178, 100, 194, 100, { stroke: t.suitGold, 'stroke-width': 1.5 }) +
+            // คุรุผู้ชี้นำตามเทศกาล
+            drawHierophantFigure(deckId, t) +
+            // คทาดาราศาสตร์ลูกโลกวงแหวนในมือซ้าย (Armillary Star Scepter)
+            line(CX - 26, 140, CX - 26, 220, { stroke: t.suitGold, 'stroke-width': 2.5 }) +
+            circle(CX - 26, 138, 9, { fill: 'none', stroke: t.suitGold, 'stroke-width': 1.8 }) +
+            ell(CX - 26, 138, 9, 3.5, { fill: 'none', stroke: t.suitGold, 'stroke-width': 1.5, transform: `rotate(35 ${CX - 26} 138)` }) +
+            sparkle(CX - 26, 138, 4, '#ffffff', 0.95) +
+            // ม้วนคัมภีร์ดาราศาสตร์ในมือขวา
+            rect(CX + 14, 154, 15, 20, { fill: '#FFFBEB', stroke: t.suitGold, 'stroke-width': 1.2, rx: 2 }) +
+            line(CX + 17, 160, CX + 25, 160, { stroke: '#8A5D0B', 'stroke-width': 1 }) +
+            line(CX + 17, 164, CX + 25, 164, { stroke: '#8A5D0B', 'stroke-width': 1 }) +
+            line(CX + 17, 168, CX + 22, 168, { stroke: '#8A5D0B', 'stroke-width': 1 }) +
+            // กุญแจทองคู่แห่งสัจธรรมและปัญญาที่พื้น
+            line(CX - 18, 232, CX + 18, 248, { stroke: t.suitGold, 'stroke-width': 2.2 }) +
+            circle(CX - 18, 232, 3.5, { fill: 'none', stroke: t.suitGold, 'stroke-width': 1.8 }) +
+            line(CX + 18, 232, CX - 18, 248, { stroke: t.suitGold, 'stroke-width': 2.2 }) +
+            circle(CX + 18, 232, 3.5, { fill: 'none', stroke: t.suitGold, 'stroke-width': 1.8 }),
             {}
-        ),
-    6: (t) => // The Lovers — คู่รัก + เทวดาปีก + ดวงอาทิตย์
-        g(
-            circle(80, 20, 10, { fill: '#f6d98a' }) + sunburst(80, 20, 20, t.suitGold, 10, 1.5) +
-            face(80, 40, 8, SKIN) +
-            path('M 62 38 Q 66 28, 74 36 Q 68 40, 62 44 Z', { fill: '#f2ead8' }) +
-            path('M 98 38 Q 94 28, 86 36 Q 92 40, 98 44 Z', { fill: '#f2ead8' }) +
-            heart(80, 58, 10, { fill: t.ribbon || '#e35d6a' }) +
-            face(56, 88, 11, SKIN, { blush: true }) + face(104, 88, 11, SKIN, { blush: true }) +
-            path('M 56 100 C 46 106, 44 124, 46 140 L 66 140 C 68 124, 66 106, 56 100 Z', { fill: t.suits.cups }) +
-            path('M 104 100 C 94 106, 92 124, 94 140 L 114 140 C 116 124, 114 106, 104 100 Z', { fill: t.suits.wands }) +
-            line(66, 112, 94, 112, { stroke: SKIN, 'stroke-width': 4.5, 'stroke-linecap': 'round' }) +
-            path('M 20 148 Q 80 158, 140 148 L 140 165 L 20 165 Z', { fill: t.suits.pentacles, opacity: 0.7 }),
+        );
+    },
+
+    6: (t, deckId = 'standard') => { // The Lovers: อัครเทวทูตราฟาเอลสยายปีก + สุริยันสีทอง + ต้นไม้แห่งชีวิตและต้นไม้แห่งปัญญา
+        return g(
+            // พระอาทิตย์ดวงใหญ่และเทวทูตราฟาเอล
+            circle(CX, 95, 22, { fill: t.suitGold, opacity: 0.85 }) +
+            // ปีกเทวทูตสีม่วงทองสยายกว้าง
+            path(`M ${CX} 115 C ${CX - 35} 90, ${CX - 75} 105, ${CX - 65} 140 C ${CX - 40} 145, ${CX - 20} 130, ${CX} 135 Z`, { fill: '#8e44ad', opacity: 0.85 }) +
+            path(`M ${CX} 115 C ${CX + 35} 90, ${CX + 75} 105, ${CX + 65} 140 C ${CX + 40} 145, ${CX + 20} 130, ${CX} 135 Z`, { fill: '#8e44ad', opacity: 0.85 }) +
+            sparkle(CX, 115, 6, '#ffffff', 0.9) +
+            // ต้นไม้แห่งชีวิต (ฝั่งชาย) มีผลเพลิง 12 ผล
+            path('M 60 235 L 60 175 Q 40 160, 60 150 Q 80 160, 60 175 Z', { fill: '#27ae60' }) +
+            [155, 165, 175].map(y => circle(60, y, 3, { fill: '#e74c3c' })).join('') +
+            // ต้นไม้แห่งปัญญา (ฝั่งหญิง) มีงูพันรอบ
+            path('M 180 235 L 180 175 Q 160 160, 180 150 Q 200 160, 180 175 Z', { fill: '#2ecc71' }) +
+            path('M 176 220 Q 186 200, 176 185', { stroke: t.suitGold, 'stroke-width': 2.2, fill: 'none' }) +
+            // คู่รักตามเทศกาล
+            drawLoversFigures(deckId, t),
             {}
-        ),
-    7: (t) => // The Chariot — รถศึก มงกุฎดาว สฟิงซ์สองตัว
-        g(
-            poly('30,44 130,44 122,18 38,18', { fill: t.suits.cups, opacity: 0.55 }) +
-            star(80, 30, 5, 2, 5, -90, { fill: t.suitGold }) + star(56, 30, 4, 1.6, 5, -90, { fill: t.suitGold }) + star(104, 30, 4, 1.6, 5, -90, { fill: t.suitGold }) +
-            rrect(44, 62, 72, 46, 6, { fill: t.suits.cups }) +
-            face(80, 62, 9, SKIN) + poly('72,54 80,44 88,54', { fill: t.suitGold }) +
-            star(64, 84, 5, 2, 5, -90, { fill: t.suitGold }) + star(96, 84, 5, 2, 5, -90, { fill: t.suitGold }) +
-            circle(58, 116, 11, { fill: t.suitGold }) + circle(102, 116, 11, { fill: t.suitGold }) +
-            circle(58, 116, 4, { fill: t.bg[1] }) + circle(102, 116, 4, { fill: t.bg[1] }) +
-            ell(28, 132, 16, 9, { fill: '#d8d3e8' }) + circle(42, 124, 6.5, { fill: '#d8d3e8' }) +
-            ell(132, 132, 16, 9, { fill: t.suits.swords }) + circle(118, 124, 6.5, { fill: t.suits.swords }),
+        );
+    },
+
+    7: (t, deckId = 'standard') => { // The Chariot: ม่านดวงดาว + ปีกสุริยะ + สฟิงซ์คู่ทวิลักษณ์ (ขาว-ดำ)
+        return g(
+            // หลังคาม่านประดับดวงดาวสีฟ้าคราม
+            path(`M 45 105 L 195 105 L 185 130 L 55 130 Z`, { fill: '#2980b9' }) +
+            [70, 95, 120, 145, 170].map(x => sparkle(x, 118, 3.5, '#ffffff', 0.9)).join('') +
+            // รถศึกและนักรบมงกุฎดาวตามเทศกาล
+            rect(75, 145, 90, 65, { fill: '#7f8c8d', stroke: t.frame, 'stroke-width': 1.5 }) +
+            drawChariotFigure(deckId, t) +
+            // ตราปีกสุริยะหน้ารถศึก
+            circle(CX, 175, 7, { fill: t.suitGold }) +
+            path(`M ${CX - 22} 175 Q ${CX - 12} 170, ${CX - 7} 175 Q ${CX - 12} 180, ${CX - 22} 175 Z`, { fill: t.suitGold }) +
+            path(`M ${CX + 22} 175 Q ${CX + 12} 170, ${CX + 7} 175 Q ${CX + 12} 180, ${CX + 22} 175 Z`, { fill: t.suitGold }) +
+            // สฟิงซ์ดำ (ด้านซ้าย)
+            path('M 60 245 C 55 220, 75 210, 85 225 L 95 245 Z', { fill: '#1e1e1e' }) +
+            circle(72, 218, 5, { fill: '#1e1e1e' }) +
+            // สฟิงซ์ขาว (ด้านขวา)
+            path('M 180 245 C 185 220, 165 210, 155 225 L 145 245 Z', { fill: '#ffffff' }) +
+            circle(168, 218, 5, { fill: '#ffffff' }),
             {}
-        ),
-    8: (t) => // Strength — หญิงสาง + สิงโต + อนันต์ + มาลัยดอกไม้
-        g(
-            path('M 66 16 C 66 8, 78 8, 78 16 C 78 8, 90 8, 90 16 C 90 24, 78 27, 78 33 C 78 27, 66 24, 66 16 Z', { fill: t.suitGold, transform: 'translate(0 -3)' }) +
-            face(52, 62, 12, SKIN, { blush: true }) +
-            [0, 1, 2, 3, 4].map(i => circle(52 - 14 + i * 7, 44 - (i % 2) * 4, 4, { fill: t.ribbon ? '#f0a8b4' : '#e88f9c', opacity: 0.9 })).join('') +
-            path('M 52 74 C 40 78, 36 96, 38 112 L 66 112 C 68 96, 64 78, 52 74 Z', { fill: '#f2ead8' }) +
-            circle(108, 78, 26, { fill: t.suits.wands }) +
-            g([0, 1, 2, 3, 4, 5, 6, 7].map(i => {
-                const a = i * 45;
-                return g(ell(0, -30, 8, 13, { fill: '#d97b3a', opacity: 0.9 }), { transform: `rotate(${a})` });
-            }).join(''), { transform: 'translate(108 78)' }) +
-            face(108, 78, 15, '#f5b76e') +
-            path('M 101 84 Q 108 90, 115 84', { stroke: '#3b2a20', 'stroke-width': 2, fill: 'none', 'stroke-linecap': 'round' }) +
-            circle(103, 76, 2, { fill: '#3b2a20' }) + circle(113, 76, 2, { fill: '#3b2a20' }) +
-            path('M 66 96 Q 86 106, 96 98', { stroke: SKIN, 'stroke-width': 4.5, fill: 'none', 'stroke-linecap': 'round' }) +
-            heart(30, 130, 7, { fill: t.ribbon || '#e35d6a', opacity: 0.9 }),
+        );
+    },
+
+    8: (t, deckId = 'standard') => { // Strength: สัญลักษณ์อนันต์ + หญิงสาวอ่อนโยนลูบคมเขี้ยวสิงโตทองคำ + มาลัยกุหลาบ
+        return g(
+            // Infinity Symbol
+            path('M 100 105 C 100 96, 112 96, 120 105 C 128 96, 140 96, 140 105 C 140 114, 128 114, 120 105 C 112 114, 100 114, 100 105 Z', { fill: 'none', stroke: t.suitGold, 'stroke-width': 2.4 }) +
+            // หญิงสาวและสิงโตตามเทศกาล
+            drawStrengthFigure(deckId, t),
             {}
-        ),
-    9: (t) => // The Hermit — ฤๅษีหิ้วโคม ตามภูเขา
-        g(
-            poly('0,165 60,60 110,165', { fill: t.bg[0], opacity: 0.7 }) +
-            poly('80,165 130,80 160,165', { fill: t.bg[0], opacity: 0.5 }) +
-            star(28, 24, 4, 1.6, 5, -90, { fill: t.sparkle, opacity: 0.8 }) + star(134, 30, 4, 1.6, 5, -90, { fill: t.sparkle, opacity: 0.8 }) +
-            face(80, 66, 10, SKIN) +
-            path('M 80 48 Q 60 52, 62 80', { stroke: '#8d8d99', 'stroke-width': 3, fill: 'none' }) +
-            path('M 80 48 Q 100 52, 98 80', { stroke: '#8d8d99', 'stroke-width': 3, fill: 'none' }) +
-            path('M 80 78 C 64 82, 62 108, 66 138 L 94 138 C 98 108, 96 82, 80 78 Z', { fill: '#8d8d99' }) +
-            line(64, 92, 46, 150, { stroke: '#8a6b4f', 'stroke-width': 3.5, 'stroke-linecap': 'round' }) +
-            line(96, 92, 116, 102, { stroke: '#8a6b4f', 'stroke-width': 2.5 }) +
-            poly('116,102 130,116 116,130 102,116', { fill: 'none', stroke: t.suitGold, 'stroke-width': 2.5 }) +
-            sparkle(116, 116, 7, '#ffe3a3') +
-            path('M 102 116 L 96 110', { stroke: t.suitGold, 'stroke-width': 1.5 }),
+        );
+    },
+
+    9: (t, deckId = 'standard') => { // The Hermit: ยอดเขาโดดเดี่ยวยามราตรี + ตะเกียงส่องสว่างด้วยดาว 6 แฉก + ไม้เท้าแห่งปัญญา
+        return g(
+            // ยอดเขาหิมะยามค่ำคืน
+            poly('35,255 120,185 205,255', { fill: '#34495e' }) +
+            poly('90,205 120,185 150,205', { fill: '#ecf0f1' }) + // หิมะบนยอดเขา
+            // ฤๅษีและตะเกียงตามเทศกาล
+            drawHermitFigure(deckId, t),
             {}
-        ),
-    10: (t) => // Wheel of Fortune — วงล้อ + สฟิงซ์ + สัตว์สี่มุม
-        g(
-            circle(80, 88, 46, { fill: 'none', stroke: t.suitGold, 'stroke-width': 6 }) +
-            circle(80, 88, 34, { fill: 'none', stroke: t.suitGold, 'stroke-width': 2 }) +
-            circle(80, 88, 10, { fill: t.suitGold }) +
-            [0, 45, 90, 135].map(a => g(
-                line(0, -10, 0, -34, { stroke: t.suitGold, 'stroke-width': 2 }),
-                { transform: `translate(80 88) rotate(${a})` }
-            ) + g(
-                line(0, -10, 0, -34, { stroke: t.suitGold, 'stroke-width': 2 }),
-                { transform: `translate(80 88) rotate(${a + 22.5})` }
-            )).join('') +
-            poly('72,40 88,40 88,30 72,30', { fill: t.suits.wands }) + face(80, 30, 5, t.suitGold, { eyeColor: t.bg[1], smile: false }) +
-            circle(26, 24, 8, { fill: t.suits.cups }) + g(path('M -12 -2 Q 0 -12, 12 -2 L 8 6 Q 0 0, -8 6 Z', { fill: '#f2ead8' }), { transform: 'translate(26 18)' }) +
-            circle(134, 24, 8, { fill: t.suits.swords }) + g(path('M -8 2 Q 0 -8, 8 2 L 6 8 Q 0 2, -6 8 Z', { fill: '#f2ead8' }), { transform: 'translate(134 18)' }) +
-            circle(26, 152, 8, { fill: t.suits.pentacles }) + poly('20,146 32,146 26,138', { fill: '#f2ead8' }) +
-            circle(134, 152, 8, { fill: t.suits.wands }) + ell(134, 158, 6, 3, { fill: '#f2ead8' }),
+        );
+    },
+
+    10: (t, deckId = 'standard') => { // Wheel of Fortune: กงล้อสวรรค์ 3 ชั้น + สฟิงซ์ดาบทอง + สัตว์เทพประจำ 4 ทิศ
+        return g(
+            // กงล้อแห่งโชคชะตาแกนกลาง
+            circle(CX, 175, 42, { fill: 'none', stroke: t.frameSoft, 'stroke-width': 1.5 }) +
+            circle(CX, 175, 34, { fill: 'none', stroke: t.frame, 'stroke-width': 2 }) +
+            circle(CX, 175, 16, { fill: 'rgba(30,15,45,0.9)', stroke: t.frame, 'stroke-width': 1.5 }) +
+            // ซี่กงล้อ 8 ทิศ
+            [0, 45, 90, 135, 180, 225, 270, 315].map(a => {
+                const rad = (a * Math.PI) / 180;
+                return line(CX + 16 * Math.cos(rad), 175 + 16 * Math.sin(rad), CX + 34 * Math.cos(rad), 175 + 34 * Math.sin(rad), { stroke: t.suitGold, 'stroke-width': 1.5 });
+            }).join('') +
+            // ตัวอักษร T-A-R-O บนกงล้อ
+            txt(CX, 152, 'T', { fill: t.suitGold, 'font-size': 9, 'font-family': "'Cinzel', serif" }) +
+            txt(CX + 24, 178, 'A', { fill: t.suitGold, 'font-size': 9, 'font-family': "'Cinzel', serif" }) +
+            txt(CX, 203, 'R', { fill: t.suitGold, 'font-size': 9, 'font-family': "'Cinzel', serif" }) +
+            txt(CX - 24, 178, 'O', { fill: t.suitGold, 'font-size': 9, 'font-family': "'Cinzel', serif" }) +
+            // สฟิงซ์ทองคำถือดาบบนยอดกงล้อ
+            circle(CX, 120, 8, { fill: t.suitGold }) +
+            poly(`${CX - 10},132 ${CX + 10},132 ${CX},122`, { fill: t.suitGold }) +
+            line(CX + 8, 125, CX + 22, 112, { stroke: t.suitGold, 'stroke-width': 2 }) +
+            // สัตว์เทพประจำ 4 ทิศ (นางฟ้า, นกอินทรี, สิงโต, วัว)
+            sparkle(52, 115, 6, t.sparkle) + sparkle(188, 115, 6, t.sparkle) +
+            sparkle(52, 235, 6, t.sparkle) + sparkle(188, 235, 6, t.sparkle),
             {}
-        ),
-    11: (t) => // Justice — ตาชั่ง + ดาบ + มงกุฎ
-        g(
-            rrect(30, 24, 14, 120, 5, { fill: t.suits.swords, opacity: 0.6 }) +
-            rrect(116, 24, 14, 120, 5, { fill: t.suits.swords, opacity: 0.6 }) +
-            poly('70,26 90,26 80,14', { fill: t.suitGold }) +
-            face(80, 52, 12, SKIN) +
-            path('M 80 66 C 66 70, 62 92, 64 116 L 96 116 C 98 92, 94 70, 80 66 Z', { fill: '#b03a3a' }) +
-            line(50, 56, 110, 56, { stroke: t.suitGold, 'stroke-width': 2.5 }) +
-            line(50, 56, 50, 96, { stroke: t.suitGold, 'stroke-width': 2 }) +
-            path('M 38 96 Q 50 106, 62 96', { fill: 'none', stroke: t.suitGold, 'stroke-width': 2.5 }) +
-            g(SUIT_ICONS.swords(t), { transform: 'translate(112 76) scale(0.85)' }),
+        );
+    },
+
+    11: (t, deckId = 'standard') => { // Justice: ดาบแห่งความจริงสองคม + ตราชูตาชั่งทองคำอันเที่ยงตรง + เสาวิหารคู่
+        return g(
+            // เสาวิหารคู่
+            rect(48, 100, 14, 145, { fill: '#7f8c8d' }) +
+            rect(178, 100, 14, 145, { fill: '#7f8c8d' }) +
+            // เทพีแห่งความยุติธรรมตามเทศกาล
+            drawJusticeFigure(deckId, t),
             {}
-        ),
-    12: (t) => // Hanged Man — ชายห้อยหัว รัศมีรอบหน้า
-        g(
-            path('M 20 22 Q 80 10, 140 22', { stroke: '#8a6b4f', 'stroke-width': 6, fill: 'none', 'stroke-linecap': 'round' }) +
-            circle(30, 22, 9, { fill: t.suits.pentacles, opacity: 0.85 }) + circle(130, 22, 9, { fill: t.suits.pentacles, opacity: 0.85 }) +
-            line(80, 28, 80, 52, { stroke: '#d9a066', 'stroke-width': 2.5 }) +
-            line(80, 128, 80, 146, { stroke: '#8a6b4f', 'stroke-width': 4.5, 'stroke-linecap': 'round' }) +
-            path('M 80 146 L 100 136', { stroke: '#8a6b4f', 'stroke-width': 4.5, 'stroke-linecap': 'round' }) +
-            path('M 80 60 C 66 64, 62 90, 64 118 L 96 118 C 98 90, 94 64, 80 60 Z', { fill: t.suits.cups }) +
-            circle(80, 132, 13, { fill: 'none', stroke: t.suitGold, 'stroke-width': 2.5 }) +
-            face(80, 132, 9, SKIN) +
-            line(64, 74, 50, 92, { stroke: SKIN, 'stroke-width': 4.5, 'stroke-linecap': 'round' }) +
-            line(96, 74, 110, 92, { stroke: SKIN, 'stroke-width': 4.5, 'stroke-linecap': 'round' }),
+        );
+    },
+
+    12: (t, deckId = 'standard') => { // The Hanged Man: ต้นไม้มีชีวิตรูปตัว T (Living Cross) + รัศมีปัญญารอบศีรษะ + แขวนขาข้างเดียว
+        return g(
+            // ต้นไม้ตัว T ที่มีใบไม้เขียวงอกผลิ
+            rect(CX - 7, 95, 14, 150, { fill: '#795548' }) +
+            rect(CX - 60, 95, 120, 14, { fill: '#795548' }) +
+            [CX - 40, CX + 30, CX - 15, CX + 45].map((x, i) =>
+                path(`M ${x} 95 Q ${x + 5} 85, ${x + 10} 95 Z`, { fill: '#4caf50' })
+            ).join('') +
+            // เชือกมัดข้อเท้า
+            line(CX, 109, CX, 130, { stroke: '#d7ccc8', 'stroke-width': 3 }) +
+            // ร่างกายกลับหัว แขนไพล่หลัง ขาขวาพาดเป็นเลข 4
+            line(CX, 130, CX, 175, { stroke: '#2980b9', 'stroke-width': 6, 'stroke-linecap': 'round' }) +
+            line(CX, 155, CX + 22, 170, { stroke: '#c0392b', 'stroke-width': 4, 'stroke-linecap': 'round' }) +
+            line(CX + 22, 170, CX, 170, { stroke: '#c0392b', 'stroke-width': 4, 'stroke-linecap': 'round' }) +
+            // ใบหน้าและรัศมีแสงสีทองอันเปล่งประกายรอบศีรษะ
+            drawHangedManFigure(deckId, t),
             {}
-        ),
-    13: (t) => // Death — กุหลาบขาว ม้าขาว อาทิตย์ขึ้นระหว่างหอคอย
-        g(
-            rrect(18, 44, 16, 66, 3, { fill: t.suits.swords, opacity: 0.7 }) +
-            rrect(126, 44, 16, 66, 3, { fill: t.suits.swords, opacity: 0.7 }) +
-            circle(80, 66, 16, { fill: '#f6d98a', opacity: 0.9 }) + sunburst(80, 66, 26, t.suitGold, 12, 1.5) +
-            rrect(34, 86, 92, 26, 8, { fill: '#f2ead8' }) +
-            rrect(34, 86, 92, 26, 8, { fill: 'none', stroke: t.bg[1], 'stroke-width': 1.2 }) +
-            poly('30,86 42,78 54,86', { fill: '#f2ead8' }) + poly('106,86 118,78 130,86', { fill: '#f2ead8' }) +
-            line(44, 112, 44, 132, { stroke: '#e0d8c8', 'stroke-width': 4 }) + line(116, 112, 116, 132, { stroke: '#e0d8c8', 'stroke-width': 4 }) +
-            ell(88, 100, 9, 8, { fill: '#e8e0d0' }) + circle(102, 94, 6, { fill: '#3b2a20' }) +
-            path('M 84 122 Q 92 128, 100 124', { stroke: '#3b2a20', 'stroke-width': 2.5, fill: 'none' }) +
-            [0, 1, 2, 3, 4].map(i => ell(80 - 12 + i * 6, 138 - (i % 2) * 5, 5.5, 9, { fill: '#f5f0e6', stroke: '#d8cfc0', 'stroke-width': 1 })).join('') +
-            circle(80, 134, 5, { fill: t.suitGold }),
+        );
+    },
+
+    13: (t, deckId = 'standard') => { // Death (Transformation): ธงกุหลาบขาว 5 กลีบ + ตะวันรุ่งโรจน์ระหว่างหอคอยคู่ + สายน้ำแห่งวัฏจักร + อัศวินแห่งการเกิดใหม่
+        return g(
+            // หอคอยคู่ที่เส้นขอบฟ้า
+            rect(65, 150, 16, 60, { fill: '#2c3e50' }) +
+            poly('60,150 73,135 86,150', { fill: '#e74c3c' }) +
+            rect(159, 150, 16, 60, { fill: '#2c3e50' }) +
+            poly('154,150 167,135 180,150', { fill: '#e74c3c' }) +
+            // ดวงอาทิตย์สีทองขึ้นตรงกลางระหว่างหอคอย (แสงอรุณหลังความมืดมิด)
+            circle(CX, 175, 14, { fill: t.suitGold }) +
+            sunburst(CX, 175, 28, t.suitGold, 10, 1.5) +
+            // แม่น้ำแห่งการเปลี่ยนแปลง
+            wave(225, W - 60, '#3498db', 0.6, 5, 40) +
+            wave(240, W - 60, '#2980b9', 0.5, 5, 40) +
+            // อัศวินผู้สง่างามแห่งการเกิดใหม่ตามเทศกาล ถือธงกุหลาบขาว 5 กลีบ (Mystic Rose)
+            drawDeathFigure(deckId, t),
             {}
-        ),
-    14: (t) => // Temperance — เทวดาเทน้ำระหว่างถ้วย + บ่อน้ำ
-        g(
-            circle(80, 34, 10, { fill: 'none', stroke: t.suitGold, 'stroke-width': 2 }) +
-            path('M 52 40 Q 38 52, 44 66 Q 50 52, 58 46 Z', { fill: '#f2ead8' }) +
-            path('M 108 40 Q 122 52, 116 66 Q 110 52, 102 46 Z', { fill: '#f2ead8' }) +
-            face(80, 54, 12, SKIN) +
-            path('M 80 68 C 66 72, 62 94, 64 114 L 96 114 C 98 94, 94 72, 80 68 Z', { fill: t.suitGold }) +
-            poly('76,82 84,82 84,90 76,90', { fill: 'none', stroke: t.bg[1], 'stroke-width': 1.5 }) +
-            g(SUIT_ICONS.cups(t), { transform: 'translate(52 92) scale(0.75)' }) +
-            g(SUIT_ICONS.cups(t), { transform: 'translate(108 88) scale(0.75)' }) +
-            path('M 56 96 Q 80 84, 104 92', { stroke: t.suits.cups, 'stroke-width': 2.5, fill: 'none', opacity: 0.8 }) +
-            ell(80, 140, 42, 9, { fill: t.suits.cups, opacity: 0.4 }) +
-            ell(80, 140, 24, 5, { fill: t.suits.cups, opacity: 0.5 }),
+        );
+    },
+
+    14: (t, deckId = 'standard') => { // Temperance: เทวทูตแสงสุริยะสยายปีก + ถ่ายเทน้ำทิพย์สองถ้วยทอง + หนทางสู่มงกุฎแสง
+        return g(
+            // หนทางสู่เทือกเขาสีทองและมงกุฎแสง
+            poly('105,245 120,225 135,245', { fill: t.suitGold, opacity: 0.4 }) +
+            sparkle(120, 218, 4.5, t.suitGold) +
+            // เทวทูตแห่งการหลอมรวมตามเทศกาล
+            drawTemperanceFigure(deckId, t),
             {}
-        ),
-    15: (t) => // The Devil — หัวเขา + ปีกค้างคาว + โซ่หลวม
-        g(
-            rrect(48, 118, 64, 14, 4, { fill: t.suits.swords, opacity: 0.7 }) +
-            face(80, 58, 16, '#6b4a8a') +
-            path('M 66 48 C 56 36, 62 30, 70 38', { stroke: '#4a3060', 'stroke-width': 4, fill: 'none' }) +
-            path('M 94 48 C 104 36, 98 30, 90 38', { stroke: '#4a3060', 'stroke-width': 4, fill: 'none' }) +
-            path('M 60 60 Q 44 66, 46 82 Q 56 74, 62 72 Z', { fill: '#3b2a52' }) +
-            path('M 100 60 Q 116 66, 114 82 Q 104 74, 98 72 Z', { fill: '#3b2a52' }) +
-            path('M 74 66 Q 80 70, 86 66', { stroke: '#f2d48a', 'stroke-width': 2, fill: 'none' }) +
-            face(52, 138, 8, SKIN) + face(108, 138, 8, SKIN) +
-            path('M 62 132 Q 80 142, 98 132', { stroke: t.suitGold, 'stroke-width': 2, fill: 'none', 'stroke-dasharray': '4 3' }),
+        );
+    },
+
+    15: (t, deckId = 'standard') => { // The Devil: ดาว 5 แฉกกลับหัวบนหน้าผาก + บัลลังก์หินทึบ + โซ่ทองหลวมรอบคอ (พันธนาการลวงตา)
+        return g(
+            // แท่นบูชาหินทึบ
+            rect(75, 185, 90, 60, { fill: '#2d3436', stroke: t.frame, 'stroke-width': 1.2 }) +
+            circle(CX, 215, 6, { fill: 'none', stroke: t.suitGold, 'stroke-width': 2 }) +
+            // ปีกค้างคาว
+            path(`M ${CX} 130 C ${CX - 35} 90, ${CX - 75} 115, ${CX - 65} 160 C ${CX - 40} 155, ${CX - 20} 145, ${CX} 150 Z`, { fill: '#341f97', opacity: 0.85 }) +
+            path(`M ${CX} 130 C ${CX + 35} 90, ${CX + 75} 115, ${CX + 65} 160 C ${CX + 40} 155, ${CX + 20} 145, ${CX} 150 Z`, { fill: '#341f97', opacity: 0.85 }) +
+            // ร่างปีศาจตามเทศกาล
+            drawDevilFigure(deckId, t) +
+            // โซ่ทองหลวม ๆ ที่คอแสดงถึงพันธนาการที่ถอดออกได้เอง
+            path(`M ${CX - 22} 205 Q ${CX} 222, ${CX + 22} 205`, { stroke: t.suitGold, 'stroke-width': 2, fill: 'none', 'stroke-dasharray': '3 2' }),
             {}
-        ),
-    16: (t) => // The Tower — หอคอยถูกฟ้าผ่า
-        g(
-            poly('70,20 90,20 90,30 82,30 82,26 78,26 78,30 70,30', { fill: t.suitGold, transform: 'rotate(-14 80 30)' }) +
-            poly('58,40 102,40 102,34 58,34', { fill: t.suits.swords, opacity: 0.8 }) +
-            rrect(62, 40, 36, 108, 3, { fill: t.suits.swords }) +
-            poly('132,14 126,34 138,30', { fill: '#f6d98a' }) +
-            poly('129,26 70,52 74,60 133,34', { fill: '#ffe27a', opacity: 0.95 }) +
-            flame(74, 70, 7, { fill: '#f08c3a' }) + flame(88, 102, 7, { fill: '#f08c3a' }) +
-            circle(30, 76, 6, { fill: SKIN }) + line(24, 84, 36, 90, { stroke: SKIN, 'stroke-width': 3 }) + line(36, 84, 24, 90, { stroke: SKIN, 'stroke-width': 3 }) +
-            circle(132, 96, 6, { fill: SKIN }) + line(126, 104, 138, 110, { stroke: SKIN, 'stroke-width': 3 }) + line(138, 104, 126, 110, { stroke: SKIN, 'stroke-width': 3 }) +
-            sparkle(38, 130, 5, t.sparkle) + sparkle(124, 140, 5, t.sparkle),
+        );
+    },
+
+    16: (t, deckId = 'standard') => { // The Tower: อัสนีบาตสายฟ้าฟาดมงกุฎยอดหอคอย + ผู้ตื่นรู้สู่ความจริง + ประกายไฟทองคำ
+        return g(
+            // หอคอยหินโบราณบนยอดผาสูง
+            poly('82,245 92,125 148,125 158,245', { fill: '#334155', stroke: t.frame, 'stroke-width': 1.5 }) +
+            // หน้าต่างหอคอยเปล่งเปลวไฟ
+            rect(112, 155, 16, 22, { fill: '#e67e22' }) +
+            rect(112, 195, 16, 22, { fill: '#e67e22' }) +
+            // สายฟ้าสีทองฟาดทะลวงลงมา
+            poly(`${CX - 15},85 ${CX + 8},108 ${CX - 2},112 ${CX + 18},132 ${CX + 4},132 ${CX + 12},148 ${CX - 8},128 ${CX + 2},128`, { fill: '#f1c40f' }) +
+            sparkle(CX + 6, 128, 8, '#ffffff', 0.95) +
+            // มงกุฎทองคำกระเด็นหลุดจากยอดหอคอย
+            poly('145,105 165,95 155,115', { fill: t.suitGold }) +
+            // ละอองประกายไฟแห่งการรู้แจ้งร่วงหล่น
+            [
+                [65, 130], [75, 155], [60, 180], [70, 205],
+                [175, 130], [165, 160], [180, 185], [170, 215]
+            ].map(p => drop(p[0], p[1], 4.5, { fill: '#f39c12' })).join('') +
+            // ผู้ตื่นรู้ทั้งสองทะยานสู่อิสรภาพแห่งสัจธรรม (Awakening Seekers of Truth)
+            circle(68, 182, 5.5, { fill: t.suitGold }) +
+            path('M 68 188 L 58 214 L 74 214 Z', { fill: '#1E293B' }) +
+            line(64, 194, 52, 186, { stroke: t.suitGold, 'stroke-width': 1.8 }) +
+            circle(172, 188, 5.5, { fill: t.suitGold }) +
+            path('M 172 194 L 162 220 L 178 220 Z', { fill: '#991B1B' }) +
+            line(176, 200, 188, 192, { stroke: t.suitGold, 'stroke-width': 1.8 }),
             {}
-        ),
-    17: (t) => // The Star — ดาวใหญ่ 8 แฉก + ดาวเล็ก 7 + เทน้ำสองขวด
-        g(
-            star(80, 28, 16, 6.5, 8, -90, { fill: t.suitGold }) +
-            [[36, 22], [56, 12], [104, 12], [124, 22], [30, 48], [130, 48], [80, 8]].map(p => star(p[0], p[1], 4.5, 1.8, 5, -90, { fill: t.sparkle, opacity: 0.9 })).join('') +
-            face(66, 84, 10, SKIN) +
-            path('M 66 70 Q 54 74, 58 88', { stroke: '#2a5f6e', 'stroke-width': 5, fill: 'none' }) +
-            path('M 66 70 Q 78 74, 74 88', { stroke: '#2a5f6e', 'stroke-width': 5, fill: 'none' }) +
-            path('M 66 96 C 56 100, 54 118, 56 134 L 76 134 C 78 118, 76 100, 66 96 Z', { fill: '#2a5f6e' }) +
-            line(52, 100, 40, 116, { stroke: SKIN, 'stroke-width': 4, 'stroke-linecap': 'round' }) +
-            g(SUIT_ICONS.cups(t), { transform: 'translate(38 120) scale(0.55)' }) +
-            path('M 42 116 Q 34 130, 30 142', { stroke: t.suits.cups, 'stroke-width': 2, fill: 'none', opacity: 0.7 }) +
-            line(80, 100, 96, 112, { stroke: SKIN, 'stroke-width': 4, 'stroke-linecap': 'round' }) +
-            g(SUIT_ICONS.cups(t), { transform: 'translate(104 110) scale(0.55)' }) +
-            ell(104, 146, 38, 8, { fill: t.suits.cups, opacity: 0.4 }) +
-            ell(104, 146, 20, 4, { fill: t.suits.cups, opacity: 0.5 }),
+        );
+    },
+
+    17: (t, deckId = 'standard') => { // The Star: ดาวดวงใหญ่ 8 แฉกพร้อมดาวบริวาร 7 ดวง + คนโทเทน้ำทิพย์หล่อเลี้ยงผืนดินและธารน้ำ
+        return g(
+            // ดาวดวงใหญ่ 8 แฉก ณ กึ่งกลางสรวงสวรรค์
+            star(CX, 115, 24, 9, 8, -90, { fill: t.suitGold }) +
+            circle(CX, 115, 5, { fill: '#ffffff' }) +
+            sparkle(CX, 115, 14, '#ffffff', 0.95) +
+            // ดาวบริวาร 7 ดวงล้อมรอบ
+            [
+                [CX - 50, 105], [CX - 30, 140], [CX - 55, 155],
+                [CX + 50, 105], [CX + 30, 140], [CX + 55, 155], [CX, 158]
+            ].map(p => star(p[0], p[1], 6, 2.5, 8, -90, { fill: t.sparkle, opacity: 0.85 })).join('') +
+            // ธารน้ำแห่งความหวัง
+            wave(225, W - 60, '#00d2d3', 0.8, 6, 35) +
+            wave(240, W - 60, '#54a0ff', 0.6, 6, 35) +
+            // เทพีแห่งดวงดาวตามเทศกาล
+            drawStarFigure(deckId, t),
             {}
-        ),
-    18: (t) => // The Moon — จันทร์หน้ายิ้ม หอคอยสอง หมา+หมาป่า กุ้ง
-        g(
-            crescent(80, 30, 18, '#f2e9c8') +
-            circle(76, 26, 1.6, { fill: t.bg[1] }) + circle(70, 32, 1.6, { fill: t.bg[1] }) +
-            path('M 70 36 Q 76 40, 82 36', { stroke: t.bg[1], 'stroke-width': 1.5, fill: 'none' }) +
-            star(30, 18, 4, 1.6, 5, -90, { fill: t.sparkle }) + star(130, 20, 4, 1.6, 5, -90, { fill: t.sparkle }) +
-            rrect(16, 78, 16, 56, 3, { fill: t.suits.swords, opacity: 0.7 }) +
-            rrect(128, 78, 16, 56, 3, { fill: t.suits.swords, opacity: 0.7 }) +
-            path('M 10 140 Q 80 122, 150 140 L 150 165 L 10 165 Z', { fill: t.suits.pentacles, opacity: 0.6 }) +
-            ell(46, 136, 12, 7, { fill: '#d9a066' }) + circle(58, 128, 6, { fill: '#d9a066' }) +
-            poly('56,124 58,118 60,124', { fill: '#d9a066' }) +
-            ell(114, 136, 12, 7, { fill: '#8d8d99' }) + circle(102, 128, 6, { fill: '#8d8d99' }) +
-            poly('100,124 102,118 104,124', { fill: '#8d8d99' }) +
-            ell(80, 152, 13, 6, { fill: '#d95f4e' }) +
-            poly('64,150 58,142 68,146', { fill: '#d95f4e' }) + poly('96,150 102,142 92,146', { fill: '#d95f4e' }) +
-            line(74, 158, 74, 163, { stroke: '#d95f4e', 'stroke-width': 1.5 }) + line(80, 158, 80, 164, { stroke: '#d95f4e', 'stroke-width': 1.5 }) + line(86, 158, 86, 163, { stroke: '#d95f4e', 'stroke-width': 1.5 }),
+        );
+    },
+
+    18: (t, deckId = 'standard') => { // The Moon: ดวงจันทร์ซ้อนเสี้ยว + หยดน้ำค้างทองคำ + หอคอยคู่ + หมาป่าและสุนัขหอน + ผู้เดินทางใต้แสงจันทร์
+        return g(
+            // พระจันทร์เต็มดวงซ้อนในพระจันทร์เสี้ยวส่องรัศมี
+            circle(CX, 108, 20, { fill: t.suitGold }) +
+            crescent(CX, 108, 20, '#fff3cd') +
+            sunburst(CX, 108, 32, t.frameSoft, 16, 1.2) +
+            // หยดน้ำค้างทองคำ 15 หยดโปรยปราย
+            [
+                [CX - 25, 134], [CX, 138], [CX + 25, 134],
+                [CX - 15, 146], [CX + 15, 146]
+            ].map(p => drop(p[0], p[1], 3.5, { fill: t.suitGold })).join('') +
+            // หอคอยคู่ซ้ายขวา
+            rect(45, 145, 16, 70, { fill: '#1E293B', stroke: t.frame, 'stroke-width': 1 }) +
+            rect(179, 145, 16, 70, { fill: '#1E293B', stroke: t.frame, 'stroke-width': 1 }) +
+            // ทะเลสาบดึกดำบรรพ์และกุ้งก้ามกรามไต่ขึ้นฝั่ง
+            wave(240, W - 60, '#2563EB', 0.8, 5, 30) +
+            path(`M ${CX} 248 Q ${CX - 8} 238, ${CX} 232 Q ${CX + 8} 238, ${CX} 248 Z`, { fill: '#EA580C' }) +
+            // หมาป่าและสุนัขเห่าหอนมองดวงจันทร์
+            path('M 68 232 C 68 212, 82 212, 86 222 L 80 234 Z', { fill: '#64748B' }) +
+            path('M 172 232 C 172 212, 158 212, 154 222 L 160 234 Z', { fill: '#94A3B8' }) +
+            // เทพีหรือนักเดินทางแห่งรัตติกาลตามเทศกาล ยืนสงบนิ่งมองสายน้ำและดวงจันทร์
+            drawMoonFigure(deckId, t),
             {}
-        ),
-    19: (t) => // The Sun — ดวงอาทิตย์หน้ายิ้ม ทานตะวัน เด็กบนม้า
-        g(
-            circle(80, 28, 15, { fill: '#f6c344' }) + sunburst(80, 28, 27, '#f6d98a', 16, 2) +
-            circle(75, 26, 1.8, { fill: '#3b2a20' }) + circle(85, 26, 1.8, { fill: '#3b2a20' }) +
-            path('M 74 32 Q 80 36, 86 32', { stroke: '#3b2a20', 'stroke-width': 1.8, fill: 'none', 'stroke-linecap': 'round' }) +
-            ell(80, 92, 30, 16, { fill: '#f2ead8' }) +
-            circle(112, 82, 10, { fill: '#f2ead8' }) + poly('118,78 128,70 122,82', { fill: '#e0d8c8' }) +
-            path('M 56 96 Q 44 100, 46 112', { stroke: '#e0d8c8', 'stroke-width': 4, fill: 'none' }) +
-            line(62, 108, 62, 126, { stroke: '#e0d8c8', 'stroke-width': 4 }) + line(74, 108, 74, 126, { stroke: '#e0d8c8', 'stroke-width': 4 }) +
-            line(88, 108, 88, 126, { stroke: '#e0d8c8', 'stroke-width': 4 }) + line(100, 108, 100, 126, { stroke: '#e0d8c8', 'stroke-width': 4 }) +
-            face(70, 68, 8, SKIN, { blush: true }) +
-            path('M 62 62 C 64 56, 78 56, 80 62', { stroke: HAIR, 'stroke-width': 3, fill: 'none' }) +
-            path('M 70 78 L 70 88 L 80 88', { stroke: t.ribbon || '#c0392b', 'stroke-width': 5, fill: 'none', 'stroke-linecap': 'round' }) +
-            [20, 60, 100, 140].map(x => {
-                const petals = [0, 1, 2, 3, 4, 5].map(i => {
-                    const a = i * 60;
-                    return g(ell(0, -8, 3.4, 6.5, { fill: '#f1c40f' }), { transform: `rotate(${a})` });
-                }).join('') + circle(0, 0, 4, { fill: '#8a5a2e' }) + line(0, 4, 0, 18, { stroke: '#4a7c3a', 'stroke-width': 2.5 });
-                return g(petals, { transform: `translate(${x} 146)` });
-            }).join(''),
+        );
+    },
+
+    19: (t, deckId = 'standard') => { // The Sun: ดวงอาทิตย์ยิ้มรุ่งโรจน์รัศมีตรงและหยัก + กำแพงดอกทานตะวัน + เด็กน้อยบนม้าขาว
+        return g(
+            // พระอาทิตย์ดวงโตเต็มฟ้าแผ่รัศมีอบอุ่น
+            circle(CX, 115, 26, { fill: t.suitGold }) +
+            sunburst(CX, 115, 42, t.suitGold, 16, 2) +
+            circle(CX, 115, 20, { fill: '#f39c12' }) +
+            sparkle(CX, 115, 6, '#ffffff', 0.9) +
+            // กำแพงอิฐสวนสวรรค์
+            rect(45, 195, 150, 45, { fill: '#7f5539', stroke: t.frame, 'stroke-width': 1.2 }) +
+            // ดอกทานตะวันสีทองเบ่งบาน
+            [60, 95, 145, 180].map(x =>
+                star(x, 195, 12, 6, 8, -90, { fill: '#f1c40f' }) +
+                circle(x, 195, 4, { fill: '#6e2c00' })
+            ).join('') +
+            // เด็กน้อยผู้บริสุทธิ์ตามเทศกาล
+            drawSunFigure(deckId, t) +
+            // ธงสีแดงโบกสะบัด
+            line(CX + 6, 175, CX + 34, 150, { stroke: t.suitGold, 'stroke-width': 2 }) +
+            path(`M ${CX + 24} 155 Q ${CX + 38} 145, ${CX + 44} 160 L ${CX + 24} 168 Z`, { fill: '#e74c3c' }),
             {}
-        ),
-    20: (t) => // Judgement — เทวดาแตรวาที คนตายฟื้น
-        g(
-            path('M 10 40 Q 80 4, 150 40 L 150 52 Q 80 24, 10 52 Z', { fill: '#f2ead8', opacity: 0.85 }) +
-            circle(70, 52, 11, { fill: 'none', stroke: t.suitGold, 'stroke-width': 2 }) +
-            face(70, 56, 9, SKIN) +
-            path('M 60 48 Q 48 40, 52 32 Q 60 36, 62 44 Z', { fill: '#f2ead8' }) +
-            path('M 80 48 Q 92 40, 88 32 Q 80 36, 78 44 Z', { fill: '#f2ead8' }) +
-            poly('84,58 116,50 118,58 86,66', { fill: t.suitGold }) +
-            rrect(114, 42, 16, 22, 3, { fill: '#f2ead8', opacity: 0.9 }) +
-            line(120, 48, 120, 58, { stroke: t.ribbon || '#c0392b', 'stroke-width': 2 }) + line(116, 53, 124, 53, { stroke: t.ribbon || '#c0392b', 'stroke-width': 2 }) +
-            [[36, 108], [80, 104], [124, 108]].map(p => g(
-                face(0, 0, 8, SKIN, { blush: true }) +
-                line(-8, -8, -14, -18, { stroke: SKIN, 'stroke-width': 3, 'stroke-linecap': 'round' }) +
-                line(8, -8, 14, -18, { stroke: SKIN, 'stroke-width': 3, 'stroke-linecap': 'round' }) +
-                path('M -10 8 C -14 22, -8 34, 0 38 C 8 34, 14 22, 10 8 Z', { fill: t.suits.cups }),
-                { transform: `translate(${p[0]} ${p[1]})` }
-            )).join('') +
-            rrect(20, 140, 120, 12, 4, { fill: t.suits.pentacles, opacity: 0.5 }),
+        );
+    },
+
+    20: (t, deckId = 'standard') => { // Judgement: อัครเทวทูตเป่าแตรทองคำ + ธงดวงดาราแห่งรุ่งอรุณ + ผู้ตื่นรู้ต้อนรับแสงสว่าง
+        return g(
+            // เมฆาสวรรค์เปิดออก
+            path(`M 45 120 Q 80 95, 120 110 Q 160 95, 195 120`, { stroke: '#ffffff', 'stroke-width': 3, fill: 'none', opacity: 0.6 }) +
+            // อัครเทวทูตตามเทศกาล
+            drawJudgementFigure(deckId, t) +
+            // แตรทองคำพร้อมธงดวงดาราแห่งรุ่งอรุณ (Golden Dawn Starburst Banner)
+            line(CX + 6, 118, CX + 42, 138, { stroke: t.suitGold, 'stroke-width': 2.5 }) +
+            poly(`${CX + 38},132 ${CX + 48},142 ${CX + 42},146`, { fill: t.suitGold }) +
+            rect(CX + 14, 125, 18, 14, { fill: '#ffffff', stroke: t.suitGold, 'stroke-width': 1 }) +
+            sparkle(CX + 23, 132, 5, t.suitGold, 0.95) +
+            circle(CX + 23, 132, 2, { fill: '#e74c3c' }) +
+            // ผู้คนฟื้นตื่นชูแขนรับแสงสวรรค์อย่างปีติ
+            [CX - 35, CX, CX + 35].map(x =>
+                circle(x, 205, 7.5, { fill: t.suitGold }) +
+                path(`M ${x} 212 L ${x - 8} 242 L ${x + 8} 242 Z`, { fill: '#ecf0f1' }) +
+                line(x - 6, 218, x - 14, 202, { stroke: t.suitGold, 'stroke-width': 2, 'stroke-linecap': 'round' }) +
+                line(x + 6, 218, x + 14, 202, { stroke: t.suitGold, 'stroke-width': 2, 'stroke-linecap': 'round' })
+            ).join(''),
             {}
-        ),
-    21: (t) => // The World — นางรำในพวงมาลัย + สัตว์สี่มุม
-        g(
-            ell(80, 84, 52, 66, { fill: 'none', stroke: t.suits.pentacles, 'stroke-width': 9, opacity: 0.85, 'stroke-dasharray': '14 7' }) +
-            poly('68,16 92,16 84,28 76,28', { fill: t.ribbon || '#c0392b' }) +
-            face(80, 62, 11, SKIN, { blush: true }) +
-            path('M 80 74 C 68 78, 66 94, 68 108 C 74 118, 66 128, 58 132 C 50 124, 58 112, 62 104 C 64 88, 70 78, 80 74 Z', { fill: t.suits.cups }) +
-            path('M 80 74 C 92 78, 94 92, 90 104 C 96 114, 102 124, 96 134 C 86 134, 82 120, 82 108 C 80 92, 74 78, 80 74 Z', { fill: t.suitGold, opacity: 0.9 }) +
-            line(68, 82, 56, 70, { stroke: SKIN, 'stroke-width': 4, 'stroke-linecap': 'round' }) +
-            line(92, 82, 104, 68, { stroke: SKIN, 'stroke-width': 4, 'stroke-linecap': 'round' }) +
-            sparkle(56, 58, 5, t.sparkle) + sparkle(104, 56, 5, t.sparkle) +
-            circle(22, 22, 7, { fill: t.suits.wands }) + g(path('M -10 -1 Q 0 -9, 10 -1 L 7 5 Q 0 0, -7 5 Z', { fill: '#f2ead8' }), { transform: 'translate(22 16)' }) +
-            circle(138, 22, 7, { fill: t.suits.cups }) + poly('132,16 144,16 138,8', { fill: '#f2ead8' }) +
-            circle(22, 146, 7, { fill: t.suits.pentacles }) + ell(22, 153, 5, 3, { fill: '#f2ead8' }) +
-            circle(138, 146, 7, { fill: t.suits.swords }) + circle(138, 141, 2.4, { fill: 'none', stroke: '#f2ead8', 'stroke-width': 1.2 }),
+        );
+    },
+
+    21: (t, deckId = 'standard') => { // The World: พวงมาลาลอเรลแห่งจักรวาล + นางระบำสวรรค์ถือคทาคู่ + ผู้พิทักษ์ 4 ทิศ
+        return g(
+            // พวงมาลาลอเรลรูปวงรีสีมรกตและทองคำ
+            ell(CX, 175, 52, 68, { fill: 'none', stroke: '#27ae60', 'stroke-width': 8, opacity: 0.85, 'stroke-dasharray': '12 6' }) +
+            ell(CX, 175, 52, 68, { fill: 'none', stroke: t.suitGold, 'stroke-width': 1.5 }) +
+            // ริบบิ้นสีแดงผูกหัวท้ายของพวงมาลา
+            poly(`${CX - 12},105 ${CX + 12},105 ${CX},118`, { fill: '#c0392b' }) +
+            poly(`${CX - 12},245 ${CX + 12},245 ${CX},232`, { fill: '#c0392b' }) +
+            // นางระบำสวรรค์ตามเทศกาล
+            drawWorldFigure(deckId, t) +
+            // 4 ผู้พิทักษ์ประจำมุม (คน, อินทรี, สิงโต, วัว)
+            sparkle(48, 110, 5, t.sparkle) + sparkle(192, 110, 5, t.sparkle) +
+            sparkle(48, 240, 5, t.sparkle) + sparkle(192, 240, 5, t.sparkle),
             {}
-        ),
+        );
+    }
 };
 
-/* ---------- ลายพื้นหลังจาง ๆ ตามธีม ---------- */
-function bgPattern(t, uid) {
+/* ---------- ลวดลายพื้นหลังจาง ๆ ตามธีม ---------- */
+function bgThemeMotif(t) {
     switch (t.pattern) {
-        case 'star':
-            return [[30, 90], [200, 130], [60, 300], [185, 260], [215, 70], [25, 210]].map(p => sparkle(p[0], p[1], 5, t.sparkle, 0.35)).join('');
         case 'wave':
-            return wave(70, W, t.sparkle, 0.14) + wave(320, W, t.sparkle, 0.12) + wave(150, W, t.sparkle, 0.07);
+            return wave(90, W, t.sparkle, 0.12) + wave(290, W, t.sparkle, 0.12);
         case 'ripple':
-            return [[120, 40], [120, 58], [120, 76]].map((p, i) => ell(p[0], 330, 60 + i * 22, 8 + i * 3, { fill: 'none', stroke: t.sparkle, 'stroke-width': 1, opacity: 0.25 })).join('') +
-                sparkle(30, 80, 4, t.sparkle, 0.3) + sparkle(210, 110, 4, t.sparkle, 0.3);
+            return [[CX, 80], [CX, 290]].map(p =>
+                circle(p[0], p[1], 35, { fill: 'none', stroke: t.sparkle, 'stroke-width': 0.8, opacity: 0.18 })
+            ).join('');
         case 'batfly':
-            return bat(28, 90, 5, t.sparkle) + bat(205, 250, 4, t.sparkle) + bat(35, 300, 5, t.sparkle) + bat(200, 80, 4, t.sparkle);
+            return bat(38, 75, 6, t.sparkle) + bat(202, 75, 6, t.sparkle) + bat(38, 295, 6, t.sparkle) + bat(202, 295, 6, t.sparkle);
         case 'snow':
-            return [[30, 80], [210, 120], [50, 290], [190, 320], [120, 60], [90, 335]].map((p, i) => snowflake(p[0], p[1], i % 2 ? 5 : 7, t.sparkle)).map(s => g(s, { opacity: 0.35 })).join('');
+            return [[38, 75], [202, 75], [38, 295], [202, 295]].map(p =>
+                snowflake(p[0], p[1], 7, t.sparkle)
+            ).join('');
         case 'heart':
-            return [[28, 90], [210, 130], [40, 300], [195, 275], [120, 50]].map(p => heart(p[0], p[1], 9, t.sparkle)).map(s => g(s, { opacity: 0.3 })).join('');
+            return [[38, 75], [202, 75], [38, 295], [202, 295]].map(p =>
+                heart(p[0], p[1], 7, { fill: t.sparkle, opacity: 0.25 })
+            ).join('');
         default:
-            return '';
+            return [[38, 75], [202, 75], [38, 295], [202, 295]].map(p =>
+                sparkle(p[0], p[1], 4, t.sparkle, 0.35)
+            ).join('');
     }
 }
 
-/* ---------- ประกอบหน้าไพ่เต็ม ---------- */
+/* ================================================================
+   เรนเดอร์หน้าไพ่เต็มผืน (78 ใบ)
+   ================================================================ */
 let uidCounter = 0;
 
 export function renderFront(card, deckId = 'standard') {
     const t = getTheme(deckId);
-    const uid = `tt${++uidCounter}`;
+    const uid = `ttf_${++uidCounter}`;
 
-    // ศิลป์กลางการ์ด (พื้นที่ออกแบบ 160×165 วางที่ translate(40,100))
-    let art;
+    // ตัวเลขโรมัน / ตัวเลขกำกับบนยอดซุ้ม
+    let numeralStr = '';
     if (card.arcana === 'major') {
-        art = (MAJORS[card.number] || MAJORS[0])(t);
+        numeralStr = toRoman(card.number);
     } else if (card.number >= 11) {
-        art = courtArt(card.number, card.suit, t);
+        const courtMap = { 11: 'PAGE', 12: 'KNIGHT', 13: 'QUEEN', 14: 'KING' };
+        numeralStr = courtMap[card.number] || '✦';
     } else {
-        const spots = PIPS[card.number] || PIPS[1];
-        art = spots.map(([x, y, s], i) =>
-            g(SUIT_ICONS[card.suit](t), { transform: `translate(${x} ${y}) scale(${s}) rotate(${i % 2 ? 9 : -9})` })
-        ).join('');
+        numeralStr = card.number === 1 ? 'ACE' : String(card.number);
     }
 
-    // ตัวเลขบนการ์ด
-    const numeral = card.arcana === 'major'
-        ? toRoman(card.number)
-        : (card.number >= 11 ? '✦' : String(card.number));
-
-    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.thai_name} (${card.name})">
+    // หากมีภาพ Masterpiece Artwork ของสำรับมาตรฐาน (27 ใบที่ได้รับการอนุมัติ)
+    // สวมกรอบและป้ายชื่อด้านล่างที่เหมือนกันกับทุกใบในสำรับ 100%
+    const approvedSrc = APPROVED_CARD_ASSETS[card?.id];
+    if (approvedSrc && deckId === 'standard') {
+        return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.thai_name || card.name_th || card.name} (${card.name})">
 <defs>
-<linearGradient id="${uid}bg" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0" stop-color="${t.bg[0]}"/><stop offset="1" stop-color="${t.bg[1]}"/>
-</linearGradient>
+    <clipPath id="${uid}clip"><rect width="${W}" height="${H}" rx="14"/></clipPath>
+    <linearGradient id="${uid}bg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${t.bg[0]}"/>
+        <stop offset="100%" stop-color="${t.bg[1]}"/>
+    </linearGradient>
+    <linearGradient id="${uid}gold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#fff5cc"/>
+        <stop offset="35%" stop-color="${t.frame}"/>
+        <stop offset="70%" stop-color="#b8860b"/>
+        <stop offset="100%" stop-color="${t.frame}"/>
+    </linearGradient>
 </defs>
-<rect width="${W}" height="${H}" fill="url(#${uid}bg)"/>
-${bgPattern(t, uid)}
-<rect x="5" y="5" width="${W - 10}" height="${H - 10}" rx="11" fill="none" stroke="${t.frame}" stroke-width="2"/>
-<rect x="12" y="12" width="${W - 24}" height="${H - 24}" rx="8" fill="none" stroke="${t.frameSoft}" stroke-width="1"/>
-${corners(t.corner, W, H, 17, 26, t.frame)}
-${txt(W / 2, 66, numeral, { fill: t.numeral, 'font-size': 24, 'font-family': "'Charm', serif", 'font-weight': 700 })}
-${card.arcana === 'major' ? g(path(`M 96 76 Q ${W / 2} 84, 144 76`, { stroke: t.frameSoft, 'stroke-width': 1.2, fill: 'none' }), {}) : ''}
-<g transform="translate(40 100)">${art}</g>
-${txt(W / 2, 330, card.thai_name, { fill: t.title, 'font-size': 25, 'font-family': "'Charm', 'Noto Sans Thai', serif", 'font-weight': 700 })}
-${txt(W / 2, 352, card.name, { fill: t.subtitle, 'font-size': 10.5, 'font-family': "'Noto Sans Thai', sans-serif", 'letter-spacing': '1.2' })}
+<image href="${approvedSrc}" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${uid}clip)"/>
+${renderDeckBorder(deckId, t, uid, false)}
+${renderDeckNumeralBadge(card, deckId, t, uid, numeralStr)}
+${renderDeckCartouche(card, deckId, t, uid)}
+</svg>`;
+    }
+
+    // สำหรับใบที่เหลือในสำรับมาตรฐาน และไพ่ทั้ง 78 ใบของทุกเทศกาล (Songkran, Loy Krathong, Christmas, Valentine, Halloween, Minimalist)
+    let art;
+    if (card.arcana === 'major') {
+        const drawMajor = MAJORS[card.number] || MAJORS[0];
+        art = drawMajor(t, deckId);
+    } else if (card.number >= 11) {
+        art = courtArt(card.number, card.suit, t, deckId);
+    } else {
+        art = renderMinorScene(card.number, card.suit, t, deckId);
+    }
+
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.thai_name || card.name_th || card.name} (${card.name})">
+<defs>
+    <!-- การไล่เฉดสีพื้นหลังมนตราพรีเมียม -->
+    <linearGradient id="${uid}bg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${t.bg[0]}"/>
+        <stop offset="100%" stop-color="${t.bg[1]}"/>
+    </linearGradient>
+
+    <!-- ไล่เฉดสีทองคำบริสุทธิ์สำหรับกรอบ (Pure Gold Foil) -->
+    <linearGradient id="${uid}gold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#fff5cc"/>
+        <stop offset="35%" stop-color="${t.frame}"/>
+        <stop offset="70%" stop-color="#b8860b"/>
+        <stop offset="100%" stop-color="${t.frame}"/>
+    </linearGradient>
+
+    <!-- ออร่าเรืองแสงภายในซุ้มวิหารสวรรค์ นุ่มนวลสบายตา ไม่สว่างโร่ (Luminous Celestial Arch) -->
+    <radialGradient id="${uid}archAura" cx="50%" cy="40%" r="65%">
+        <stop offset="0%" stop-color="${t.archCenter || '#FFFDF7'}" stop-opacity="0.85"/>
+        <stop offset="60%" stop-color="${t.bg[0]}" stop-opacity="0.80"/>
+        <stop offset="100%" stop-color="${t.bg[1]}" stop-opacity="0.92"/>
+    </radialGradient>
+</defs>
+
+<!-- 1. กรอบนอก 3 ชั้นและลวดลายมุมเอกลักษณ์ประจำสำรับ -->
+${renderDeckBorder(deckId, t, uid, true)}
+
+<!-- 2. ซุ้มวิหารสวรรค์ / ซุ้มประจำเทศกาล -->
+${renderDeckArch(deckId, t, uid)}
+
+<!-- 3. ตรายอดซุ้มและตัวเลขกำกับไพ่ด้านบน -->
+${renderDeckNumeralBadge(card, deckId, t, uid, numeralStr)}
+
+<!-- 4. งานศิลป์ภาพไพ่ตรงกลาง -->
+<g id="card-symbolic-art">${art}</g>
+
+<!-- 5. ป้ายชื่อไพ่ด้านล่างประจำสำรับ (Mitr + Outfit + Watermark) -->
+${renderDeckCartouche(card, deckId, t, uid)}
 </svg>`;
 }
