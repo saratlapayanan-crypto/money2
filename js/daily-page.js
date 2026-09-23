@@ -4,10 +4,12 @@ import { getInterpretation } from './engines/interpretation-engine.js';
 import { formatThaiDateDisplay, getThaiDateString } from './utils/timezone.js';
 import { trackEvent } from './analytics.js';
 import { setupGlobalDecks, getActiveDeckId } from './engines/deck-engine.js';
-import { paintFront } from './art/tarot-art.js';
+import { paintFront, paintBack } from './art/tarot-art.js';
 import { getDayOfWeekFromDateString, calculateOutfitAdvice } from './domain/lucky-colors.js';
 import { renderMoonRabbitSvg } from './art/moon-rabbit.js';
 import { renderOutfitMannequinSvg, renderShirtIconSvg, renderPantsIconSvg } from './art/outfit-icons.js';
+
+let isFlipped = false;
 
 async function initDailyPage() {
     try {
@@ -25,13 +27,22 @@ async function initDailyPage() {
         ]);
 
         await displayDailyCard(cards, interpretations, false);
+        setupDailyRitual();
 
         const redrawBtn = document.getElementById('btn-redraw-card');
         if (redrawBtn) {
             redrawBtn.addEventListener('click', async () => {
                 redrawBtn.disabled = true;
                 redrawBtn.classList.add('opacity-50');
+
+                // Quick tactile flip on redraw
+                const flipContainer = document.getElementById('daily-flip-container');
+                if (flipContainer) flipContainer.classList.remove('flipped');
+                
+                await new Promise(r => setTimeout(r, 260));
                 await displayDailyCard(cards, interpretations, true);
+                
+                if (flipContainer) flipContainer.classList.add('flipped');
                 redrawBtn.disabled = false;
                 redrawBtn.classList.remove('opacity-50');
             });
@@ -43,11 +54,54 @@ async function initDailyPage() {
     }
 }
 
+function setupDailyRitual() {
+    const flipContainer = document.getElementById('daily-flip-container');
+    const revealBtn = document.getElementById('btn-reveal-daily');
+    const ritualPrompt = document.getElementById('daily-ritual-prompt');
+    const revealBtnContainer = document.getElementById('daily-reveal-btn-container');
+    const detailsSection = document.getElementById('daily-details-section');
+
+    const alreadyFlipped = sessionStorage.getItem('tarot_daily_flipped') === 'true';
+
+    function doReveal() {
+        if (isFlipped) return;
+        isFlipped = true;
+        if (flipContainer) flipContainer.classList.add('flipped');
+        if (ritualPrompt) ritualPrompt.classList.add('hidden');
+        if (revealBtnContainer) revealBtnContainer.classList.add('hidden');
+        if (detailsSection) detailsSection.classList.remove('hidden');
+        try {
+            sessionStorage.setItem('tarot_daily_flipped', 'true');
+        } catch (_) {}
+    }
+
+    if (alreadyFlipped) {
+        doReveal();
+    } else {
+        if (detailsSection) detailsSection.classList.add('hidden');
+        if (flipContainer) {
+            flipContainer.addEventListener('click', doReveal);
+            flipContainer.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    doReveal();
+                }
+            });
+        }
+        if (revealBtn) {
+            revealBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                doReveal();
+            });
+        }
+    }
+}
+
 async function displayDailyCard(cards, interpretations, forceNew = false) {
     const { card, debugInfo } = await getDailyCard(cards, forceNew);
 
     renderCard(card);
-    const energies = renderEnergies(card.id, interpretations);
+    const energies = renderEnergies(card, interpretations);
     
     // วิเคราะห์สไตล์การแต่งกายและสีมงคลประจำวันตามพลังงานไพ่
     if (energies) {
@@ -69,30 +123,46 @@ async function displayDailyCard(cards, interpretations, forceNew = false) {
 }
 
 function renderCard(card) {
-    const cardContainer = document.getElementById('card-display');
-    if (!cardContainer) return;
+    const deckId = getActiveDeckId();
+    const cardFront = document.getElementById('card-display');
+    const cardBack = document.getElementById('daily-card-back');
 
-    // วาดภาพไพ่ด้วยระบบศิลป์ SVG (ตามธีมสำรับที่ใช้งาน)
-    paintFront(cardContainer, card, getActiveDeckId());
-    cardContainer.classList.add('has-svg-art');
+    if (cardBack) {
+        paintBack(cardBack, deckId);
+        cardBack.classList.add('has-svg-art');
+    }
+    if (cardFront) {
+        paintFront(cardFront, card, deckId);
+        cardFront.classList.add('has-svg-art');
+    }
 }
 
-function renderEnergies(cardId, interpretations) {
+function renderEnergies(card, interpretations) {
+    const cardId = card.id;
     // Generate interpretations for all 3 categories
     const loveData = getInterpretation(interpretations, cardId, 'love');
     const financeData = getInterpretation(interpretations, cardId, 'finance');
     const workData = getInterpretation(interpretations, cardId, 'work');
     
-    // Attempt to get daily message
+    // Attempt to get daily message (1. Mirror of Mind)
     const dailyData = getInterpretation(interpretations, cardId, 'daily', 'message');
     
     const dailyMsg = document.getElementById('daily-message');
     if (dailyMsg) {
         if (dailyData && dailyData.summary && !dailyData.summary.startsWith('รอการปรับปรุง')) {
-            dailyMsg.textContent = dailyData.summary;
+            dailyMsg.textContent = `“${dailyData.summary}”`;
+        } else if (card.reflection) {
+            dailyMsg.textContent = `“${card.reflection}”`;
         } else {
-            dailyMsg.textContent = `คำแนะนำหลักของวันนี้: ${workData.action}`;
+            dailyMsg.textContent = `“วันนี้พลังของ ${card.thai_name || card.name} เกื้อหนุนคุณ: ${workData.summary || workData.action}”`;
         }
+    }
+
+    // 2. Daily Caution & Blindspot (จุดเตือนสติตลอดวัน)
+    const dailyCaution = document.getElementById('daily-caution');
+    if (dailyCaution) {
+        const cautionText = workData.warning || loveData.warning || financeData.warning || card.meaning_reversed || "ระวังความเร่งรีบหรือความกดดันจากภายนอก ให้หายใจลึกๆ และรักษาสมดุลความสงบในใจ";
+        dailyCaution.textContent = cautionText;
     }
 
     const container = document.getElementById('energy-container');

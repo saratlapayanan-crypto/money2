@@ -113,31 +113,42 @@
                 <span class="text-xs text-amber-500">✦</span>
             </div>
 
-            <!-- การตีความ -->
-            <section class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4 sm:p-5 w-full mb-4 space-y-3.5">
-                <div class="flex items-center gap-1.5 pb-2 border-b border-purple-100/80">
-                    <span class="text-purple-600 text-base">📖</span>
-                    <h3 class="text-sm font-bold text-[#231230]">การตีความหมายของไพ่</h3>
+            <!-- การตีความเชิงจิตวิทยา 3 ระดับ (Psychological Tarot Insights) -->
+            <section class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4 sm:p-5 w-full mb-4 space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-purple-100/80">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-purple-600 text-base">🔮</span>
+                        <h3 class="text-sm font-bold text-[#231230]">การวิเคราะห์คำทำนายและเสียงสะท้อนจิตใจ</h3>
+                    </div>
+                    <span class="text-[10px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200 font-semibold">3 มิตินำทาง</span>
                 </div>
                 
-                <div>
-                    <p id="interp-summary" class="text-[#261633] leading-relaxed text-sm sm:text-base font-medium">กำลังแปลผล...</p>
+                <!-- 1. กระจกสะท้อนสภาวะใจ (Mirror of Mind) -->
+                <div class="rounded-xl border border-purple-200/80 bg-gradient-to-br from-purple-50/70 to-white p-4 shadow-xs space-y-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center text-xs text-purple-700 font-bold shrink-0">🪞</span>
+                        <h4 class="text-xs font-bold text-purple-900">กระจกสะท้อนสภาวะใจในตอนนี้</h4>
+                    </div>
+                    <p id="interp-summary" class="text-[#261633] leading-relaxed text-sm font-medium">กำลังแปลผล...</p>
+                    <p id="interp-reflection" class="text-xs text-[#6B5B7E] italic border-t border-purple-100/70 pt-2"></p>
                 </div>
 
-                <div class="rounded-xl border border-amber-300/50 bg-amber-50/60 p-3.5 shadow-xs">
-                    <h4 class="text-xs text-[#8A5D0B] font-bold mb-1 flex items-center gap-1">
-                        <span>✨</span>
-                        <span>แนวทางปฏิบัติที่แนะนำ</span>
-                    </h4>
-                    <p id="interp-action" class="text-xs sm:text-sm text-[#4A3B55] leading-relaxed">...</p>
+                <!-- 2. จุดสะกิดใจเตือนสติ (Caution & Blindspot) -->
+                <div id="warning-container" class="bg-gradient-to-br from-rose-50/80 to-white p-4 rounded-xl border border-rose-200/90 shadow-xs space-y-1.5">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-rose-100 flex items-center justify-center text-xs text-rose-700 font-bold shrink-0">⚠️</span>
+                        <h4 class="text-xs text-rose-900 font-bold">จุดสะกิดใจเตือนสติ (สิ่งที่อาจมองข้าม)</h4>
+                    </div>
+                    <p id="interp-warning" class="text-xs sm:text-sm text-rose-800 leading-relaxed font-normal">...</p>
                 </div>
 
-                <div id="warning-container" class="hidden bg-rose-50 p-3.5 rounded-xl border border-rose-200 shadow-xs">
-                    <h4 class="text-xs text-rose-800 font-bold mb-1 flex items-center gap-1">
-                        <span>⚠️</span>
-                        <span>ข้อควรระวัง</span>
-                    </h4>
-                    <p id="interp-warning" class="text-xs sm:text-sm text-rose-700 leading-relaxed">...</p>
+                <!-- 3. ก้าวต่อไปที่ทำได้จริง (Actionable Guidance) -->
+                <div class="rounded-xl border border-amber-300/70 bg-gradient-to-br from-amber-50/70 to-white p-4 shadow-xs space-y-1.5">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-xs text-[#8A5D0B] font-bold shrink-0">🧭</span>
+                        <h4 class="text-xs text-[#8A5D0B] font-bold">ก้าวต่อไปที่ลงมือทำได้จริง</h4>
+                    </div>
+                    <p id="interp-action" class="text-xs sm:text-sm text-[#4A3B55] leading-relaxed font-medium">...</p>
                 </div>
             </section>
 

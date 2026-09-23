@@ -96,61 +96,113 @@
                 <span id="daily-date">กำลังโหลด...</span>
             </div>
             
-            <!-- ไพ่ประจำวัน -->
-            <article id="card-display" class="card-placeholder mb-3 shadow-xl shadow-purple-500/10">
-                <div class="card-number" id="card-number">-</div>
-                <div class="card-symbol" id="card-symbol">?</div>
-                <div class="card-title" id="card-title">กำลังสับไพ่...</div>
+            <!-- ส่วนชวนตั้งจิตอธิษฐานก่อนเปิดไพ่ประจำวัน (Sacred Intention Ritual) -->
+            <div id="daily-ritual-prompt" class="w-full max-w-xs text-center mb-3">
+                <div class="inline-flex items-center gap-1.5 bg-white/90 border border-purple-200/90 px-3.5 py-1 rounded-full text-xs font-semibold text-purple-700 shadow-2xs mb-2">
+                    <span class="animate-pulse">✨</span>
+                    <span>ก้าวแรกของวัน: ตั้งจิตรับพลัง</span>
+                </div>
+                <p class="text-xs text-[#5C4A6F] leading-relaxed">
+                    สูดหายใจเข้าลึก ๆ ปล่อยวางความกังวล...<br>
+                    แล้วแตะที่ไพ่เพื่อเปิดรับพลังนำทางของวันนี้
+                </p>
+            </div>
+
+            <!-- ไพ่ประจำวัน: รองรับการพลิกหงาย 3 มิติ (Flip 3D) -->
+            <article class="flip-container mb-3 cursor-pointer group select-none" id="daily-flip-container" role="button" aria-label="แตะเพื่อเปิดไพ่ประจำวัน" tabindex="0">
+                <div class="flipper" id="daily-flipper">
+                    <!-- หลังไพ่ (สำหรับคว่ำหน้ารอแตะเปิด) -->
+                    <div class="back card-placeholder-back" id="daily-card-back">
+                        <div class="pattern">❈</div>
+                    </div>
+                    <!-- หน้าไพ่ (หลังพลิกเปิด) -->
+                    <div class="front card-placeholder" id="card-display">
+                        <div class="card-number" id="card-number">-</div>
+                        <div class="card-symbol" id="card-symbol">?</div>
+                        <div class="card-title" id="card-title">กำลังสับไพ่...</div>
+                    </div>
+                </div>
             </article>
 
-            <!-- ปุ่มจับไพ่ใบใหม่ (สุ่มอีกครั้ง) -->
-            <div class="mb-3 flex items-center justify-center gap-2">
-                <button id="btn-redraw-card" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-white/90 hover:bg-white text-purple-700 border border-purple-200/80 shadow-xs hover:shadow transition-all flex items-center gap-1.5 cursor-pointer active:scale-95">
-                    <span>🔄</span>
-                    <span>จับไพ่ใบใหม่ (สุ่มอีกครั้ง)</span>
+            <!-- ปุ่มแตะเปิดไพ่ (แสดงเมื่อยังไม่เปิด) -->
+            <div id="daily-reveal-btn-container" class="mb-3">
+                <button id="btn-reveal-daily" class="hero-pill-btn px-6 py-2.5 text-xs font-bold shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center gap-2 cursor-pointer">
+                    <span>✨</span>
+                    <span>แตะเพื่อเปิดรับพลังไพ่ประจำวัน</span>
                 </button>
             </div>
 
-            <!-- Watermark สำหรับแชร์ลงโซเชียล -->
-            <div class="mb-4 flex items-center justify-center gap-1.5 text-[11px] tracking-wider uppercase text-[#7E22CE] px-3.5 py-1 rounded-full border border-purple-200/80 bg-white/80 shadow-xs">
-                <span class="text-xs text-amber-500">✦</span>
-                <span class="font-semibold">money2 · ไพ่นำทางเพื่อวันพรุ่งนี้ที่ดีกว่า</span>
-                <span class="text-xs text-amber-500">✦</span>
-            </div>
-
-            <section class="w-full space-y-4 text-left">
-                <!-- ข้อความประจำวัน -->
-                <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4">
-                    <div class="flex items-center gap-1.5 pb-2 mb-2 border-b border-purple-100/80">
-                        <span class="text-amber-500 text-sm">✨</span>
-                        <h2 class="text-sm font-bold text-[#231230]">ข้อความประจำวัน</h2>
-                    </div>
-                    <p class="text-[#423154] italic leading-relaxed text-sm font-medium" id="daily-message">"กำลังแปลผลไพ่..."</p>
+            <!-- ส่วนแสดงผลรายละเอียดหลังเปิดไพ่ -->
+            <div id="daily-details-section" class="w-full flex flex-col items-center">
+                <!-- ปุ่มจับไพ่ใบใหม่ (สุ่มอีกครั้ง) -->
+                <div class="mb-3 flex items-center justify-center gap-2">
+                    <button id="btn-redraw-card" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-white/90 hover:bg-white text-purple-700 border border-purple-200/80 shadow-xs hover:shadow transition-all flex items-center gap-1.5 cursor-pointer active:scale-95">
+                        <span>🔄</span>
+                        <span>จับไพ่ใบใหม่ (สุ่มอีกครั้ง)</span>
+                    </button>
                 </div>
-                
-                <!-- พลังงานรายด้าน -->
-                <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4">
-                    <div class="flex items-center gap-1.5 pb-2 mb-3 border-b border-purple-100/80">
-                        <span class="text-purple-600 text-sm">🔮</span>
-                        <h3 class="text-sm font-bold text-[#231230]">พลังงานในแต่ละด้าน</h3>
+
+                <!-- Watermark สำหรับแชร์ลงโซเชียล -->
+                <div class="mb-4 flex items-center justify-center gap-1.5 text-[11px] tracking-wider uppercase text-[#7E22CE] px-3.5 py-1 rounded-full border border-purple-200/80 bg-white/80 shadow-xs">
+                    <span class="text-xs text-amber-500">✦</span>
+                    <span class="font-semibold">money2 · ไพ่นำทางเพื่อวันพรุ่งนี้ที่ดีกว่า</span>
+                    <span class="text-xs text-amber-500">✦</span>
+                </div>
+
+                <section class="w-full space-y-4 text-left">
+                    <!-- ข้อความและบทวิเคราะห์ประจำวัน 3 มิติ -->
+                    <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4 space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-purple-100/80">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-amber-500 text-sm">✨</span>
+                                <h2 class="text-sm font-bold text-[#231230]">ข้อความนำทางประจำวัน</h2>
+                            </div>
+                            <span class="text-[10px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200 font-semibold">พลังใจวันนี้</span>
+                        </div>
+                        
+                        <!-- 1. สะท้อนสภาวะใจวันนี้ -->
+                        <div class="rounded-xl border border-purple-100 bg-purple-50/50 p-3">
+                            <p class="text-xs font-bold text-purple-900 mb-1 flex items-center gap-1">
+                                <span>🪞</span>
+                                <span>สภาวะพลังงานของคุณ</span>
+                            </p>
+                            <p class="text-[#423154] italic leading-relaxed text-xs sm:text-sm font-medium" id="daily-message">"กำลังแปลผลไพ่..."</p>
+                        </div>
+
+                        <!-- 2. จุดเตือนสติตลอดวัน -->
+                        <div id="daily-caution-box" class="rounded-xl border border-rose-100 bg-rose-50/50 p-3">
+                            <p class="text-xs font-bold text-rose-900 mb-1 flex items-center gap-1">
+                                <span>⚠️</span>
+                                <span>จุดเตือนสติตลอดวัน</span>
+                            </p>
+                            <p class="text-xs sm:text-sm text-rose-800 leading-relaxed" id="daily-caution">...</p>
+                        </div>
                     </div>
-                    <div id="energy-container" class="space-y-3">
+                    
+                    <!-- พลังงานรายด้าน -->
+                    <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4">
+                        <div class="flex items-center gap-1.5 pb-2 mb-3 border-b border-purple-100/80">
+                            <span class="text-purple-600 text-sm">🔮</span>
+                            <h3 class="text-sm font-bold text-[#231230]">พลังงานในแต่ละด้าน</h3>
+                        </div>
+                        <div id="energy-container" class="space-y-3">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- คำแนะนำการแต่งกาย & สีมงคลประจำวัน จากกระต่ายจันทรา -->
+                    <div id="outfit-advice-container" class="space-y-3">
                         <!-- Dynamically populated by JS -->
                     </div>
-                </div>
-
-                <!-- คำแนะนำการแต่งกาย & สีมงคลประจำวัน จากกระต่ายจันทรา -->
-                <div id="outfit-advice-container" class="space-y-3">
-                    <!-- Dynamically populated by JS -->
-                </div>
-                
-                <nav class="pt-2">
-                    <a href="reading.html" class="hero-pill-btn w-full text-center py-3">
-                        <span>เปิดไพ่ส่วนตัวแบบเจาะลึก</span>
-                        <span>→</span>
-                    </a>
-                </nav>
-            </section>
+                    
+                    <nav class="pt-2">
+                        <a href="reading.html" class="hero-pill-btn w-full text-center py-3">
+                            <span>เปิดไพ่ส่วนตัวแบบเจาะลึก</span>
+                            <span>→</span>
+                        </a>
+                    </nav>
+                </section>
+            </div>
 
             <!-- AdSense Placeholder -->
             <div class="w-full ad-slot text-center py-3 my-4 text-xs" aria-label="Advertisement">

@@ -112,35 +112,92 @@ function showCardSelection() {
     document.getElementById('step-2-meditation').classList.add('hidden');
     document.getElementById('step-3-selection').classList.remove('hidden');
 
+    const ribbon = document.getElementById('cards-spread-ribbon');
     const grid = document.getElementById('cards-grid');
-    grid.innerHTML = ''; // Clear previous if any
+    if (ribbon) ribbon.innerHTML = '';
+    if (grid) grid.innerHTML = '';
 
     // หลังไพ่ลายเทศกาล: ใช้ data-URI เดียวเป็น background ทั้ง 78 ใบ (DOM เบา)
     const svgStr = renderBack(getActiveDeckId());
     const bgUrl = `url("data:image/svg+xml,${encodeURIComponent(svgStr)}")`;
 
     for (let i = 0; i < 78; i++) {
-        const cardBack = document.createElement('div');
-        cardBack.className = 'mini-card-back';
-        cardBack.dataset.position = i;
-        cardBack.style.backgroundImage = bgUrl;
-        cardBack.style.backgroundSize = 'cover';
+        // 1. ไพ่ในแถวคลี่ริบบิ้น (Spread Ribbon)
+        if (ribbon) {
+            const spreadCard = document.createElement('div');
+            spreadCard.className = 'spread-card-item';
+            spreadCard.dataset.position = i;
+            spreadCard.style.backgroundImage = bgUrl;
+            spreadCard.style.zIndex = i + 1;
+            spreadCard.title = `ไพ่ใบที่ ${i + 1}`;
+            spreadCard.addEventListener('click', () => handleCardClick(i));
+            ribbon.appendChild(spreadCard);
+        }
 
-        cardBack.addEventListener('click', () => handleCardClick(i));
-        grid.appendChild(cardBack);
+        // 2. ไพ่ในตาราง (Grid)
+        if (grid) {
+            const cardBack = document.createElement('div');
+            cardBack.className = 'mini-card-back';
+            cardBack.dataset.position = i;
+            cardBack.style.backgroundImage = bgUrl;
+            cardBack.style.backgroundSize = 'cover';
+            cardBack.title = `ไพ่ใบที่ ${i + 1}`;
+            cardBack.addEventListener('click', () => handleCardClick(i));
+            grid.appendChild(cardBack);
+        }
     }
+
+    setupViewToggle();
+}
+
+let isGridView = false;
+function setupViewToggle() {
+    const toggleBtn = document.getElementById('btn-toggle-view');
+    const spreadContainer = document.getElementById('cards-spread-container');
+    const grid = document.getElementById('cards-grid');
+    if (!toggleBtn || !spreadContainer || !grid) return;
+
+    toggleBtn.onclick = () => {
+        isGridView = !isGridView;
+        if (isGridView) {
+            spreadContainer.classList.add('hidden');
+            grid.classList.remove('hidden');
+            toggleBtn.innerHTML = '<span>🎴 สลับเป็นแบบคลี่ไพ่</span>';
+        } else {
+            spreadContainer.classList.remove('hidden');
+            grid.classList.add('hidden');
+            toggleBtn.innerHTML = '<span>⊞ สลับเป็นมุมมองตาราง</span>';
+        }
+    };
 }
 
 function handleCardClick(position) {
     const session = selectPosition(position);
     if (session.locked) return; // Prevent changing if somehow locked
     
-    // Update UI highlights
-    const allCards = document.querySelectorAll('.mini-card-back');
-    allCards.forEach(c => c.classList.remove('selected'));
+    // Update UI highlights across both ribbon and grid
+    const allSpreadCards = document.querySelectorAll('.spread-card-item');
+    allSpreadCards.forEach(c => c.classList.remove('selected'));
+
+    const allGridCards = document.querySelectorAll('.mini-card-back');
+    allGridCards.forEach(c => c.classList.remove('selected'));
     
-    const selectedEl = document.querySelector(`.mini-card-back[data-position="${position}"]`);
-    if (selectedEl) selectedEl.classList.add('selected');
+    const selectedSpread = document.querySelector(`.spread-card-item[data-position="${position}"]`);
+    if (selectedSpread) {
+        selectedSpread.classList.add('selected');
+        try {
+            selectedSpread.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } catch (_) {}
+    }
+
+    const selectedGrid = document.querySelector(`.mini-card-back[data-position="${position}"]`);
+    if (selectedGrid) selectedGrid.classList.add('selected');
+
+    // Update status badge
+    const statusEl = document.getElementById('selected-card-status');
+    if (statusEl) {
+        statusEl.textContent = `คุณเลือกไพ่ใบที่ ${position + 1} เรียบร้อยแล้ว ✨`;
+    }
 
     document.getElementById('confirm-container').classList.remove('hidden');
 }

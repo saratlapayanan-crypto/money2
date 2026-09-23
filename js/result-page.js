@@ -66,17 +66,31 @@ function renderResult(session, cards, interpretations, questionsData, remedies, 
     paintFront(cardContainer, cardData, getActiveDeckId());
     cardContainer.classList.add('has-svg-art');
 
-    // 3. Render Interpretation Contextually
+    // 3. Render Interpretation Contextually (3-tier Psychological Framing)
     const interp = getInterpretation(interpretations, session.cardId, session.category, session.subtopic);
     
-    document.getElementById('interp-summary').textContent = interp.summary;
-    document.getElementById('interp-action').textContent = interp.action;
-    
-    if (interp.warning) {
-        const wCont = document.getElementById('warning-container');
-        wCont.classList.remove('hidden');
-        document.getElementById('interp-warning').textContent = interp.warning;
+    // 1. Mirror of Mind (กระจกสะท้อนสภาวะใจ)
+    const summaryEl = document.getElementById('interp-summary');
+    if (summaryEl) summaryEl.textContent = interp.summary;
+
+    const reflectionEl = document.getElementById('interp-reflection');
+    if (reflectionEl) {
+        const quote = cardData.reflection || cardData.meaning_upright || 'รับรู้และโอบรับทุกความรู้สึก เพื่อให้สัญชาตญาณพาคุณก้าวไปข้างหน้า';
+        reflectionEl.textContent = `“${quote}”`;
     }
+    
+    // 2. Mindful Caution & Blindspot (จุดสะกิดใจเตือนสติ)
+    const warningEl = document.getElementById('interp-warning');
+    const warningContainer = document.getElementById('warning-container');
+    if (warningEl && warningContainer) {
+        const warningText = interp.warning || cardData.meaning_reversed || 'ระวังความกังวลหรือความเร่งรีบด่วนตัดสินใจ ให้เวลาตนเองได้ไตร่ตรองอย่างรอบคอบ';
+        warningEl.textContent = warningText;
+        warningContainer.classList.remove('hidden');
+    }
+
+    // 3. Actionable Guidance (ก้าวต่อไปที่ทำได้จริง)
+    const actionEl = document.getElementById('interp-action');
+    if (actionEl) actionEl.textContent = interp.action || 'จัดลำดับความสำคัญและลงมือทำทีละก้าวอย่างมั่นใจ';
 
     // 4. Remedy & Support (Phase 8)
     const remedy = getRemedy(remedies, session.category, interp.status);
