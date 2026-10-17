@@ -6,6 +6,12 @@ import { getWallpaper } from './engines/wallpaper-engine.js';
 import { trackEvent } from './analytics.js';
 import { setupGlobalDecks, getActiveDeckId } from './engines/deck-engine.js';
 import { paintFront } from './art/tarot-art.js';
+import {
+    saveReadingToHistory,
+    shareTarotReading,
+    generateCardWallpaperDataUrl,
+    showToast
+} from './utils/share-and-history.js';
 
 async function initResultPage() {
     try {
@@ -30,7 +36,7 @@ async function initResultPage() {
         ]);
         const questionsData = await questionsRes.json();
 
-        renderResult(session, cards, interpretations, questionsData, remedies, colors, wallpapers);
+        await renderResult(session, cards, interpretations, questionsData, remedies, colors, wallpapers);
         renderAffiliates(session.category, affiliates);
 
     } catch (e) {
@@ -39,13 +45,14 @@ async function initResultPage() {
     }
 }
 
-function renderResult(session, cards, interpretations, questionsData, remedies, colors, wallpapers) {
+async function renderResult(session, cards, interpretations, questionsData, remedies, colors, wallpapers) {
     // 1. Render Question Text
     const catList = questionsData[session.category] || [];
     const qObj = catList.find(q => q.slug === session.subtopic);
-    document.getElementById('question-text').textContent = qObj ? qObj.label_th : 'คำถามของคุณ';
+    const questionLabel = qObj ? qObj.label_th : 'คำถามของคุณ';
+    document.getElementById('question-text').textContent = questionLabel;
 
-    // 2. Render Card Artwork (ระบบศิลป์ SVG ตามธีมสำรับ)
+    // 2. Render Card Artwork (ระบบศิลป์ SVG / Masterpiece ตามธีมสำรับ)
     let cardData = cards.find(c => c.id === session.cardId);
     if (!cardData) {
         const [arcanaSuit, num] = session.cardId.split('-');
@@ -74,8 +81,8 @@ function renderResult(session, cards, interpretations, questionsData, remedies, 
     if (summaryEl) summaryEl.textContent = interp.summary;
 
     const reflectionEl = document.getElementById('interp-reflection');
+    const quote = cardData.reflection || cardData.meaning_upright || 'รับรู้และโอบรับทุกความรู้สึก เพื่อให้สัญชาตญาณพาคุณก้าวไปข้างหน้า';
     if (reflectionEl) {
-        const quote = cardData.reflection || cardData.meaning_upright || 'รับรู้และโอบรับทุกความรู้สึก เพื่อให้สัญชาตญาณพาคุณก้าวไปข้างหน้า';
         reflectionEl.textContent = `“${quote}”`;
     }
     
@@ -119,32 +126,72 @@ function renderResult(session, cards, interpretations, questionsData, remedies, 
         document.getElementById('color-meaning').textContent = color.meaning;
     }
 
-    // 6. Wallpaper Mapping (Phase 8)
+    // 6. Save to Reading History Journal
+    saveReadingToHistory({
+        sessionId: session.sessionId,
+        type: 'personal',
+        category: session.category,
+        questionText: questionLabel,
+        cardId: cardData.id,
+        cardNameTh: cardData.name_th || cardData.thai_name || cardData.name,
+        cardNameEn: cardData.name_en || cardData.name,
+        summary: interp.summary
+    });
+
+    // 7. Dynamic 1080x1920 Mobile Lockscreen Wallpaper Generation & Preview
     const wallpaper = getWallpaper(wallpapers, session.cardId, session.category, remedy ? remedy.group_id : null);
-    if (wallpaper) {
-        document.getElementById('wallpaper-name').textContent = wallpaper.name_th;
-        const btn = document.getElementById('wallpaper-download-btn');
-        btn.href = wallpaper.image_url;
-        btn.addEventListener('click', () => {
-            trackEvent('download_wallpaper', { wallpaper_id: wallpaper.wallpaper_id });
+    const wpNameText = wallpaper ? `${wallpaper.name_th} · ${cardData.name_th || cardData.name}` : `วอลเปเปอร์${cardData.name_th || cardData.name}`;
+    const wpNameEl = document.getElementById('wallpaper-name');
+    if (wpNameEl) wpNameEl.textContent = wpNameText;
+
+    const btn = document.getElementById('wallpaper-download-btn');
+    const previewBox = document.getElementById('wallpaper-preview-box');
+
+    try {
+        const dataUrl = await generateCardWallpaperDataUrl({
+            card: cardData,
+            heading: questionLabel,
+            affirmation: (remedy && remedy.affirmation) ? remedy.affirmation : quote,
+            luckyColorName: color ? `สี${color.name_th}` : 'สีทองมงคล',
+            luckyColorHex: color ? color.hex : '#D97706',
+            wallpaperTitle: wallpaper ? wallpaper.name_th : 'TAROT TALISMAN'
         });
-        // In real app, we set preview image. Since we don't have assets, it remains a CSS placeholder
+
+        if (dataUrl) {
+            if (previewBox) {
+                previewBox.innerHTML = `<img src="${dataUrl}" alt="${wpNameText}" class="w-full h-full object-cover">`;
+            }
+            if (btn) {
+                btn.href = dataUrl;
+                btn.download = `money2-wallpaper-${cardData.id}.png`;
+                btn.addEventListener('click', () => {
+                    trackEvent('download_wallpaper', { wallpaper_id: wallpaper?.wallpaper_id || cardData.id });
+                    showToast('ดาวน์โหลดวอลเปเปอร์มงคลสำเร็จแล้ว ✨');
+                });
+            }
+        }
+    } catch (wpErr) {
+        console.warn('Could not render dynamic wallpaper:', wpErr);
     }
-    
+
     // Analytics
     trackEvent('view_result', { card_id: session.cardId, category: session.category, subtopic: session.subtopic });
 
-    // Share result listener
+    // 8. Share result listener
     const shareBtn = document.getElementById('btn-share');
     if (shareBtn) {
-        shareBtn.addEventListener('click', () => {
+        shareBtn.addEventListener('click', async () => {
             trackEvent('share_result', { card_id: session.cardId, category: session.category });
+            await shareTarotReading({
+                title: `🔮 คำทำนายไพ่ทาโรต์: ${cardData.name_th || cardData.name} (${cardData.name_en || cardData.name})`,
+                text: `คำถาม: ${questionLabel}\n✨ คำทำนาย: ${interp.summary}\n🧭 ก้าวต่อไป: ${interp.action || ''}`,
+                url: new URL('reading.html', window.location.href).href
+            });
         });
     }
 }
 
 document.addEventListener('DOMContentLoaded', initResultPage);
-
 
 function renderAffiliates(category, affiliates) {
     if (!affiliates || affiliates.length === 0) return;

@@ -1,20 +1,15 @@
 import { loadCards } from './data-loader.js';
-import { THEMES, getTheme } from './art/themes.js';
+import { THEMES } from './art/themes.js';
 import { renderCardFront, renderCardBack } from './art/tarot-art.js';
 import { APPROVED_CARD_ASSETS } from './art/fronts.js';
 import { setupGlobalDecks, getActiveDeckId } from './engines/deck-engine.js';
-import {
-    renderDeckBorder,
-    renderDeckNumeralBadge,
-    renderDeckCartouche
-} from './art/borders.js';
-import { toRoman } from './art/helpers.js';
+import { generateCardWallpaperDataUrl, showToast } from './utils/share-and-history.js';
 
 let allCards = [];
 let currentTheme = 'standard';
-let activeTab = 'completed'; // 'completed' | 'queued' | 'all'
+let activeTab = 'all'; // 'all' | 'major' | 'wands' | 'cups' | 'swords' | 'pentacles'
+let searchQuery = '';
 let promptManifest = {};
-let countdownInterval = null;
 
 const THEME_INFO = {
     standard: {
@@ -54,37 +49,16 @@ const THEME_INFO = {
     }
 };
 
-// Generated concept art is kept separate from the 78-card registry until each
-// card has its own reviewed asset. Showing the reviewed pilot here makes the
-// new visual direction visible without pretending that the whole deck is done.
-const GENERATED_PREVIEWS = {
-    christmas: {
-        src: 'output/imagegen/christmas-solstice-style-02-art-nouveau.png',
-        alt: 'ตัวอย่างไพ่คริสต์มาสและหลังไพ่ Art Nouveau ที่สร้างใหม่',
-        title: 'ตัวอย่างภาพใหม่ · Christmas / Winter Solstice',
-        note: 'ภาพตัวอย่าง Art Nouveau ที่สร้างขึ้นใหม่ — ยังไม่ใช่ภาพครบ 78 ใบ'
-    }
-};
-
-const GENERATED_CARD_ASSETS = {
-    christmas: {
-        cardId: 'major-0',
-        src: 'output/imagegen/christmas-the-fool-art-nouveau.png',
-        alt: 'ไพ่ The Fool ธีม Christmas / Winter Solstice วาดใหม่สไตล์ Art Nouveau',
-        label: 'The Fool · ไพ่ใบแรกที่สร้างเป็นภาพแยก'
-    }
-};
-
 async function init() {
     try { await setupGlobalDecks(); } catch (_) { /* optional */ }
     currentTheme = getActiveDeckId();
     allCards = await loadCards();
 
-    await loadManifest();
+    await loadManifest(currentTheme);
     buildThemePicker();
     setupTabs();
+    setupSearch();
     setupModal();
-    startCountdown();
     updateHeaderStatus();
     renderGrid();
 }
@@ -114,7 +88,7 @@ async function loadManifest(themeId = currentTheme) {
     } catch (_) {}
 }
 
-function isApproved(card, themeId) {
+function isApprovedMasterpiece(card, themeId) {
     if (themeId === 'standard') {
         return Boolean(APPROVED_CARD_ASSETS[card.id]);
     }
@@ -127,7 +101,7 @@ function buildThemePicker() {
     picker.innerHTML = '';
     Object.entries(THEMES).forEach(([id, t]) => {
         const btn = document.createElement('button');
-        btn.className = 'chip transition-all' + (id === currentTheme ? ' !bg-gradient-to-r !from-purple-700 !to-amber-600 !text-white !border-amber-400 font-bold shadow-xs' : ' hover:bg-white/80');
+        btn.className = 'chip transition-all cursor-pointer' + (id === currentTheme ? ' !bg-gradient-to-r !from-purple-700 !to-amber-600 !text-white !border-amber-400 font-bold shadow-xs' : ' hover:bg-white/80');
         btn.textContent = t.label;
         btn.addEventListener('click', async () => {
             currentTheme = id;
@@ -150,10 +124,33 @@ function setupTabs() {
             });
             btn.classList.add('active', '!bg-gradient-to-r', '!from-purple-600', '!to-amber-600', '!text-white', 'shadow-md');
             btn.classList.remove('bg-white/90', 'text-[#5C4A6F]');
-            activeTab = btn.dataset.tab;
+            activeTab = btn.dataset.tab || 'all';
             renderGrid();
         });
     });
+}
+
+function setupSearch() {
+    const input = document.getElementById('preview-search-input');
+    const clearBtn = document.getElementById('preview-search-clear');
+    if (!input) return;
+
+    input.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim().toLowerCase();
+        if (clearBtn) {
+            clearBtn.classList.toggle('hidden', !searchQuery);
+        }
+        renderGrid();
+    });
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            input.value = '';
+            searchQuery = '';
+            clearBtn.classList.add('hidden');
+            renderGrid();
+        });
+    }
 }
 
 function updateHeaderStatus() {
@@ -162,163 +159,80 @@ function updateHeaderStatus() {
     const descEl = document.getElementById('deck-style-desc');
     const badgeEl = document.getElementById('deck-badge');
     const progressBarFill = document.getElementById('progress-bar-fill');
-    const countCompletedEl = document.getElementById('count-completed');
-    const countQueuedEl = document.getElementById('count-queued');
     const progressTextLeft = document.getElementById('progress-text-left');
     const progressTextRight = document.getElementById('progress-text-right');
+    const quotaCountdownEl = document.getElementById('quota-countdown');
+    const pillSubEl = document.getElementById('deck-pill-sub');
 
-    const completedCount = allCards.filter(c => isApproved(c, currentTheme)).length;
-    const queuedCount = allCards.length - completedCount;
-    const percentage = ((completedCount / (allCards.length || 78)) * 100).toFixed(1);
+    const total = allCards.length || 78;
+    const isStandard = currentTheme === 'standard';
+    const masterpieceCount = allCards.filter(c => isApprovedMasterpiece(c, currentTheme)).length;
 
     if (titleEl) titleEl.textContent = info.title;
     if (descEl) descEl.textContent = info.desc;
-    if (badgeEl) {
-        badgeEl.textContent = currentTheme === 'standard'
-            ? `✨ Masterpiece ${completedCount} / ${allCards.length || 78} ใบ (${percentage}%)`
-            : `⏳ รอคิว AI 0 / 78 ใบ (0%)`;
-    }
-    if (progressBarFill) {
-        progressBarFill.style.width = `${percentage}%`;
-    }
-    if (countCompletedEl) countCompletedEl.textContent = completedCount;
-    if (countQueuedEl) countQueuedEl.textContent = queuedCount;
-    if (progressTextLeft) {
-        progressTextLeft.textContent = currentTheme === 'standard'
-            ? `🎨 สร้างเสร็จแล้ว ${completedCount} / 78 ใบ (Major Arcana ครบ 22 ใบ + Wands ครบ 14 ใบ + Cups ครบ 14 ใบ + Swords 9 ใบ + 1 Ace)`
-            : `🎨 อยู่ในคิวรอสร้างภาพ AI หลังสำรับมาตรฐานเสร็จสมบูรณ์`;
-    }
-    if (progressTextRight) {
-        progressTextRight.textContent = `รอคิว AI ${queuedCount} ใบ`;
-    }
-}
 
-/**
- * นาฬิกานับถอยหลังรอบโควตา AI ปลดล็อก (2026-09-28T13:46:13Z หรือ 20:46 น. วันที่ 28 ก.ย.)
- */
-function startCountdown() {
-    const countdownEl = document.getElementById('quota-countdown');
-    if (!countdownEl) return;
-
-    // Reset timestamp: 2026-09-28T13:46:13Z (20:46 Thai time)
-    const resetTime = new Date('2026-09-28T13:46:13Z').getTime();
-
-    function update() {
-        const now = Date.now();
-        const diff = resetTime - now;
-
-        if (diff <= 0) {
-            countdownEl.textContent = '00:00:00';
-            countdownEl.classList.remove('text-[#B45309]');
-            countdownEl.classList.add('text-emerald-600');
-            return;
+    if (isStandard) {
+        const percentage = ((masterpieceCount / total) * 100).toFixed(0);
+        if (badgeEl) {
+            badgeEl.textContent = `✨ Masterpiece ${masterpieceCount} / ${total} ใบ (${percentage}%)`;
         }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        const pad = n => String(n).padStart(2, '0');
-        countdownEl.textContent = days > 0
-            ? `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
-            : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        if (progressBarFill) {
+            progressBarFill.style.width = `${percentage}%`;
+        }
+        if (progressTextLeft) {
+            progressTextLeft.textContent = `🎨 สร้างเสร็จสมบูรณ์ ${masterpieceCount} / ${total} ใบ (Major Arcana ครบ 22 ใบ + Wands ครบ 14 ใบ + Cups ครบ 14 ใบ + Swords ครบ 14 ใบ + Pentacles ครบ 14 ใบ)`;
+        }
+        if (progressTextRight) {
+            progressTextRight.textContent = `✨ ครบทุกใบ 100%`;
+        }
+        if (quotaCountdownEl) {
+            quotaCountdownEl.textContent = 'ครบสมบูรณ์ 100%';
+        }
+        if (pillSubEl) {
+            pillSubEl.textContent = 'ภาพสีน้ำมันเรเนสซองส์ครบ 78 ใบ';
+        }
+    } else {
+        if (badgeEl) {
+            badgeEl.textContent = `🎨 สำรับเทศกาล 78 / 78 ใบ (100%)`;
+        }
+        if (progressBarFill) {
+            progressBarFill.style.width = `100%`;
+        }
+        if (progressTextLeft) {
+            progressTextLeft.textContent = `🎨 งานศิลป์เวกเตอร์มนตราประจำเทศกาลครบ 78 ใบ (Major 22 + Wands 14 + Cups 14 + Swords 14 + Pentacles 14)`;
+        }
+        if (progressTextRight) {
+            progressTextRight.textContent = `✨ พร้อมใช้งานครบ 78 ใบ`;
+        }
+        if (quotaCountdownEl) {
+            quotaCountdownEl.textContent = 'พร้อมใช้งาน 78 ใบ';
+        }
+        if (pillSubEl) {
+            pillSubEl.textContent = 'กรอบและลวดลายเฉพาะเทศกาล';
+        }
     }
-
-    update();
-    if (countdownInterval) clearInterval(countdownInterval);
-    countdownInterval = setInterval(update, 1000);
 }
 
-/**
- * เรนเดอร์การ์ดในคิว AI สไตล์หรูหรา (Luxury Celestial Queue Card)
- * ใช้กรอบและตรายอดซุ้มเดียวกัน 100% กับไพ่มาสเตอร์พีซ เพื่อรักษาความต่อเนื่อง
- * ไร้ภาพลายเส้นแบนหรือตัวการ์ตูน
- */
-function renderQueuedCardSvg(card, themeId) {
-    const t = getTheme(themeId);
-    const uid = `queue_${card.id}_${Math.random().toString(36).substring(2, 7)}`;
-    const W = 240, H = 380, CX = 120;
+function matchesSuitFilter(card) {
+    if (activeTab === 'all' || activeTab === 'completed') return true;
+    if (activeTab === 'major') return card.arcana === 'major';
+    return card.suit === activeTab;
+}
 
-    let numeralStr = '';
-    if (card.arcana === 'major') {
-        numeralStr = toRoman(card.number);
-    } else {
-        const rankNames = { 1: 'ACE', 11: 'PAGE', 12: 'KNIGHT', 13: 'QUEEN', 14: 'KING' };
-        numeralStr = rankNames[card.number] || String(card.number);
-    }
-
-    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.name_th || card.name} - รอคิว AI">
-<defs>
-    <clipPath id="${uid}clip"><rect width="${W}" height="${H}" rx="14"/></clipPath>
-    <linearGradient id="${uid}bg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#140b20"/>
-        <stop offset="50%" stop-color="#1c102e"/>
-        <stop offset="100%" stop-color="#28153f"/>
-    </linearGradient>
-    <linearGradient id="${uid}gold" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#fff5cc"/>
-        <stop offset="35%" stop-color="${t.frame}"/>
-        <stop offset="70%" stop-color="#b8860b"/>
-        <stop offset="100%" stop-color="${t.frame}"/>
-    </linearGradient>
-    <radialGradient id="${uid}centerGlow" cx="50%" cy="46%" r="55%">
-        <stop offset="0%" stop-color="#ffd54f" stop-opacity="0.25"/>
-        <stop offset="60%" stop-color="#7c3aed" stop-opacity="0.10"/>
-        <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
-    </radialGradient>
-</defs>
-
-<!-- พื้นหลังกำมะหยี่ราตรีพร้อมประกายแสง -->
-<rect width="${W}" height="${H}" rx="14" fill="url(#${uid}bg)"/>
-<circle cx="${CX}" cy="175" r="90" fill="url(#${uid}centerGlow)"/>
-
-<!-- ดวงดาวระยิบระยับในราตรี -->
-<g opacity="0.65" fill="#fef08a">
-    <circle cx="55" cy="115" r="1.2"/>
-    <circle cx="185" cy="125" r="1.4"/>
-    <circle cx="65" cy="225" r="1.1"/>
-    <circle cx="178" cy="235" r="1.3"/>
-    <circle cx="120" cy="100" r="1.5"/>
-</g>
-
-<!-- วงแหวนดาราศาสตร์และสัญลักษณ์สัจธรรมจักรวาล (Sacred Celestial Geometry) -->
-<g transform="translate(${CX}, 172)">
-    <!-- วงแหวนนอก -->
-    <circle cx="0" cy="0" r="54" fill="none" stroke="url(#${uid}gold)" stroke-width="1.4" opacity="0.85"/>
-    <circle cx="0" cy="0" r="48" fill="none" stroke="${t.frameSoft}" stroke-width="0.8" stroke-dasharray="3, 3" opacity="0.7"/>
-    <circle cx="0" cy="0" r="40" fill="none" stroke="url(#${uid}gold)" stroke-width="0.9" opacity="0.6"/>
-
-    <!-- รัศมี 8 ทิศ -->
-    <path d="M 0 -58 L 0 -48 M 0 48 L 0 58 M -58 0 L -48 0 M 48 0 L 58 0 M -41 -41 L -34 -34 M 34 34 L 41 41 M -41 41 L -34 34 M 34 -34 L 41 -41" stroke="url(#${uid}gold)" stroke-width="1.2" opacity="0.75"/>
-
-    <!-- ตราสัญลักษณ์นาฬิกาทรายมนตราเรืองแสงแห่งกาลเวลา -->
-    <path d="M -14 -20 L 14 -20 L 0 0 L 14 20 L -14 20 L 0 0 Z" fill="rgba(245, 158, 11, 0.15)" stroke="url(#${uid}gold)" stroke-width="1.6"/>
-    <!-- ทรายทองคำไหลผ่านใจกลาง -->
-    <circle cx="0" cy="0" r="2.2" fill="#fff5cc"/>
-    <circle cx="0" cy="10" r="3.2" fill="#fbbf24"/>
-    <circle cx="0" cy="14" r="5" fill="#f59e0b" opacity="0.8"/>
-
-    <!-- ประกายแสงกึ่งกลาง -->
-    <polygon points="0,-28 2.5,-22 8.5,-20 2.5,-18 0,-12 -2.5,-18 -8.5,-20 -2.5,-22" fill="#ffffff" opacity="0.95"/>
-</g>
-
-<!-- ป้ายสถานะคิว AI ระดับพรีเมียม -->
-<g transform="translate(${CX}, 245)">
-    <rect x="-68" y="-12" width="136" height="24" rx="12" fill="#2d124d" stroke="url(#${uid}gold)" stroke-width="1.1" opacity="0.95"/>
-    <text x="0" y="4" fill="#fbbf24" font-size="9.5" font-family="'Outfit', sans-serif" font-weight="700" letter-spacing="1.5" text-anchor="middle">✦ AI IN QUEUE ✦</text>
-    <text x="0" y="22" fill="#e9d5ff" font-size="8" font-family="'Mitr', sans-serif" font-weight="400" text-anchor="middle">รอบโควตา 18:52 น.</text>
-</g>
-
-<!-- 1. กรอบนอก 3 ชั้นและลวดลายมุมเอกลักษณ์เดียวกัน 100% -->
-${renderDeckBorder(themeId, t, uid, false)}
-
-<!-- 2. ตรายอดซุ้มและตัวเลขกำกับไพ่ด้านบน -->
-${renderDeckNumeralBadge(card, themeId, t, uid, numeralStr)}
-
-<!-- 3. ป้ายชื่อไพ่ด้านล่างประจำสำรับ (Mitr + Outfit + Watermark) -->
-${renderDeckCartouche(card, themeId, t, uid)}
-</svg>`;
+function matchesSearch(card) {
+    if (!searchQuery) return true;
+    const nameEn = (card.name_en || card.name || '').toLowerCase();
+    const nameTh = (card.name_th || card.thai_name || '').toLowerCase();
+    const meaning = (card.meaning_upright || '').toLowerCase();
+    const keywords = Array.isArray(card.keywords_upright) ? card.keywords_upright.join(' ').toLowerCase() : '';
+    const numStr = String(card.number ?? '');
+    return (
+        nameEn.includes(searchQuery) ||
+        nameTh.includes(searchQuery) ||
+        meaning.includes(searchQuery) ||
+        keywords.includes(searchQuery) ||
+        numStr === searchQuery
+    );
 }
 
 function renderGrid() {
@@ -326,14 +240,14 @@ function renderGrid() {
     if (!grid) return;
     grid.innerHTML = '';
 
-    // แผ่นหลังไพ่ประจำธีม (แสดงในแท็บ completed หรือ all)
-    if (activeTab === 'completed' || activeTab === 'all') {
+    // แผ่นหลังไพ่ประจำธีม (แสดงเมื่อดูทั้งสำรับและไม่ได้พิมพ์ค้นหา)
+    if ((activeTab === 'all' || activeTab === 'completed') && !searchQuery) {
         const backCell = document.createElement('div');
         backCell.className = 'flex flex-col items-center group transition-transform duration-200 hover:-translate-y-1 cursor-pointer';
         backCell.innerHTML = renderCardBack(currentTheme);
         const backItem = backCell.querySelector('svg, img');
         if (backItem) backItem.classList.add('w-full', 'h-auto', 'rounded-xl', 'shadow-md', 'border', 'border-amber-300/60');
-        
+
         const badge = document.createElement('span');
         badge.className = 'text-[10px] font-bold px-2 py-0.5 mt-1.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200';
         badge.textContent = 'หลังไพ่ประจำสำรับ';
@@ -346,53 +260,52 @@ function renderGrid() {
 
         backCell.addEventListener('click', () => {
             openCardModal({
+                id: 'major-1',
                 name_th: 'หลังไพ่ประจำสำรับ',
+                name_en: 'Theme Card Back',
                 name: 'Theme Card Back',
-                description: 'ลวดลายหลังไพ่ที่ออกแบบเฉพาะตัวสำหรับสำรับนี้ ลายเส้นทองคำสอดประสานมนตราสยามและสัญลักษณ์ดวงดาว'
-            }, renderCardBack(currentTheme), true);
+                meaning_upright: 'ลวดลายหลังไพ่ที่ออกแบบเฉพาะตัวสำหรับสำรับนี้ ลายเส้นทองคำสอดประสานมนตราสยามและสัญลักษณ์ดวงดาวอย่างสมมาตร',
+                reflection: 'ทุกด้านที่ซ่อนอยู่ คือคำตอบที่รอเวลาเปิดเผยเมื่อใจสงบ'
+            }, renderCardBack(currentTheme), true, true);
         });
 
         grid.appendChild(backCell);
     }
 
-    allCards.forEach(card => {
-        const approved = isApproved(card, currentTheme);
+    const filteredCards = allCards.filter(card => matchesSuitFilter(card) && matchesSearch(card));
 
-        // คัดกรองตามแท็บที่เลือก
-        if (activeTab === 'completed' && !approved) return;
-        if (activeTab === 'queued' && approved) return;
+    if (filteredCards.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full py-12 text-center bg-white/70 rounded-2xl border border-purple-100 p-6">
+                <div class="text-2xl mb-2">🔍</div>
+                <p class="text-sm font-bold text-[#231230]">ไม่พบไพ่ที่ตรงกับคำค้นหา "${searchQuery}"</p>
+                <p class="text-xs text-[#7A6B85] mt-1">ลองค้นหาด้วยชื่อไพ่ภาษาไทย ภาษาอังกฤษ หรือเลือกหมวดไพ่ด้านบน</p>
+            </div>
+        `;
+        return;
+    }
+
+    filteredCards.forEach(card => {
+        const isMasterpiece = isApprovedMasterpiece(card, currentTheme);
 
         const cell = document.createElement('div');
         cell.className = 'flex flex-col items-center group transition-transform duration-200 hover:-translate-y-1 cursor-pointer relative';
         cell.id = `card-${card.id}`;
 
-        let cardSvg = '';
-        if (approved) {
-            cardSvg = renderCardFront(card, currentTheme);
-        } else {
-            cardSvg = renderQueuedCardSvg(card, currentTheme);
-        }
-
+        const cardSvg = renderCardFront(card, currentTheme);
         cell.innerHTML = cardSvg;
+
         const item = cell.querySelector('svg, img');
         if (item) {
-            item.classList.add('w-full', 'h-auto', 'rounded-xl', 'shadow-md', 'border');
-            if (approved) {
-                item.classList.add('border-amber-400/70', 'ring-1', 'ring-amber-200/50');
-            } else {
-                item.classList.add('border-purple-300/40', 'opacity-95');
-            }
+            item.classList.add('w-full', 'h-auto', 'rounded-xl', 'shadow-md', 'border', 'border-amber-400/70', 'ring-1', 'ring-amber-200/50');
         }
 
-        // ป้ายสถานะ
+        // ป้ายสถานะและหมวดไพ่
         const statusPill = document.createElement('span');
-        if (approved) {
-            statusPill.className = 'text-[9.5px] font-bold px-2 py-0.5 mt-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 flex items-center gap-1';
-            statusPill.innerHTML = '<span>✨</span><span>Masterpiece สำเร็จ</span>';
-        } else {
-            statusPill.className = 'text-[9.5px] font-semibold px-2 py-0.5 mt-1.5 rounded-full bg-amber-50 text-amber-800 border border-amber-300/80 flex items-center gap-1';
-            statusPill.innerHTML = '<span>⏳</span><span>รอคิว AI 18:52</span>';
-        }
+        statusPill.className = 'text-[9.5px] font-bold px-2 py-0.5 mt-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 flex items-center gap-1';
+        statusPill.innerHTML = isMasterpiece
+            ? '<span>✨</span><span>Masterpiece</span>'
+            : '<span>🎨</span><span>Seasonal Art</span>';
         cell.appendChild(statusPill);
 
         const caption = document.createElement('span');
@@ -401,18 +314,21 @@ function renderGrid() {
         cell.appendChild(caption);
 
         cell.addEventListener('click', () => {
-            openCardModal(card, cardSvg, approved);
+            openCardModal(card, cardSvg, isMasterpiece, false);
         });
 
         grid.appendChild(cell);
     });
 
     // Scroll to target card if hash is provided in URL
-    if (window.location.hash) {
+    if (window.location.hash && window.location.hash.startsWith('#card-')) {
         try {
             const targetEl = document.querySelector(window.location.hash);
             if (targetEl) {
-                setTimeout(() => targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+                setTimeout(() => {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetEl.classList.add('ring-4', 'ring-purple-400', 'rounded-2xl');
+                }, 150);
             }
         } catch (_) {}
     }
@@ -439,46 +355,81 @@ function setupModal() {
     });
 }
 
-function openCardModal(card, svgHtml, isCompleted) {
+function openCardModal(card, svgHtml, isMasterpiece, isBackCard = false) {
     const modal = document.getElementById('card-modal');
     const modalBody = document.getElementById('modal-body');
     const content = document.getElementById('card-modal-content');
     if (!modal || !modalBody) return;
 
-    const manifestEntry = promptManifest[card.id] || null;
+    const keywordsHtml = Array.isArray(card.keywords_upright) && card.keywords_upright.length
+        ? `<div class="bg-amber-50/70 rounded-xl p-3 border border-amber-200/70 text-xs">
+                <div class="font-bold text-[#8A5D0B] mb-1.5 flex items-center gap-1.5">
+                    <span>🌟</span>
+                    <span>พลังงานสำคัญของไพ่ใบนี้</span>
+                </div>
+                <ul class="list-disc list-inside space-y-1 text-[#4A3B55] leading-relaxed">
+                    ${card.keywords_upright.map(kw => `<li>${kw}</li>`).join('')}
+                </ul>
+           </div>`
+        : '';
+
+    const reflectionHtml = card.reflection
+        ? `<div class="bg-emerald-50/70 rounded-xl p-3 border border-emerald-200/70 text-xs">
+                <div class="font-bold text-emerald-800 mb-1 flex items-center gap-1.5">
+                    <span>🪞</span>
+                    <span>ข้อคิดสะท้อนใจ (Mindful Reflection)</span>
+                </div>
+                <p class="text-emerald-900 italic leading-relaxed">“${card.reflection}”</p>
+           </div>`
+        : '';
+
+    const cautionHtml = card.meaning_reversed
+        ? `<div class="bg-rose-50/70 rounded-xl p-3 border border-rose-200/70 text-xs">
+                <div class="font-bold text-rose-800 mb-1 flex items-center gap-1.5">
+                    <span>⚠️</span>
+                    <span>จุดเตือนสติที่ควรระวัง</span>
+                </div>
+                <p class="text-rose-900 leading-relaxed">${card.meaning_reversed}</p>
+           </div>`
+        : '';
 
     modalBody.innerHTML = `
         <div class="w-48 sm:w-56 rounded-xl overflow-hidden shadow-xl border border-amber-400/80 mb-4 flex-shrink-0">
             ${svgHtml}
         </div>
         <div class="w-full text-center">
-            <div class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${isCompleted ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-amber-100 text-amber-900 border border-amber-300'} mb-2">
-                <span>${isCompleted ? '✨ Masterpiece สร้างเสร็จสมบูรณ์' : '⏳ รอคิว AI รอบ 18:52 น.'}</span>
+            <div class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 mb-2">
+                <span>${isMasterpiece ? '✨ Masterpiece Oil Painting' : '🎨 Seasonal Art Nouveau'}</span>
             </div>
             <h3 class="text-xl font-bold text-[#231230]">${card.name_th || card.thai_name || card.name}</h3>
             <p class="text-xs text-[#7A6A8D] font-mono tracking-wider uppercase">${card.name_en || card.name || ''}</p>
         </div>
 
-        <div class="w-full mt-4 space-y-3 text-left">
+        <div class="w-full mt-4 space-y-2.5 text-left">
             <div class="bg-purple-50/70 rounded-xl p-3.5 border border-purple-200/60 text-xs">
                 <div class="font-bold text-[#6D28D9] mb-1 flex items-center gap-1.5">
                     <span>🔮</span>
-                    <span>ความหมายหลัก</span>
+                    <span>ความหมายหลัก (Upright Meaning)</span>
                 </div>
-                <p class="text-[#3F2E52] leading-relaxed">${card.meaning_upright || card.description || 'ก้าวสำคัญแห่งสัจธรรมและการเรียนรู้'}</p>
+                <p class="text-[#3F2E52] leading-relaxed font-medium">${card.meaning_upright || card.description || 'ก้าวสำคัญแห่งสัจธรรมและการเรียนรู้'}</p>
             </div>
 
-            <div class="bg-amber-50/70 rounded-xl p-3.5 border border-amber-200/60 text-xs">
-                <div class="font-bold text-[#B45309] mb-1 flex items-center gap-1.5">
-                    <span>🎨</span>
-                    <span>สไตล์ศิลปะและการควบคุมภาพ (Art Direction)</span>
-                </div>
-                <p class="text-[#5C4A6F] leading-relaxed">
-                    ${isCompleted
-                        ? 'วาดด้วยภาพสีน้ำมันสไตล์เรเนสซองส์อาร์ตนูโว องค์ประกอบคลาสสิก ปราศจากความขัดแย้งทางศาสนา 100% พร้อมกรอบทองคำเอกลักษณ์ประจำสำรับ'
-                        : (manifestEntry ? manifestEntry.prompt : 'เตรียมคำสั่งสร้างภาพสีน้ำมันคลาสสิกสไตล์เดียวกับ 27 ใบแรก ปราศจากรูปพระหรือศาสนาใดๆ')}
-                </p>
+            ${keywordsHtml}
+            ${reflectionHtml}
+            ${cautionHtml}
+
+            ${!isBackCard ? `
+            <div class="pt-2 flex flex-col sm:flex-row gap-2">
+                <button id="modal-download-wp-btn" class="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span>📱</span>
+                    <span>ดาวน์โหลดวอลเปเปอร์ไพ่ใบนี้</span>
+                </button>
+                <a href="reading.html" class="flex-1 py-2.5 px-3 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-1.5 no-underline text-center">
+                    <span>🔮</span>
+                    <span>เปิดไพ่ถามเรื่องของคุณ</span>
+                </a>
             </div>
+            ` : ''}
 
             <div class="flex items-center justify-between text-[11px] text-gray-500 pt-1 px-1">
                 <span>กรอบ 3 ชั้น: อัตลักษณ์เดียวกับทั้งสำรับ</span>
@@ -486,6 +437,39 @@ function openCardModal(card, svgHtml, isCompleted) {
             </div>
         </div>
     `;
+
+    const dlBtn = document.getElementById('modal-download-wp-btn');
+    if (dlBtn && !isBackCard) {
+        dlBtn.addEventListener('click', async () => {
+            dlBtn.disabled = true;
+            dlBtn.innerHTML = '<span>⏳</span><span>กำลังสร้างวอลเปเปอร์...</span>';
+            try {
+                const dataUrl = await generateCardWallpaperDataUrl({
+                    card,
+                    heading: `${card.name_th || card.name} · ${card.name_en || card.name}`,
+                    affirmation: card.reflection || card.meaning_upright || 'ขอให้พลังแห่งไพ่นำทางสู่ความสำเร็จและความสุข',
+                    luckyColorName: 'ทองอร่าม & ม่วงมนตรา',
+                    luckyColorHex: '#D97706',
+                    wallpaperTitle: 'TAROT MASTERPIECE WALLPAPER'
+                });
+                if (dataUrl) {
+                    const link = document.createElement('a');
+                    link.download = `money2-tarot-${card.id}.png`;
+                    link.href = dataUrl;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    showToast('ดาวน์โหลดวอลเปเปอร์ไพ่สำเร็จแล้ว ✨');
+                }
+            } catch (err) {
+                console.warn('Wallpaper generation error:', err);
+                showToast('ไม่สามารถสร้างวอลเปเปอร์ได้ในขณะนี้');
+            } finally {
+                dlBtn.disabled = false;
+                dlBtn.innerHTML = '<span>📱</span><span>ดาวน์โหลดวอลเปเปอร์ไพ่ใบนี้</span>';
+            }
+        });
+    }
 
     modal.classList.remove('opacity-0', 'pointer-events-none');
     if (content) content.classList.remove('scale-95');

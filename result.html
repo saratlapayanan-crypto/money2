@@ -191,14 +191,13 @@
                 </article>
 
                 <article id="wallpaper-container" class="border-t border-purple-100/80 pt-3 flex flex-col items-center text-center">
-                    <h4 class="text-xs font-bold text-[#231230] mb-2">📱 วอลเปเปอร์มงคลประจำคำทำนาย</h4>
-                    <div class="w-28 h-40 rounded-xl border border-purple-200/80 mb-2.5 flex items-center justify-center overflow-hidden shadow-sm"
-                         style="background: repeating-radial-gradient(circle at 50% 45%, transparent 0 8px, rgba(214,158,46,.12) 8px 9px), linear-gradient(160deg,#F5EDFF,#FDF9EF);">
-                        <span class="text-purple-600 text-2xl" aria-hidden="true">✦</span>
+                    <h4 class="text-xs font-bold text-[#231230] mb-2">📱 วอลเปเปอร์มงคลประจำคำทำนาย (1080×1920)</h4>
+                    <div id="wallpaper-preview-box" class="w-32 h-56 rounded-xl border-2 border-amber-300/80 mb-2.5 flex items-center justify-center overflow-hidden shadow-md bg-[#170B26]">
+                        <span class="text-amber-300 text-2xl animate-pulse" aria-hidden="true">✦</span>
                     </div>
                     <p class="text-xs text-[#4A3B55] font-semibold mb-2" id="wallpaper-name"></p>
-                    <a href="#" id="wallpaper-download-btn" download class="inline-flex items-center gap-1 text-xs font-semibold text-[#7C3AED] bg-white border border-purple-300/80 px-3.5 py-1.5 rounded-full shadow-xs hover:bg-purple-50 transition-all">
-                        <span>ดาวน์โหลดฟรี</span>
+                    <a href="#" id="wallpaper-download-btn" download="money2-tarot-wallpaper.png" class="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 px-4 py-2 rounded-full shadow-sm transition-all no-underline">
+                        <span>📱 ดาวน์โหลดวอลเปเปอร์ฟรี</span>
                         <span>↓</span>
                     </a>
                 </article>
@@ -220,8 +219,8 @@
             </div>
 
             <nav class="w-full flex flex-col gap-2.5 pt-1">
-                <button id="btn-share" class="hero-pill-btn w-full text-center py-3 hidden">
-                    <span>แชร์ผลลัพธ์คำทำนาย ✦</span>
+                <button type="button" id="btn-share" class="w-full py-3 px-4 rounded-full bg-white hover:bg-purple-50 text-[#6D28D9] border border-purple-300 font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span>✨ แชร์ผลลัพธ์คำทำนายให้เพื่อน</span>
                 </button>
                 <a href="reading.html" class="hero-pill-btn w-full text-center py-3">
                     <span>เปิดไพ่ถามเรื่องอื่นต่อ</span>
@@ -274,7 +273,7 @@
             <span class="mt-0.5">ไพ่ทั้งหมด</span>
         </a>
 
-        <a href="index.html" class="bottom-nav-item" aria-label="ข้อมูลส่วนตัว">
+        <a href="index.html#profile" class="bottom-nav-item" aria-label="ข้อมูลส่วนตัว">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>

@@ -46,19 +46,50 @@ test('all HTML files have Mitr + Outfit fonts and no text-white on body', () => 
 });
 
 test('HTTP server responds with 200 OK for all HTML pages', async () => {
-    const pages = [
-        'http://localhost:8080/index.html',
-        'http://localhost:8080/daily.html',
-        'http://localhost:8080/reading.html',
-        'http://localhost:8080/result.html',
-        'http://localhost:8080/cards-preview.html'
-    ];
+    const http = await import('node:http');
+    const htmlFiles = ['index.html', 'daily.html', 'reading.html', 'result.html', 'cards-preview.html'];
 
-    for (const url of pages) {
-        const res = await fetch(url);
-        assert.equal(res.status, 200, `Expected 200 for ${url}`);
-        const html = await res.text();
-        assert.ok(html.length > 500, `Expected content length > 500 for ${url}`);
+    const server = http.createServer((req, res) => {
+        const cleanPath = (req.url || '/index.html').split('?')[0].replace(/^\/+/, '') || 'index.html';
+        const filePath = path.join(projectRoot, cleanPath);
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+            res.end(fs.readFileSync(filePath));
+        } else {
+            res.writeHead(404);
+            res.end('Not found');
+        }
+    });
+
+    await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const { port } = server.address();
+
+    try {
+        for (const page of htmlFiles) {
+            const url = `http://127.0.0.1:${port}/${page}`;
+            const res = await fetch(url);
+            assert.equal(res.status, 200, `Expected 200 for ${url}`);
+            const html = await res.text();
+            assert.ok(html.length > 500, `Expected content length > 500 for ${url}`);
+        }
+    } finally {
+        await new Promise((resolve) => server.close(resolve));
+    }
+});
+
+test('all 78 standard Masterpiece card images are registered in APPROVED_CARD_ASSETS and exist on disk', async () => {
+    const { APPROVED_CARD_ASSETS } = await import('../js/art/fronts.js');
+    const cards = JSON.parse(fs.readFileSync(path.join(projectRoot, 'data/cards.json'), 'utf8'));
+
+    assert.equal(Object.keys(APPROVED_CARD_ASSETS).length, 78, 'APPROVED_CARD_ASSETS must have all 78 cards');
+
+    for (const card of cards) {
+        const relPath = APPROVED_CARD_ASSETS[card.id];
+        assert.ok(relPath, `Card ${card.id} must be registered in APPROVED_CARD_ASSETS`);
+        const fullPath = path.join(projectRoot, relPath);
+        assert.ok(fs.existsSync(fullPath), `Asset file ${relPath} for ${card.id} must exist on disk`);
+        const stat = fs.statSync(fullPath);
+        assert.ok(stat.size > 10000, `Asset file ${relPath} must be a valid non-empty image (>10KB)`);
     }
 });
 

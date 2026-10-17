@@ -30,7 +30,7 @@ import {
 const W = 240, H = 380;
 const CX = W / 2;
 
-/** ภาพวาด Masterpiece ลายเส้นอาร์ตนูโวคลาสสิกที่ผ่านการอนุมัติครบ 22 Major Arcana + 4 Aces */
+/** ภาพวาด Masterpiece ลายเส้นอาร์ตนูโวคลาสสิกที่ผ่านการอนุมัติครบทั้ง 78 ใบ (22 Major Arcana + 56 Minor Arcana) */
 export const APPROVED_CARD_ASSETS = {
     'major-0': 'assets/cards/standard/major-0.jpg',
     'major-1': 'assets/cards/standard/major-1.jpg',
@@ -91,7 +91,25 @@ export const APPROVED_CARD_ASSETS = {
     'swords-7': 'assets/cards/standard/swords-7.jpg',
     'swords-8': 'assets/cards/standard/swords-8.jpg',
     'swords-9': 'assets/cards/standard/swords-9.jpg',
+    'swords-10': 'assets/cards/standard/swords-10.jpg',
+    'swords-11': 'assets/cards/standard/swords-11.jpg',
+    'swords-12': 'assets/cards/standard/swords-12.jpg',
+    'swords-13': 'assets/cards/standard/swords-13.jpg',
+    'swords-14': 'assets/cards/standard/swords-14.jpg',
     'pentacles-1': 'assets/cards/standard/pentacles-1.jpg',
+    'pentacles-2': 'assets/cards/standard/pentacles-2.jpg',
+    'pentacles-3': 'assets/cards/standard/pentacles-3.jpg',
+    'pentacles-4': 'assets/cards/standard/pentacles-4.jpg',
+    'pentacles-5': 'assets/cards/standard/pentacles-5.jpg',
+    'pentacles-6': 'assets/cards/standard/pentacles-6.jpg',
+    'pentacles-7': 'assets/cards/standard/pentacles-7.jpg',
+    'pentacles-8': 'assets/cards/standard/pentacles-8.jpg',
+    'pentacles-9': 'assets/cards/standard/pentacles-9.jpg',
+    'pentacles-10': 'assets/cards/standard/pentacles-10.jpg',
+    'pentacles-11': 'assets/cards/standard/pentacles-11.jpg',
+    'pentacles-12': 'assets/cards/standard/pentacles-12.jpg',
+    'pentacles-13': 'assets/cards/standard/pentacles-13.jpg',
+    'pentacles-14': 'assets/cards/standard/pentacles-14.jpg',
 };
 
 /* ---------- ไอคอน 4 ธาตุประจำชุดไพ่ (Suit Relics) ---------- */

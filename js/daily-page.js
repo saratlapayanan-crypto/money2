@@ -13,10 +13,17 @@ import { paintFront, paintBack, renderBack } from './art/tarot-art.js';
 import { getDayOfWeekFromDateString, calculateOutfitAdvice } from './domain/lucky-colors.js';
 import { renderMoonRabbitSvg } from './art/moon-rabbit.js';
 import { renderOutfitMannequinSvg, renderShirtIconSvg, renderPantsIconSvg } from './art/outfit-icons.js';
+import {
+    saveReadingToHistory,
+    shareTarotReading,
+    generateCardWallpaperDataUrl,
+    showToast
+} from './utils/share-and-history.js';
 
 let countdownInterval = null;
 let selectedDailyPosition = null;
 let spreadDeckIds = [];
+let isDailyGridView = false;
 
 async function initDailyPage() {
     try {
@@ -40,7 +47,7 @@ async function initDailyPage() {
             const card = cards.find(c => c.id === record.cardId) || cards[0];
             showDailyResult(card, interpretations, false);
         } else {
-            // Not drawn yet -> show interactive 78-card spread fan
+            // Not drawn yet -> show interactive 78-card spread fan & grid
             setupDailySelection(cards, interpretations);
         }
 
@@ -58,8 +65,9 @@ function setupDailySelection(cards, interpretations) {
     if (resultSec) resultSec.classList.add('hidden');
 
     const ribbon = document.getElementById('daily-spread-ribbon');
-    if (!ribbon) return;
-    ribbon.innerHTML = '';
+    const grid = document.getElementById('daily-cards-grid');
+    if (ribbon) ribbon.innerHTML = '';
+    if (grid) grid.innerHTML = '';
 
     spreadDeckIds = getDailySpreadDeck();
     const deckId = getActiveDeckId();
@@ -67,15 +75,44 @@ function setupDailySelection(cards, interpretations) {
     const bgUrl = `url("data:image/svg+xml,${encodeURIComponent(svgStr)}")`;
 
     for (let i = 0; i < spreadDeckIds.length; i++) {
-        const spreadCard = document.createElement('div');
-        spreadCard.className = 'spread-card-item';
-        spreadCard.dataset.position = i;
-        spreadCard.style.backgroundImage = bgUrl;
-        spreadCard.style.zIndex = i + 1;
-        spreadCard.title = `ไพ่ใบที่ ${i + 1}`;
+        if (ribbon) {
+            const spreadCard = document.createElement('div');
+            spreadCard.className = 'spread-card-item';
+            spreadCard.dataset.position = i;
+            spreadCard.style.backgroundImage = bgUrl;
+            spreadCard.style.zIndex = i + 1;
+            spreadCard.title = `ไพ่ใบที่ ${i + 1}`;
+            spreadCard.addEventListener('click', () => handleSpreadCardClick(i));
+            ribbon.appendChild(spreadCard);
+        }
 
-        spreadCard.addEventListener('click', () => handleSpreadCardClick(i));
-        ribbon.appendChild(spreadCard);
+        if (grid) {
+            const miniCard = document.createElement('div');
+            miniCard.className = 'mini-card-back';
+            miniCard.dataset.position = i;
+            miniCard.style.backgroundImage = bgUrl;
+            miniCard.style.backgroundSize = 'cover';
+            miniCard.title = `ไพ่ใบที่ ${i + 1}`;
+            miniCard.addEventListener('click', () => handleSpreadCardClick(i));
+            grid.appendChild(miniCard);
+        }
+    }
+
+    const toggleBtn = document.getElementById('btn-daily-toggle-view');
+    const spreadContainer = document.getElementById('daily-spread-container');
+    if (toggleBtn && spreadContainer && grid) {
+        toggleBtn.onclick = () => {
+            isDailyGridView = !isDailyGridView;
+            if (isDailyGridView) {
+                spreadContainer.classList.add('hidden');
+                grid.classList.remove('hidden');
+                toggleBtn.innerHTML = '<span>🎴 สลับเป็นแบบคลี่ไพ่</span>';
+            } else {
+                spreadContainer.classList.remove('hidden');
+                grid.classList.add('hidden');
+                toggleBtn.innerHTML = '<span>⊞ สลับเป็นมุมมองตาราง</span>';
+            }
+        };
     }
 
     const confirmBtn = document.getElementById('btn-confirm-daily');
@@ -95,9 +132,9 @@ function setupDailySelection(cards, interpretations) {
 function handleSpreadCardClick(position) {
     selectedDailyPosition = position;
     
-    // Highlight in ribbon
-    const allCards = document.querySelectorAll('.spread-card-item');
-    allCards.forEach(c => c.classList.remove('selected'));
+    // Highlight in ribbon and grid
+    document.querySelectorAll('.spread-card-item').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('#daily-cards-grid .mini-card-back').forEach(c => c.classList.remove('selected'));
 
     const selectedEl = document.querySelector(`.spread-card-item[data-position="${position}"]`);
     if (selectedEl) {
@@ -105,6 +142,11 @@ function handleSpreadCardClick(position) {
         try {
             selectedEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         } catch (_) {}
+    }
+
+    const selectedGridEl = document.querySelector(`#daily-cards-grid .mini-card-back[data-position="${position}"]`);
+    if (selectedGridEl) {
+        selectedGridEl.classList.add('selected');
     }
 
     const statusEl = document.getElementById('daily-selected-status');
@@ -124,11 +166,12 @@ function showDailyResult(card, interpretations, animateFlip = false) {
 
     renderCard(card);
     const energies = renderEnergies(card, interpretations);
+    let advice = null;
 
     if (energies) {
         const thaiDate = getThaiDateString();
         const dayIndex = getDayOfWeekFromDateString(thaiDate);
-        const advice = calculateOutfitAdvice({
+        advice = calculateOutfitAdvice({
             dayIndex,
             loveScore: energies.loveData.score,
             financeScore: energies.financeData.score,
@@ -136,6 +179,21 @@ function showDailyResult(card, interpretations, animateFlip = false) {
         });
         renderOutfitAdvice(advice);
     }
+
+    // บันทึกลงสมุดบันทึกประวัติการเปิดไพ่
+    const dailyMsgText = document.getElementById('daily-message')?.textContent || card.meaning_upright || '';
+    saveReadingToHistory({
+        type: 'daily',
+        category: 'daily',
+        categoryLabel: '☀️ ไพ่ประจำวัน',
+        questionText: dailyMsgText.replace(/^“|”$/g, ''),
+        cardId: card.id,
+        cardNameTh: card.name_th || card.thai_name || card.name,
+        cardNameEn: card.name_en || card.name,
+        summary: dailyMsgText
+    });
+
+    setupDailyActionButtons(card, dailyMsgText, advice);
 
     // 3D Flip Card Animation
     const flipContainer = document.getElementById('daily-flip-container');
@@ -152,6 +210,58 @@ function showDailyResult(card, interpretations, animateFlip = false) {
 
     startMidnightCountdown();
     trackEvent('view_daily_card', { card_id: card.id, card_name: card.name });
+}
+
+function setupDailyActionButtons(card, dailyMsgText, advice) {
+    const shareBtn = document.getElementById('btn-daily-share');
+    const wpBtn = document.getElementById('btn-daily-wallpaper');
+    const cleanMsg = String(dailyMsgText || '').replace(/^“|”$/g, '');
+    const mainColorName = advice?.formula?.mainColor?.name || 'สีทองอร่าม';
+    const subColorName = advice?.formula?.subColor?.name || 'สีม่วงมนตรา';
+    const mainColorHex = advice?.formula?.mainColor?.hex || '#D97706';
+
+    if (shareBtn) {
+        shareBtn.onclick = async () => {
+            trackEvent('share_daily_card', { card_id: card.id });
+            await shareTarotReading({
+                title: `☀️ ไพ่ประจำวันของฉัน: ${card.name_th || card.name} (${card.name_en || card.name})`,
+                text: `“${cleanMsg}”\n👔 สีมงคลวันนี้: ${mainColorName} + ${subColorName}`,
+                url: window.location.href
+            });
+        };
+    }
+
+    if (wpBtn) {
+        wpBtn.onclick = async () => {
+            wpBtn.disabled = true;
+            wpBtn.innerHTML = '<span>⏳</span><span>กำลังสร้างวอลเปเปอร์...</span>';
+            try {
+                const dataUrl = await generateCardWallpaperDataUrl({
+                    card,
+                    heading: `ไพ่ประจำวัน · ${formatThaiDateDisplay()}`,
+                    affirmation: cleanMsg || card.reflection || card.meaning_upright,
+                    luckyColorName: `${mainColorName} & ${subColorName}`,
+                    luckyColorHex: mainColorHex,
+                    wallpaperTitle: 'DAILY TAROT BLESSING'
+                });
+                if (dataUrl) {
+                    const link = document.createElement('a');
+                    link.download = `money2-daily-${card.id}-${getThaiDateString()}.png`;
+                    link.href = dataUrl;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    showToast('บันทึกวอลเปเปอร์ไพ่ประจำวันสำเร็จแล้ว ✨');
+                }
+            } catch (e) {
+                console.warn('Daily wallpaper error:', e);
+                showToast('ไม่สามารถสร้างวอลเปเปอร์ได้ในขณะนี้');
+            } finally {
+                wpBtn.disabled = false;
+                wpBtn.innerHTML = '<span>📱</span><span>บันทึกวอลเปเปอร์ไพ่วันนี้</span>';
+            }
+        };
+    }
 }
 
 function startMidnightCountdown() {

@@ -110,22 +110,27 @@
                     </p>
                 </div>
 
-                <!-- Spread Mode Helper Hint -->
-                <div class="flex items-center justify-between w-full max-w-md px-1 mb-1 text-[11px] text-[#7A6B85]">
+                <!-- Spread Mode Helper Hint & View Toggle -->
+                <div class="flex items-center justify-between w-full max-w-md px-1 mb-2 text-[11px] text-[#7A6B85]">
                     <span class="flex items-center gap-1">
                         <span class="text-amber-500">↔</span>
-                        <span>เลื่อนนิ้วดูไพ่ทั้ง 78 ใบ</span>
+                        <span>เลื่อนนิ้วดูไพ่ทั้ง 78 ใบ (1 ใบ / วัน)</span>
                     </span>
-                    <span class="text-[10px] text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
-                        1 คน / 1 ใบ / วัน
-                    </span>
+                    <button type="button" id="btn-daily-toggle-view" class="px-2.5 py-1 rounded-lg border border-purple-200 bg-white/80 hover:bg-white text-purple-700 font-medium transition-all shadow-2xs cursor-pointer">
+                        <span>⊞ สลับเป็นมุมมองตาราง</span>
+                    </button>
                 </div>
 
-                <!-- แถวคลี่ไพ่แบบริบบิ้นหรูหรา (Spread Ribbon) -->
+                <!-- 1. แถวคลี่ไพ่แบบริบบิ้นหรูหรา (Spread Ribbon) -->
                 <div id="daily-spread-container" class="cards-spread-wrapper mb-3">
                     <div id="daily-spread-ribbon" class="cards-spread-ribbon">
                         <!-- 78 spread cards injected by JS -->
                     </div>
+                </div>
+
+                <!-- 2. ตารางไพ่ 78 ใบ (Grid View) -->
+                <div id="daily-cards-grid" class="cards-grid mb-5 hidden">
+                    <!-- 78 mini cards injected by JS -->
                 </div>
 
                 <!-- ส่วนปุ่มยืนยันการเลือกไพ่ประจำวัน (แสดงเมื่อแตะเลือกไพ่) -->
@@ -229,7 +234,17 @@
                         <!-- Dynamically populated by JS -->
                     </div>
                     
-                    <nav class="pt-2">
+                    <nav class="pt-2 flex flex-col gap-2.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <button type="button" id="btn-daily-wallpaper" class="w-full py-2.5 px-4 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                                <span>📱</span>
+                                <span>บันทึกวอลเปเปอร์ไพ่วันนี้</span>
+                            </button>
+                            <button type="button" id="btn-daily-share" class="w-full py-2.5 px-4 rounded-full bg-white hover:bg-purple-50 text-[#6D28D9] border border-purple-300 font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                                <span>✨</span>
+                                <span>แชร์คำทำนาย & สีมงคล</span>
+                            </button>
+                        </div>
                         <a href="reading.html" class="hero-pill-btn w-full text-center py-3">
                             <span>เปิดไพ่ส่วนตัวแบบเจาะลึก 3 หมวด</span>
                             <span>→</span>
@@ -289,7 +304,7 @@
             <span class="mt-0.5">ไพ่ทั้งหมด</span>
         </a>
 
-        <a href="index.html" class="bottom-nav-item" aria-label="ข้อมูลส่วนตัว">
+        <a href="index.html#profile" class="bottom-nav-item" aria-label="ข้อมูลส่วนตัว">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>

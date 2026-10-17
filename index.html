@@ -130,10 +130,10 @@
             <div class="relative z-10 flex items-center gap-3">
                 <!-- Tilted Featured Card -->
                 <a href="daily.html" class="hero-tilted-card group block" title="คลิกเพื่อเปิดไพ่ประจำวัน">
-                    <img src="assets/cards/standard/major-1.jpg" alt="Featured Tarot Card - The Magician" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <img id="hero-card-img" src="assets/cards/standard/major-1.jpg" alt="Featured Tarot Card - The Magician" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     <div class="absolute inset-0 bg-gradient-to-t from-purple-950/50 via-transparent to-transparent"></div>
                     <div class="absolute bottom-1.5 inset-x-0 text-center">
-                        <span class="text-[9px] font-bold text-amber-200 uppercase tracking-wider bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-xs">I · THE MAGICIAN</span>
+                        <span id="hero-card-badge" class="text-[9px] font-bold text-amber-200 uppercase tracking-wider bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-xs">I · THE MAGICIAN</span>
                     </div>
                 </a>
 
@@ -143,9 +143,9 @@
                         <div class="flex items-center justify-between gap-1 pb-1.5 border-b border-purple-100/70">
                             <div class="flex items-center gap-1.5">
                                 <span class="text-amber-500 text-sm">☀️</span>
-                                <h2 class="text-xs sm:text-sm font-bold text-[#231230]">ไพ่ประจำวัน</h2>
+                                <h2 id="hero-daily-heading" class="text-xs sm:text-sm font-bold text-[#231230]">ไพ่ประจำวัน</h2>
                             </div>
-                            <span id="hero-daily-date" class="text-[10px] text-[#7C6C8F] font-medium">31 มี.ค. 2569</span>
+                            <span id="hero-daily-date" class="text-[10px] text-[#7C6C8F] font-medium">กำลังโหลด...</span>
                         </div>
 
                         <p id="hero-quote-text" class="text-[11px] sm:text-[12px] text-[#423154] leading-relaxed my-2 font-normal">
@@ -156,8 +156,8 @@
                     </div>
 
                     <div>
-                        <a href="daily.html" class="hero-pill-btn w-full">
-                            <span>เปิดไพ่วันนี้</span>
+                        <a href="daily.html" id="hero-daily-cta" class="hero-pill-btn w-full">
+                            <span id="hero-daily-cta-text">เปิดไพ่วันนี้</span>
                             <span>→</span>
                         </a>
                     </div>
@@ -310,7 +310,7 @@
             </div>
 
             <!-- Horizontal Scroll Cards Gallery -->
-            <div class="cards-horizontal-gallery mt-1.5">
+            <div id="home-cards-gallery" class="cards-horizontal-gallery mt-1.5">
                 <!-- 0 The Fool -->
                 <a href="cards-preview.html#card-major-0" class="gallery-card-item">
                     <div class="gallery-card-img-wrap">
@@ -591,13 +591,13 @@
 
     <!-- 3. Profile Modal -->
     <div id="profile-modal" class="app-modal-overlay" aria-hidden="true" role="dialog">
-        <div class="app-modal-card p-5">
+        <div class="app-modal-card p-5 max-h-[85vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-3 border-b border-purple-100">
                 <div class="flex items-center gap-2">
                     <span class="text-purple-600 text-base">👤</span>
-                    <h3 class="font-bold text-base text-[#231230]">โปรไฟล์ & การตั้งค่า</h3>
+                    <h3 class="font-bold text-base text-[#231230]">โปรไฟล์ & สมุดบันทึกไพ่</h3>
                 </div>
-                <button class="modal-close-btn text-gray-400 hover:text-gray-700 text-lg px-2">✕</button>
+                <button class="modal-close-btn text-gray-400 hover:text-gray-700 text-lg px-2 cursor-pointer">✕</button>
             </div>
             <div class="mt-4 flex flex-col items-center text-center">
                 <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-purple-500 to-amber-300 p-0.5 shadow-md mb-2">
@@ -611,12 +611,28 @@
                 <div class="w-full mt-4 space-y-2 text-left text-xs">
                     <a href="daily.html" class="flex items-center justify-between p-2.5 bg-purple-50/70 hover:bg-purple-100/70 rounded-xl border border-purple-100 transition-colors">
                         <span class="font-medium text-[#4A3B5C]">☀️ ไพ่ประจำวันวันนี้</span>
-                        <span class="text-purple-600 font-bold">เปิดแล้ว ›</span>
+                        <span id="profile-daily-status" class="text-purple-600 font-bold">ตรวจสอบ ›</span>
                     </a>
                     <a href="cards-preview.html" class="flex items-center justify-between p-2.5 bg-purple-50/70 hover:bg-purple-100/70 rounded-xl border border-purple-100 transition-colors">
-                        <span class="font-medium text-[#4A3B5C]">🃏 เลือกเปลี่ยนธีมสำรับไพ่</span>
+                        <span class="font-medium text-[#4A3B5C]">🃏 ชมสำรับไพ่ Masterpiece 78 ใบ</span>
                         <span class="text-purple-600 font-bold">ดูสำรับ ›</span>
                     </a>
+                </div>
+
+                <!-- Reading History Journal -->
+                <div class="w-full mt-4 pt-3 border-t border-purple-100 text-left">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-[#231230] flex items-center gap-1">
+                            <span>📜</span>
+                            <span>สมุดบันทึกการเปิดไพ่ล่าสุด</span>
+                        </span>
+                        <button id="btn-clear-history" class="text-[10px] text-rose-500 hover:underline hidden cursor-pointer">ล้างประวัติ</button>
+                    </div>
+                    <div id="profile-history-list" class="space-y-2 max-h-52 overflow-y-auto pr-0.5">
+                        <div class="text-[11px] text-gray-400 text-center py-3 bg-purple-50/40 rounded-xl border border-purple-100/60">
+                            ยังไม่มีประวัติการเปิดไพ่ ลองเปิดไพ่ประจำวันหรือไพ่ส่วนตัวดูสิ ✨
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
