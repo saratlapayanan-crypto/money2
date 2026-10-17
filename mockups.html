@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup 20 แนวสไตล์ไพ่ - Thai Tarot</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { mystic: '#1a1025', gold: '#D69E2E', accent: '#9F7AEA' } } } }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="text-white min-h-screen flex flex-col">
+    <header class="site-header p-4 flex justify-between items-center">
+        <nav>
+            <a href="index.html" class="back-link touch-target">← กลับ</a>
+        </nav>
+        <h1 class="text-2xl font-bold brand-title whitespace-nowrap">Mockup 20 แนวสไตล์</h1>
+        <div class="w-10"></div>
+    </header>
+
+    <main class="flex-grow p-4 max-w-7xl mx-auto w-full pb-12">
+        <div class="text-center mb-2">
+            <div class="thai-divider" aria-hidden="true">❈</div>
+            <h2 class="text-2xl text-gold font-bold">เลือกทิศทางศิลป์สำหรับสำรับไพ่</h2>
+            <p class="text-sm text-gray-400 mt-2 leading-relaxed max-w-2xl mx-auto">
+                ทุกภาพวาดด้วย SVG ต้นฉบับของเราเอง (ปลอดลิขสิทธิ์ 100%)<br>
+                แนวที่เลือกจะถูกพัฒนาต่อเป็นไพ่ครบ 78 ใบ ทั้งหน้าและหลังไพ่ + 7 ธีมเทศกาล
+            </p>
+        </div>
+        <div id="mockup-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 mt-8"></div>
+    </main>
+
+    <footer class="p-4 text-center border-t border-gold/15 text-xs text-gray-500 mt-auto">
+        <p>&copy; 2026 Thai Tarot. Original vector art — อ้างอิงสัญลักษณ์จาก Wikipedia</p>
+    </footer>
+
+    <script type="module" src="js/mockups.js"></script>
+    <script type="module">
+        import { renderMockupGallery } from './js/mockups.js';
+        renderMockupGallery(document.getElementById('mockup-grid'));
+    </script>
+</body>
+</html>
