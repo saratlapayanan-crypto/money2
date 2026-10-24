@@ -16,6 +16,9 @@
     <meta property="og:image" content="https://thaitarot.com/assets/cards/standard/major-1.jpg">
     <meta property="og:url" content="https://thaitarot.com/">
     <meta property="og:type" content="website">
+    <meta name="theme-color" content="#7E22CE">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/app-icon.svg">
 
     <!-- Google Fonts: Mitr (หัวข้อไทยทันสมัย สดใส อบอุ่น) + Outfit (สากล โมเดิร์น) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -223,6 +226,25 @@
                 <span class="font-bold text-xs text-[#231230] mt-2">ใจของเรา</span>
                 <span class="text-[9px] text-[#7A6A8D] leading-snug mt-0.5">สุขภาพจิต<br>และพลังบวก</span>
             </a>
+        </section>
+
+        <!-- 3.5 แถบคู่มือเข้าใจไพ่ใน 30 วิ & สถิติเปิดไพ่ต่อเนื่อง (Daily Streak) -->
+        <section class="grid grid-cols-2 gap-2.5 mb-4">
+            <button type="button" id="btn-home-quick-guide" class="flex items-center gap-2.5 p-3 rounded-2xl bg-white/95 hover:bg-purple-50 border border-purple-200/90 shadow-xs text-left transition-all cursor-pointer">
+                <span class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-base shrink-0">📖</span>
+                <div class="min-w-0">
+                    <p class="text-xs font-bold text-[#231230] truncate">วิธีอ่านไพ่ใน 30 วิ</p>
+                    <p class="text-[10px] text-[#6B5B7E] truncate">มือใหม่เข้าใจทันที ✨</p>
+                </div>
+            </button>
+
+            <button type="button" id="btn-home-streak" class="flex items-center gap-2.5 p-3 rounded-2xl bg-gradient-to-r from-amber-50/95 to-white hover:from-amber-100/80 border border-amber-300/80 shadow-xs text-left transition-all cursor-pointer">
+                <span id="home-streak-icon" class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-base shrink-0">🔥</span>
+                <div class="min-w-0">
+                    <p id="home-streak-title" class="text-xs font-bold text-[#231230] truncate">สะสมพลังรายวัน</p>
+                    <p id="home-streak-sub" class="text-[10px] text-amber-800 font-semibold truncate">ผู้เริ่มต้นเปิดดวง 🌱</p>
+                </div>
+            </button>
         </section>
 
         <!-- 4. Personal Reading Banner ("เปิดไพ่ส่วนตัว") -->
@@ -605,8 +627,8 @@
                         🐰
                     </div>
                 </div>
-                <h4 class="font-bold text-sm text-[#231230]">เพื่อนร่วมทางกระต่ายจันทรา</h4>
-                <span class="text-[11px] text-[#7A6A8D] mt-0.5">สถานะ: พลังใจเต็มเปี่ยม ✦</span>
+                <h4 id="profile-rank-title" class="font-bold text-sm text-[#231230]">เพื่อนร่วมทางกระต่ายจันทรา</h4>
+                <span id="profile-streak-badge" class="text-[11px] text-[#7A6A8D] mt-0.5">สถานะ: พลังใจเต็มเปี่ยม ✦</span>
 
                 <div class="w-full mt-4 space-y-2 text-left text-xs">
                     <a href="daily.html" class="flex items-center justify-between p-2.5 bg-purple-50/70 hover:bg-purple-100/70 rounded-xl border border-purple-100 transition-colors">
@@ -617,6 +639,10 @@
                         <span class="font-medium text-[#4A3B5C]">🃏 ชมสำรับไพ่ Masterpiece 78 ใบ</span>
                         <span class="text-purple-600 font-bold">ดูสำรับ ›</span>
                     </a>
+                    <button type="button" id="btn-profile-tip" class="w-full flex items-center justify-between p-2.5 bg-amber-50/90 hover:bg-amber-100/80 rounded-xl border border-amber-300/80 transition-colors cursor-pointer">
+                        <span class="font-bold text-amber-900">🙏 ร่วมทำบุญสนับสนุนค่าครู (9฿ / 19฿ / 29฿)</span>
+                        <span class="text-amber-700 font-bold">รับพร ›</span>
+                    </button>
                 </div>
 
                 <!-- Reading History Journal -->

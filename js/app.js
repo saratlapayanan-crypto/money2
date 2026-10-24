@@ -4,6 +4,9 @@ import { getStoredDailyRecord } from './engines/daily-engine.js';
 import { APPROVED_CARD_ASSETS } from './art/fronts.js';
 import { toRoman } from './art/helpers.js';
 import { getReadingHistory, clearReadingHistory, showToast } from './utils/share-and-history.js';
+import { initSoundAndPwa, playCardTap } from './utils/sound-effects.js';
+import { getStreakInfo, openTarotGuideModal } from './utils/streak-and-guide.js';
+import { openTipModal } from './ui/monetization-ui.js';
 
 const THAI_MONTHS = [
     'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
@@ -36,6 +39,8 @@ const DEFAULT_DAILY_QUOTES = [
 let allCardsCache = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
+    initSoundAndPwa();
+
     // 1. Setup Global Decks
     try {
         await setupGlobalDecks();
@@ -50,8 +55,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.warn("Could not preload cards:", e);
     }
 
-    // 3. Set Current Thai Date
+    // 3. Set Current Thai Date & Streak Banner
     updateThaiDate();
+    setupHomeGuideAndStreak();
 
     // 4. Populate Expanded Homepage 78-Card Showcase Gallery
     populateHomeGallery();
@@ -63,6 +69,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupModals();
     setupSearchInput();
 });
+
+function setupHomeGuideAndStreak() {
+    const streak = getStreakInfo();
+    const titleEl = document.getElementById('home-streak-title');
+    const subEl = document.getElementById('home-streak-sub');
+    const iconEl = document.getElementById('home-streak-icon');
+
+    if (titleEl) {
+        titleEl.textContent = streak.streakDays > 0
+            ? `เปิดไพ่ต่อเนื่อง ${streak.streakDays} วัน 🔥`
+            : 'เริ่มสะสมพลังรายวัน ✨';
+    }
+    if (subEl) {
+        subEl.textContent = `${streak.rank.title} (${streak.totalReadings} ครั้ง)`;
+    }
+    if (iconEl) {
+        iconEl.textContent = streak.rank.icon || '🔥';
+    }
+
+    document.getElementById('btn-home-quick-guide')?.addEventListener('click', () => {
+        openTarotGuideModal();
+    });
+
+    document.getElementById('btn-home-streak')?.addEventListener('click', () => {
+        const profileBtn = document.getElementById('btn-profile-nav');
+        if (profileBtn) profileBtn.click();
+    });
+}
 
 function updateThaiDate() {
     const dateEl = document.getElementById('hero-daily-date');
@@ -189,6 +223,22 @@ function updateProfileModalContent() {
     const dailyStatusEl = document.getElementById('profile-daily-status');
     const historyListEl = document.getElementById('profile-history-list');
     const clearBtn = document.getElementById('btn-clear-history');
+    const rankTitleEl = document.getElementById('profile-rank-title');
+    const streakBadgeEl = document.getElementById('profile-streak-badge');
+    const tipBtn = document.getElementById('btn-profile-tip');
+
+    const streak = getStreakInfo();
+    if (rankTitleEl) {
+        rankTitleEl.textContent = `${streak.rank.icon} ${streak.rank.title}`;
+    }
+    if (streakBadgeEl) {
+        streakBadgeEl.textContent = `🔥 เปิดไพ่ต่อเนื่อง ${streak.streakDays} วัน • สะสม ${streak.totalReadings} ครั้ง`;
+    }
+    if (tipBtn) {
+        tipBtn.onclick = () => {
+            openTipModal(19);
+        };
+    }
 
     // 1. Update Daily Tarot status
     const dailyRecord = getStoredDailyRecord();

@@ -5,7 +5,7 @@ import path from 'node:path';
 
 const projectRoot = path.resolve('C:/Users/frame/Desktop/Money');
 
-test('all required JSON data files exist and are valid JSON', () => {
+test('all required JSON data files and PWA manifest exist and are valid JSON', () => {
     const jsonFiles = [
         'data/cards.json',
         'data/interpretations.json',
@@ -14,7 +14,8 @@ test('all required JSON data files exist and are valid JSON', () => {
         'data/colors.json',
         'data/wallpapers.json',
         'data/affiliates.json',
-        'data/decks.json'
+        'data/decks.json',
+        'manifest.json'
     ];
 
     for (const f of jsonFiles) {
@@ -23,9 +24,12 @@ test('all required JSON data files exist and are valid JSON', () => {
         const content = fs.readFileSync(fullPath, 'utf8');
         assert.doesNotThrow(() => JSON.parse(content), `File ${f} must be valid JSON`);
     }
+
+    assert.ok(fs.existsSync(path.join(projectRoot, 'sw.js')), 'Service Worker sw.js must exist');
+    assert.ok(fs.existsSync(path.join(projectRoot, 'assets/icons/app-icon.svg')), 'PWA app-icon.svg must exist');
 });
 
-test('all HTML files have Mitr + Outfit fonts and no text-white on body', () => {
+test('all HTML files have Mitr + Outfit fonts, PWA manifest links, and no text-white on body', () => {
     const htmlFiles = [
         'index.html',
         'daily.html',
@@ -42,18 +46,20 @@ test('all HTML files have Mitr + Outfit fonts and no text-white on body', () => 
         assert.ok(content.includes('family=Outfit:'), `${f} must include Outfit font`);
         assert.ok(!content.includes('<body class="text-white'), `${f} must not have text-white on body`);
         assert.ok(content.includes('text-[#261633]'), `${f} must have text-[#261633] on body`);
+        assert.ok(content.includes('rel="manifest" href="manifest.json"'), `${f} must include PWA manifest link`);
+        assert.ok(content.includes('assets/icons/app-icon.svg'), `${f} must include app icon link`);
     }
 });
 
-test('HTTP server responds with 200 OK for all HTML pages', async () => {
+test('HTTP server responds with 200 OK for all HTML pages and PWA files', async () => {
     const http = await import('node:http');
-    const htmlFiles = ['index.html', 'daily.html', 'reading.html', 'result.html', 'cards-preview.html'];
+    const filesToTest = ['index.html', 'daily.html', 'reading.html', 'result.html', 'cards-preview.html', 'manifest.json', 'sw.js'];
 
     const server = http.createServer((req, res) => {
         const cleanPath = (req.url || '/index.html').split('?')[0].replace(/^\/+/, '') || 'index.html';
         const filePath = path.join(projectRoot, cleanPath);
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+            res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
             res.end(fs.readFileSync(filePath));
         } else {
             res.writeHead(404);
@@ -65,12 +71,12 @@ test('HTTP server responds with 200 OK for all HTML pages', async () => {
     const { port } = server.address();
 
     try {
-        for (const page of htmlFiles) {
+        for (const page of filesToTest) {
             const url = `http://127.0.0.1:${port}/${page}`;
             const res = await fetch(url);
             assert.equal(res.status, 200, `Expected 200 for ${url}`);
-            const html = await res.text();
-            assert.ok(html.length > 500, `Expected content length > 500 for ${url}`);
+            const text = await res.text();
+            assert.ok(text.length > 100, `Expected content length > 100 for ${url}`);
         }
     } finally {
         await new Promise((resolve) => server.close(resolve));
@@ -152,4 +158,78 @@ test('Outfit Advice engine works for all 7 days with valid mannequins and distin
             assert.ok(pantsSvg.startsWith('<svg'));
         }
     }
+});
+
+test('Personal Reading Engine supports 1-card and 3-card spread modes correctly', async () => {
+    const store = new Map();
+    globalThis.sessionStorage = {
+        getItem: (k) => (store.has(k) ? store.get(k) : null),
+        setItem: (k, v) => store.set(k, String(v)),
+        removeItem: (k) => store.delete(k)
+    };
+    globalThis.localStorage = {
+        getItem: () => null,
+        setItem: () => {},
+        removeItem: () => {}
+    };
+
+    const { createReadingSession, selectPosition, confirmSelection, SPREAD_MODES } = await import('../js/engines/personal-engine.js');
+    assert.ok(SPREAD_MODES.single && SPREAD_MODES['three-time'] && SPREAD_MODES['three-insight']);
+
+    // 1. Test 1-Card Mode
+    const s1 = createReadingSession('work', 'overall', 'single');
+    assert.equal(s1.cardCount, 1);
+    selectPosition(12);
+    const c1 = confirmSelection();
+    assert.equal(c1.locked, true);
+    assert.equal(c1.cardIds.length, 1);
+    assert.equal(c1.cardId, c1.cardIds[0]);
+
+    // 2. Test 3-Card Mode (three-time)
+    const s3 = createReadingSession('love', 'relationship', 'three-time');
+    assert.equal(s3.cardCount, 3);
+    selectPosition(5);
+    selectPosition(18);
+    // Toggle off 18
+    let afterToggle = selectPosition(18);
+    assert.deepEqual(afterToggle.selectedPositions, [5]);
+    // Re-pick 18 and 42
+    selectPosition(18);
+    selectPosition(42);
+    const c3 = confirmSelection();
+    assert.equal(c3.locked, true);
+    assert.equal(c3.cardIds.length, 3);
+    assert.equal(new Set(c3.cardIds).size, 3, 'All 3 drawn cards must be distinct');
+});
+
+test('Yes/No Verdict, Plain-Language Card Explainer, and Monetization Config work for all 78 cards', async () => {
+    const { getYesNoVerdict } = await import('../js/utils/share-and-history.js');
+    const { getCardElementExplanation, getMysticRank } = await import('../js/utils/streak-and-guide.js');
+    const { MONETIZATION_CONFIG, buildAffiliateSearchUrl } = await import('../js/config/monetization-config.js');
+
+    const cards = JSON.parse(fs.readFileSync(path.join(projectRoot, 'data/cards.json'), 'utf8'));
+    const affiliates = JSON.parse(fs.readFileSync(path.join(projectRoot, 'data/affiliates.json'), 'utf8'));
+
+    for (const card of cards) {
+        const verdict = getYesNoVerdict(card, 'neutral');
+        assert.ok(['YES', 'LIKELY', 'WAIT'].includes(verdict.code));
+        assert.ok(verdict.label.length > 5);
+
+        const exp = getCardElementExplanation(card);
+        assert.ok(exp.badge && exp.element && exp.simpleMeaning);
+        assert.ok(!exp.simpleMeaning.includes('undefined'));
+    }
+
+    assert.equal(MONETIZATION_CONFIG.tipping.amounts.length, 3);
+    const shopUrl = buildAffiliateSearchUrl('กำไลหินมงคล');
+    assert.ok(shopUrl.startsWith('https://shopee.co.th/search?keyword='));
+
+    assert.ok(affiliates.length >= 6, 'Should have at least 6 rich affiliate items');
+    for (const item of affiliates) {
+        assert.ok(!item.url.includes('example.com'), `Affiliate ${item.id} must not use placeholder example.com URL`);
+        assert.ok(item.icon && item.badge && item.price_range && item.cta_th);
+    }
+
+    const rank = getMysticRank(7, 15);
+    assert.ok(rank.title && rank.icon);
 });

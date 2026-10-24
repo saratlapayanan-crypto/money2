@@ -11,6 +11,9 @@
     <meta property="og:title" content="ไพ่ประจำวัน - รับคำแนะนำและพลังบวก">
     <meta property="og:description" content="เปิดไพ่ยิปซี 1 ใบเพื่อเป็นเข็มทิศประจำวันของคุณ ฟรีทุกวัน">
     <meta property="og:url" content="https://thaitarot.com/daily.html">
+    <meta name="theme-color" content="#7E22CE">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/app-icon.svg">
 
     <!-- Google Fonts: Mitr (โมเดิร์น สดใส อบอุ่น สไตล์คนรุ่นใหม่) + Outfit (สากล ทันสมัย) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -165,6 +168,16 @@
                     </div>
                 </article>
 
+                <!-- คำอธิบายธาตุและหมวดไพ่ฉบับคนทั่วไปเข้าใจง่าย -->
+                <div id="daily-element-explainer" class="w-full bg-purple-50/90 border border-purple-200/80 rounded-2xl p-3 mb-3 text-center shadow-2xs">
+                    <div class="flex items-center justify-center gap-1.5 mb-1">
+                        <span id="daily-element-badge" class="text-xs font-bold text-purple-900">🌟 ไพ่ทาโรต์ประจำวัน</span>
+                        <span class="text-purple-300">•</span>
+                        <span id="daily-element-sub" class="text-[11px] font-semibold text-amber-800">พลังงานหลัก</span>
+                    </div>
+                    <p id="daily-element-desc" class="text-xs text-[#4A3B55] leading-relaxed"></p>
+                </div>
+
                 <!-- กล่องสถานะและนับถอยหลังสู่เที่ยงคืน (Midnight Countdown Box) -->
                 <div class="w-full max-w-sm bg-gradient-to-r from-purple-50 via-white to-amber-50 rounded-2xl border border-purple-200/80 p-3.5 mb-3 shadow-xs text-center">
                     <div class="flex items-center justify-center gap-1.5 text-xs font-bold text-purple-900 mb-1">
@@ -179,13 +192,6 @@
                         <span>อยากถามเรื่องอื่นเพิ่มเติม?</span>
                         <a href="reading.html" class="font-semibold underline hover:text-purple-900 transition-colors">เปิดไพ่ส่วนตัวแบบเจาะลึก 3 หมวด →</a>
                     </div>
-                </div>
-
-                <!-- Watermark สำหรับแชร์ลงโซเชียล -->
-                <div class="mb-4 flex items-center justify-center gap-1.5 text-[11px] tracking-wider uppercase text-[#7E22CE] px-3.5 py-1 rounded-full border border-purple-200/80 bg-white/80 shadow-xs">
-                    <span class="text-xs text-amber-500">✦</span>
-                    <span class="font-semibold">money2 · ไพ่นำทางเพื่อวันพรุ่งนี้ที่ดีกว่า</span>
-                    <span class="text-xs text-amber-500">✦</span>
                 </div>
 
                 <div class="w-full space-y-4 text-left">
@@ -233,6 +239,9 @@
                     <div id="outfit-advice-container" class="space-y-3">
                         <!-- Dynamically populated by JS -->
                     </div>
+
+                    <!-- กล่องสนับสนุนค่าครูตามศรัทธา -->
+                    <div id="daily-tip-box"></div>
                     
                     <nav class="pt-2 flex flex-col gap-2.5">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">

@@ -1,30 +1,79 @@
 [
   {
     "id": "aff-01",
-    "title": "กำไลหินโรสควอตซ์ (Rose Quartz)",
-    "description": "สัญลักษณ์แห่งความรักและการเยียวยาจิตใจ ช่วยเสริมพลังบวกและความเมตตากรุณา",
+    "title": "กำไลหินโรสควอตซ์แท้ (Rose Quartz) เกรดพรีเมียม",
+    "description": "หินแห่งความรักและเสน่หาเมตตามหานิยม ช่วยดึงดูดความสัมพันธ์ที่ดี เยียวยาหัวใจ และเสริมเสน่ห์ให้คนเอ็นดู",
     "category": "love",
-    "url": "https://example.com/affiliate/rosequartz"
+    "icon": "💖",
+    "badge": "ขายดีหมวดความรัก",
+    "price_range": "฿129 - ฿390",
+    "cta_th": "ดูไอเทมเสริมดวงความรักบน Shopee",
+    "url": "https://shopee.co.th/search?keyword=%E0%B8%81%E0%B8%B3%E0%B9%84%E0%B8%A5%E0%B8%AB%E0%B8%B4%E0%B8%99%E0%B9%82%E0%B8%A3%E0%B8%AA%E0%B8%84%E0%B8%A7%E0%B8%AD%E0%B8%95%E0%B8%8B%E0%B9%8C%E0%B8%A1%E0%B8%87%E0%B8%84%E0%B8%A5"
   },
   {
     "id": "aff-02",
-    "title": "ไพ่ยิปซีชุดมาตรฐาน (Rider Waite Smith)",
-    "description": "สำหรับผู้เริ่มต้นที่ต้องการเรียนรู้และทบทวนความหมายของไพ่เพื่อพัฒนาตนเอง",
-    "category": "general",
-    "url": "https://example.com/affiliate/riderwaite"
+    "title": "เทียนหอมอโรม่า กลิ่นกุหลาบและลาเวนเดอร์ปรับสมดุลรัก",
+    "description": "สร้างบรรยากาศผ่อนคลายละมุนใจ ลดความตึงเครียดในความสัมพันธ์ และเปิดรับพลังงานบวกก่อนนอน",
+    "category": "love",
+    "icon": "🕯️",
+    "badge": "ฮีลใจคนโสด/มีคู่",
+    "price_range": "฿159 - ฿450",
+    "cta_th": "ช้อปเทียนหอมเสริมพลังใจ",
+    "url": "https://shopee.co.th/search?keyword=%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B8%AB%E0%B8%AD%E0%B8%A1%E0%B8%AD%E0%B9%82%E0%B8%A3%E0%B8%A1%E0%B9%88%E0%B8%B2%20%E0%B8%A5%E0%B8%B2%E0%B9%80%E0%B8%A7%E0%B8%99%E0%B9%80%E0%B8%94%E0%B8%AD%E0%B8%A3%E0%B9%8C"
   },
   {
     "id": "aff-03",
-    "title": "สมุดบันทึกพลังบวก (Gratitude Journal)",
-    "description": "เครื่องมือช่วยจัดระเบียบความคิดและจดบันทึกสิ่งดีๆ ที่เกิดขึ้นในแต่ละวัน",
-    "category": "work",
-    "url": "https://example.com/affiliate/journal"
+    "title": "หินไหมทอง & ซิทริน (Citrine) เรียกทรัพย์รับโชคก้อนใหญ่",
+    "description": "อัญมณีแห่งความมั่งคั่งและโชคลาภทางการเงิน เสริมพลังการค้าขาย ปิดดีลธุรกิจ และดึงดูดโอกาสทำเงินใหม่ๆ",
+    "category": "finance",
+    "icon": "🪙",
+    "badge": "ไอเทมเรียกทรัพย์ยอดฮิต",
+    "price_range": "฿199 - ฿590",
+    "cta_th": "ดูหินไหมทอง & ซิทรินเรียกทรัพย์",
+    "url": "https://shopee.co.th/search?keyword=%E0%B8%81%E0%B8%B3%E0%B9%84%E0%B8%A5%E0%B8%AB%E0%B8%B4%E0%B8%99%E0%B9%84%E0%B8%AB%E0%B8%A1%E0%B8%97%E0%B8%AD%E0%B8%87%20%E0%B8%8B%E0%B8%B4%E0%B8%97%E0%B8%A3%E0%B8%B4%E0%B8%99"
   },
   {
     "id": "aff-04",
-    "title": "หินซิทริน (Citrine) เสริมความมั่นใจ",
-    "description": "เครื่องประดับแห่งความสดใส เปรียบดั่งแสงอาทิตย์ที่ให้พลังงานในการเริ่มต้นสิ่งใหม่ๆ",
+    "title": "กระเป๋าสตางค์สีมงคลเรียกทรัพย์ จัดระเบียบธนบัตร",
+    "description": "เปลี่ยนกระเป๋าสตางค์ให้พร้อมรับทรัพย์ เก็บเงินอยู่ไม่รั่วไหล เสริมโหงวเฮ้งการเงินให้คล่องตัวตลอดปี",
     "category": "finance",
-    "url": "https://example.com/affiliate/citrine"
+    "icon": "👛",
+    "badge": "เสริมดวงการเงิน",
+    "price_range": "฿250 - ฿790",
+    "cta_th": "เลือกกระเป๋าสตางค์สีมงคล",
+    "url": "https://shopee.co.th/search?keyword=%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%9B%E0%B9%8B%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%B2%E0%B8%87%E0%B8%84%E0%B9%8C%E0%B8%AA%E0%B8%B5%E0%B8%A1%E0%B8%87%E0%B8%84%E0%B8%A5%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%81%E0%B8%97%E0%B8%A3%E0%B8%B1%E0%B8%9E%E0%B8%A2%E0%B9%8C"
+  },
+  {
+    "id": "aff-05",
+    "title": "สมุดแพลนเนอร์ & Gratitude Journal จัดระเบียบเป้าหมาย",
+    "description": "เปลี่ยนคำแนะนำจากไพ่ให้เป็นแผนงานที่จับต้องได้ ช่วยโฟกัสเป้าหมายการงานและจดบันทึกความสำเร็จทุกวัน",
+    "category": "work",
+    "icon": "📓",
+    "badge": "แนะนำสำหรับคนทำงาน",
+    "price_range": "฿120 - ฿350",
+    "cta_th": "ดูสมุดแพลนเนอร์เสริมความสำเร็จ",
+    "url": "https://shopee.co.th/search?keyword=Gratitude%20Journal%20%E0%B8%AA%E0%B8%A1%E0%B8%B8%E0%B8%94%E0%B9%81%E0%B8%9E%E0%B8%A5%E0%B8%99%E0%B9%80%E0%B8%99%E0%B8%AD%E0%B8%A3%E0%B9%8C"
+  },
+  {
+    "id": "aff-06",
+    "title": "หินอเมทิสต์ & ไทเกอร์อาย (Amethyst / Tiger Eye) เสริมอำนาจตัดสินใจ",
+    "description": "เสริมสติปัญญา สมาธิ และบารมีในการทำงาน ช่วยให้ผู้ใหญ่เมตตา เจรจาติดต่องานราบรื่นผ่านฉลุย",
+    "category": "work",
+    "icon": "🔮",
+    "badge": "เสริมบารมี/เลื่อนขั้น",
+    "price_range": "฿169 - ฿490",
+    "cta_th": "ดูหินมงคลเสริมการงานบน Shopee",
+    "url": "https://shopee.co.th/search?keyword=%E0%B8%81%E0%B8%B3%E0%B9%84%E0%B8%A5%E0%B8%AB%E0%B8%B4%E0%B8%99%E0%B9%84%E0%B8%97%E0%B9%80%E0%B8%81%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%AD%E0%B8%B2%E0%B8%A2%20%E0%B8%AD%E0%B9%80%E0%B8%A1%E0%B8%97%E0%B8%B4%E0%B8%AA%E0%B8%95%E0%B9%8C"
+  },
+  {
+    "id": "aff-07",
+    "title": "สำรับไพ่ทาโรต์มาตรฐาน (Rider-Waite-Smith Tarot Deck)",
+    "description": "สำหรับผู้ที่หลงใหลศาสตร์ไพ่ทาโรต์และต้องการมีสำรับไพ่ประจำตัวไว้ฝึกอ่านพลังงานและทบทวนจิตใจ",
+    "category": "general",
+    "icon": "🃏",
+    "badge": "ยอดนิยมตลอดกาล",
+    "price_range": "฿290 - ฿890",
+    "cta_th": "ดูสำรับไพ่ทาโรต์ของแท้",
+    "url": "https://shopee.co.th/search?keyword=%E0%B9%84%E0%B8%9E%E0%B9%88%E0%B8%97%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%95%E0%B9%8C%20Rider%20Waite"
   }
 ]

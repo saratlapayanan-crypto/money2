@@ -1,0 +1,20 @@
+{
+  "name": "money2 · Thai Tarot ดูดวงไพ่ทาโรต์",
+  "short_name": "Thai Tarot",
+  "description": "ดูดวงไพ่ทาโรต์รายวัน เปิดไพ่ส่วนตัว 78 ใบ สีมงคล และดาวน์โหลดวอลเปเปอร์เสริมดวง",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#170B26",
+  "theme_color": "#7E22CE",
+  "lang": "th",
+  "icons": [
+    {
+      "src": "assets/icons/app-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

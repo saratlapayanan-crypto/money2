@@ -5,6 +5,54 @@ const HISTORY_STORAGE_KEY = 'tarot_reading_history_v1';
 const MAX_HISTORY_ITEMS = 15;
 
 /**
+ * คำนวณผลฟันธง Yes / No เชิงจิตวิทยาจากสถานะคำทำนายและพลังงานไพ่
+ */
+export function getYesNoVerdict(card, interpStatus = 'neutral') {
+    const positiveIds = new Set([
+        'major-0', 'major-1', 'major-3', 'major-6', 'major-7', 'major-8',
+        'major-10', 'major-11', 'major-14', 'major-17', 'major-19', 'major-20', 'major-21',
+        'wands-1', 'wands-3', 'wands-4', 'wands-6', 'wands-8', 'wands-11', 'wands-13', 'wands-14',
+        'cups-1', 'cups-2', 'cups-3', 'cups-6', 'cups-9', 'cups-10', 'cups-11', 'cups-13', 'cups-14',
+        'swords-1', 'swords-6', 'swords-13', 'swords-14',
+        'pentacles-1', 'pentacles-3', 'pentacles-6', 'pentacles-8', 'pentacles-9', 'pentacles-10', 'pentacles-13', 'pentacles-14'
+    ]);
+    const cautionIds = new Set([
+        'major-12', 'major-13', 'major-15', 'major-16', 'major-18',
+        'wands-5', 'wands-7', 'wands-9', 'wands-10',
+        'cups-4', 'cups-5', 'cups-7', 'cups-8',
+        'swords-3', 'swords-5', 'swords-7', 'swords-8', 'swords-9', 'swords-10',
+        'pentacles-5'
+    ]);
+
+    const cardId = card?.id || '';
+    if (interpStatus === 'positive' || positiveIds.has(cardId)) {
+        return {
+            code: 'YES',
+            badge: 'YES · พลังบวกหนุนนำ ✨',
+            label: 'ใช่ • ลุยได้เลย มีเกณฑ์สำเร็จสูง',
+            advice: 'จังหวะและพลังงานเปิดทางให้คุณแล้ว เดินหน้าด้วยความมั่นใจได้เลย',
+            hex: '#10B981'
+        };
+    }
+    if (interpStatus === 'caution' || cautionIds.has(cardId)) {
+        return {
+            code: 'WAIT',
+            badge: 'WAIT · ชะลอและทบทวน 🌙',
+            label: 'ชะลอก่อน • รอจังหวะที่เหมาะสมกว่านี้',
+            advice: 'อย่าเพิ่งรีบตัดสินใจด้วยอารมณ์ ถอยมาตั้งสติและเก็บข้อมูลเพิ่มอีกนิด',
+            hex: '#F43F5E'
+        };
+    }
+    return {
+        code: 'LIKELY',
+        badge: 'LIKELY · สำเร็จได้ด้วยความตั้งใจ 🌟',
+        label: 'มีโอกาสเป็นไปได้ • ขึ้นอยู่กับการลงมือทำ',
+        advice: 'ผลลัพธ์อยู่ในมือคุณ หากวางแผนให้รัดกุมและค่อยเป็นค่อยไปจะผ่านไปได้ด้วยดี',
+        hex: '#F59E0B'
+    };
+}
+
+/**
  * บันทึกประวัติการเปิดไพ่ (ทั้งไพ่ประจำวันและไพ่ส่วนตัว) ลง localStorage
  */
 export function saveReadingToHistory(entry) {
@@ -29,10 +77,12 @@ export function saveReadingToHistory(entry) {
             id: entry.sessionId || `${entry.type || 'reading'}-${thaiDate}-${Date.now()}`,
             sessionId: entry.sessionId || null,
             type: entry.type || 'personal', // 'daily' | 'personal'
+            spreadMode: entry.spreadMode || 'single',
             category: entry.category || 'daily',
             categoryLabel: entry.categoryLabel || getCategoryLabel(entry.category || 'daily'),
             questionText: entry.questionText || 'ไพ่นำทางประจำวัน',
             cardId: entry.cardId,
+            cardIds: Array.isArray(entry.cardIds) ? entry.cardIds : [entry.cardId],
             cardNameTh: entry.cardNameTh || '',
             cardNameEn: entry.cardNameEn || '',
             summary: entry.summary || '',
@@ -226,7 +276,6 @@ export async function generateCardWallpaperDataUrl({
         ctx.drawImage(img, cardX, cardY, cardW, cardH);
         ctx.restore();
     } catch (_) {
-        // Fallback art box if image cannot be drawn
         ctx.fillStyle = '#2D1948';
         roundRect(ctx, cardX, cardY, cardW, cardH, 22);
         ctx.fill();
@@ -304,6 +353,247 @@ export async function generateCardWallpaperDataUrl({
     return canvas.toDataURL('image/png');
 }
 
+/**
+ * สร้างภาพการ์ดสรุปผลทำนาย (รองรับทั้งโหมดไพ่ 3 ใบเรียงกัน และ 1 ใบฟันธง) ขนาด 1080x1920 สำหรับแชร์ลง IG Story / TikTok
+ */
+export async function generateStorySpreadDataUrl({
+    cards = [],
+    slots = ['อดีต / ที่มา', 'ปัจจุบัน / ตอนนี้', 'อนาคต / แนวโน้ม'],
+    spreadSummaries = [],
+    spreadTitle = 'สรุปผลคำทำนายไพ่ทาโรต์',
+    questionLabel = 'คำถามของคุณ',
+    verdict = null,
+    actionText = 'ตั้งสติและก้าวเดินอย่างมั่นใจ',
+    luckyColorName = 'สีทองมงคล',
+    luckyColorHex = '#D97706'
+}) {
+    if (typeof document === 'undefined' || !cards.length) return null;
+
+    const canvas = document.createElement('canvas');
+    const W = 1080;
+    const H = 1920;
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    // 1. พื้นหลัง Cosmic Royal Purple & Gold
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#140824');
+    bgGrad.addColorStop(0.5, '#271242');
+    bgGrad.addColorStop(1, '#10061B');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    const aura = ctx.createRadialGradient(W / 2, 560, 50, W / 2, 560, 620);
+    aura.addColorStop(0, `${luckyColorHex}55`);
+    aura.addColorStop(0.6, '#9333EA22');
+    aura.addColorStop(1, 'transparent');
+    ctx.fillStyle = aura;
+    ctx.fillRect(0, 0, W, H);
+
+    // กรอบทอง 2 ชั้น
+    ctx.strokeStyle = '#D4AF37';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(38, 38, W - 76, H - 76);
+    ctx.strokeStyle = 'rgba(253, 230, 138, 0.35)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(54, 54, W - 108, H - 108);
+
+    // 2. ส่วนหัว Story Card
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#FDE68A';
+    ctx.font = '700 26px "Outfit", "Mitr", sans-serif';
+    ctx.fillText(`✦ ${spreadTitle.toUpperCase()} ✦`, W / 2, 120);
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '600 34px "Mitr", sans-serif';
+    wrapText(ctx, `“${questionLabel}”`, W / 2, 172, W - 160, 44, 2);
+
+    // 3. วาดไพ่ (กรณี 3 ใบเรียงกัน หรือ 1 ใบตรงกลาง)
+    if (cards.length >= 3) {
+        const cardW = 284;
+        const cardH = 426;
+        const gap = 36;
+        const startX = (W - (cardW * 3 + gap * 2)) / 2;
+        const cardY = 290;
+
+        for (let i = 0; i < 3; i++) {
+            const c = cards[i];
+            const slotLabel = slots[i] || `ใบที่ ${i + 1}`;
+            const x = startX + i * (cardW + gap);
+            const centerX = x + cardW / 2;
+
+            // ป้ายตำแหน่งไพ่ด้านบน
+            ctx.fillStyle = 'rgba(253, 230, 138, 0.16)';
+            roundRect(ctx, x + 22, cardY - 52, cardW - 44, 38, 19);
+            ctx.fill();
+            ctx.strokeStyle = '#FCD34D';
+            ctx.lineWidth = 1.5;
+            roundRect(ctx, x + 22, cardY - 52, cardW - 44, 38, 19);
+            ctx.stroke();
+
+            ctx.fillStyle = '#FEF08A';
+            ctx.font = '600 20px "Mitr", sans-serif';
+            ctx.fillText(`${i + 1}. ${slotLabel}`, centerX, cardY - 26);
+
+            // รูปไพ่
+            const src = APPROVED_CARD_ASSETS[c?.id] || 'assets/cards/standard/major-1.jpg';
+            try {
+                const img = await loadImageElement(src);
+                ctx.save();
+                roundRect(ctx, x, cardY, cardW, cardH, 16);
+                ctx.clip();
+                ctx.drawImage(img, x, cardY, cardW, cardH);
+                ctx.restore();
+            } catch (_) {
+                ctx.fillStyle = '#2D1948';
+                roundRect(ctx, x, cardY, cardW, cardH, 16);
+                ctx.fill();
+            }
+
+            ctx.strokeStyle = '#F6E05E';
+            ctx.lineWidth = 4;
+            roundRect(ctx, x, cardY, cardW, cardH, 16);
+            ctx.stroke();
+
+            // ชื่อไพ่ใต้แต่ละใบ
+            const cNameTh = c?.name_th || c?.thai_name || c?.name || '';
+            const cNameEn = (c?.name_en || c?.name || '').toUpperCase();
+            ctx.fillStyle = '#FFFBEB';
+            ctx.font = '600 24px "Mitr", sans-serif';
+            ctx.fillText(cNameTh, centerX, cardY + cardH + 38);
+
+            ctx.fillStyle = '#FCD34D';
+            ctx.font = '600 16px "Outfit", sans-serif';
+            ctx.fillText(cNameEn, centerX, cardY + cardH + 64);
+        }
+
+        // 4. กล่องสรุปคำทำนาย 3 ตำแหน่ง
+        let boxY = 815;
+        for (let i = 0; i < 3; i++) {
+            const c = cards[i];
+            const slotLabel = slots[i] || `ใบที่ ${i + 1}`;
+            const sumText = spreadSummaries[i] || c?.meaning_upright || '';
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+            roundRect(ctx, 78, boxY, W - 156, 195, 22);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(246, 224, 94, 0.4)';
+            ctx.lineWidth = 1.5;
+            roundRect(ctx, 78, boxY, W - 156, 195, 22);
+            ctx.stroke();
+
+            ctx.fillStyle = '#FDE68A';
+            ctx.font = '600 23px "Mitr", sans-serif';
+            ctx.fillText(`✦ ${slotLabel} — ${c?.name_th || c?.name || ''}`, W / 2, boxY + 42);
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '400 23px "Mitr", sans-serif';
+            wrapText(ctx, sumText, W / 2, boxY + 86, W - 220, 36, 3);
+
+            boxY += 215;
+        }
+    } else {
+        // กรณี 1 ใบฟันธง
+        const c = cards[0];
+        const cardW = 420;
+        const cardH = 630;
+        const cardX = (W - cardW) / 2;
+        const cardY = 245;
+
+        const src = APPROVED_CARD_ASSETS[c?.id] || 'assets/cards/standard/major-1.jpg';
+        try {
+            const img = await loadImageElement(src);
+            ctx.save();
+            roundRect(ctx, cardX, cardY, cardW, cardH, 20);
+            ctx.clip();
+            ctx.drawImage(img, cardX, cardY, cardW, cardH);
+            ctx.restore();
+        } catch (_) {
+            ctx.fillStyle = '#2D1948';
+            roundRect(ctx, cardX, cardY, cardW, cardH, 20);
+            ctx.fill();
+        }
+
+        ctx.strokeStyle = '#F6E05E';
+        ctx.lineWidth = 4;
+        roundRect(ctx, cardX, cardY, cardW, cardH, 20);
+        ctx.stroke();
+
+        ctx.fillStyle = '#FFFBEB';
+        ctx.font = '600 38px "Mitr", sans-serif';
+        ctx.fillText(c?.name_th || c?.name || '', W / 2, 930);
+
+        ctx.fillStyle = '#FCD34D';
+        ctx.font = '700 22px "Outfit", sans-serif';
+        ctx.fillText((c?.name_en || c?.name || '').toUpperCase(), W / 2, 968);
+
+        // กล่องคำทำนายหลัก
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+        roundRect(ctx, 78, 1015, W - 156, 420, 26);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(246, 224, 94, 0.45)';
+        ctx.lineWidth = 2;
+        roundRect(ctx, 78, 1015, W - 156, 420, 26);
+        ctx.stroke();
+
+        ctx.fillStyle = '#FDE68A';
+        ctx.font = '600 26px "Mitr", sans-serif';
+        ctx.fillText(verdict ? verdict.label : '✦ คำทำนายฟันธง ✦', W / 2, 1075);
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '400 27px "Mitr", sans-serif';
+        wrapText(ctx, spreadSummaries[0] || c?.meaning_upright || '', W / 2, 1140, W - 220, 44, 5);
+    }
+
+    // 5. กล่องก้าวต่อไป + แถบสีมงคลด้านล่าง
+    const footerBoxY = 1475;
+    ctx.fillStyle = 'rgba(251, 191, 36, 0.12)';
+    roundRect(ctx, 78, footerBoxY, W - 156, 155, 22);
+    ctx.fill();
+    ctx.strokeStyle = '#F59E0B';
+    ctx.lineWidth = 2;
+    roundRect(ctx, 78, footerBoxY, W - 156, 155, 22);
+    ctx.stroke();
+
+    ctx.fillStyle = '#FDE68A';
+    ctx.font = '600 23px "Mitr", sans-serif';
+    ctx.fillText('🧭 ก้าวต่อไปที่แนะนำ', W / 2, footerBoxY + 42);
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '400 24px "Mitr", sans-serif';
+    wrapText(ctx, actionText, W / 2, footerBoxY + 86, W - 210, 36, 2);
+
+    // แถบสีมงคล
+    const pillY = 1665;
+    ctx.fillStyle = 'rgba(18, 8, 28, 0.85)';
+    roundRect(ctx, W / 2 - 290, pillY, 580, 64, 32);
+    ctx.fill();
+    ctx.strokeStyle = luckyColorHex || '#F59E0B';
+    ctx.lineWidth = 3;
+    roundRect(ctx, W / 2 - 290, pillY, 580, 64, 32);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(W / 2 - 220, pillY + 32, 14, 0, Math.PI * 2);
+    ctx.fillStyle = luckyColorHex || '#F59E0B';
+    ctx.fill();
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = '#FEF9C3';
+    ctx.font = '500 24px "Mitr", sans-serif';
+    ctx.fillText(`พลังสีมงคล: ${luckyColorName}`, W / 2 + 20, pillY + 40);
+
+    ctx.fillStyle = 'rgba(233, 213, 255, 0.8)';
+    ctx.font = '600 22px "Outfit", "Mitr", sans-serif';
+    ctx.fillText('✦ MONEY2 · THAI TAROT · IG STORY SUMMARY ✦', W / 2, 1815);
+
+    return canvas.toDataURL('image/png');
+}
+
 function loadImageElement(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -330,7 +620,6 @@ function roundRect(ctx, x, y, width, height, radius) {
 
 function wrapText(ctx, text, x, startY, maxWidth, lineHeight, maxLines = 3) {
     const cleanText = String(text || '').trim();
-    // ตัดคำภาษาไทยแบบอิงความกว้างตัวอักษร
     const chars = Array.from(cleanText);
     let line = '';
     const lines = [];
@@ -342,7 +631,6 @@ function wrapText(ctx, text, x, startY, maxWidth, lineHeight, maxLines = 3) {
             lines.push(line.trim());
             line = chars[i];
             if (lines.length >= maxLines - 1) {
-                // บรรทัดสุดท้าย
                 const rest = chars.slice(i).join('');
                 let finalLine = rest;
                 while (ctx.measureText(finalLine + '…').width > maxWidth && finalLine.length > 0) {

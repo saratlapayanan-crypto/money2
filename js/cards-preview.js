@@ -4,6 +4,7 @@ import { renderCardFront, renderCardBack } from './art/tarot-art.js';
 import { APPROVED_CARD_ASSETS } from './art/fronts.js';
 import { setupGlobalDecks, getActiveDeckId } from './engines/deck-engine.js';
 import { generateCardWallpaperDataUrl, showToast } from './utils/share-and-history.js';
+import { initSoundAndPwa, playCardTap } from './utils/sound-effects.js';
 
 let allCards = [];
 let currentTheme = 'standard';
@@ -50,6 +51,7 @@ const THEME_INFO = {
 };
 
 async function init() {
+    initSoundAndPwa();
     try { await setupGlobalDecks(); } catch (_) { /* optional */ }
     currentTheme = getActiveDeckId();
     allCards = await loadCards();

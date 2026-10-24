@@ -19,6 +19,10 @@ import {
     generateCardWallpaperDataUrl,
     showToast
 } from './utils/share-and-history.js';
+import { initSoundAndPwa, playCardTap, playCardFlip } from './utils/sound-effects.js';
+import { recordReadingStreak, getCardElementExplanation } from './utils/streak-and-guide.js';
+import { renderTipBox } from './ui/monetization-ui.js';
+import { buildAffiliateSearchUrl } from './config/monetization-config.js';
 
 let countdownInterval = null;
 let selectedDailyPosition = null;
@@ -26,6 +30,7 @@ let spreadDeckIds = [];
 let isDailyGridView = false;
 
 async function initDailyPage() {
+    initSoundAndPwa();
     try {
         try {
             await setupGlobalDecks();
@@ -102,6 +107,7 @@ function setupDailySelection(cards, interpretations) {
     const spreadContainer = document.getElementById('daily-spread-container');
     if (toggleBtn && spreadContainer && grid) {
         toggleBtn.onclick = () => {
+            playCardTap();
             isDailyGridView = !isDailyGridView;
             if (isDailyGridView) {
                 spreadContainer.classList.add('hidden');
@@ -119,8 +125,10 @@ function setupDailySelection(cards, interpretations) {
     if (confirmBtn) {
         confirmBtn.onclick = () => {
             if (selectedDailyPosition === null) return;
+            playCardFlip();
             const chosenCardId = spreadDeckIds[selectedDailyPosition];
             saveDailyRecord(chosenCardId, selectedDailyPosition);
+            recordReadingStreak();
 
             const chosenCard = cards.find(c => c.id === chosenCardId) || cards[0];
             trackEvent('draw_daily_card', { card_id: chosenCard.id, card_name: chosenCard.name });
@@ -130,6 +138,7 @@ function setupDailySelection(cards, interpretations) {
 }
 
 function handleSpreadCardClick(position) {
+    playCardTap();
     selectedDailyPosition = position;
     
     // Highlight in ribbon and grid
@@ -165,6 +174,16 @@ function showDailyResult(card, interpretations, animateFlip = false) {
     if (resultSec) resultSec.classList.remove('hidden');
 
     renderCard(card);
+
+    // อธิบายธาตุและหมวดไพ่ด้วยภาษาที่เข้าใจง่ายทันที
+    const elemInfo = getCardElementExplanation(card);
+    const elemBadge = document.getElementById('daily-element-badge');
+    const elemSub = document.getElementById('daily-element-sub');
+    const elemDesc = document.getElementById('daily-element-desc');
+    if (elemBadge) elemBadge.textContent = elemInfo.badge;
+    if (elemSub) elemSub.textContent = elemInfo.element;
+    if (elemDesc) elemDesc.textContent = elemInfo.simpleMeaning;
+
     const energies = renderEnergies(card, interpretations);
     let advice = null;
 
@@ -179,6 +198,8 @@ function showDailyResult(card, interpretations, animateFlip = false) {
         });
         renderOutfitAdvice(advice);
     }
+
+    renderTipBox(document.getElementById('daily-tip-box'));
 
     // บันทึกลงสมุดบันทึกประวัติการเปิดไพ่
     const dailyMsgText = document.getElementById('daily-message')?.textContent || card.meaning_upright || '';
@@ -441,6 +462,15 @@ function renderOutfitAdvice(advice) {
                         <p class="text-[11px] text-[#5A4866] leading-relaxed bg-[#FFFDF5] p-2.5 rounded-lg border border-amber-200/60">
                             ✦ <strong class="text-[#8A5D0B]">ทริคแต่งกาย:</strong> ${look.tip}
                         </p>
+
+                        <div class="grid grid-cols-2 gap-2 pt-0.5">
+                            <a href="${buildAffiliateSearchUrl(`${look.top.item} ${look.top.color}`)}" target="_blank" rel="nofollow sponsored noopener" class="py-1.5 px-2.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-300 text-[#8A5D0B] font-bold text-[11px] text-center no-underline transition-all">
+                                🛍️ ช้อปเสื้อ${look.top.color}
+                            </a>
+                            <a href="${buildAffiliateSearchUrl(`${look.bottom.item} ${look.bottom.color}`)}" target="_blank" rel="nofollow sponsored noopener" class="py-1.5 px-2.5 rounded-lg bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-800 font-bold text-[11px] text-center no-underline transition-all">
+                                👖 ช้อปกางเกง${look.bottom.color}
+                            </a>
+                        </div>
                     </div>
                 `).join('')}
             </div>
