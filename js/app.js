@@ -41,6 +41,10 @@ let allCardsCache = [];
 document.addEventListener('DOMContentLoaded', async () => {
     initSoundAndPwa();
 
+    // Render all 78 cards immediately using APPROVED_CARD_ASSETS so gallery is never incomplete
+    populateHomeGallery('all');
+    setupHomeGalleryFilters();
+
     // 1. Setup Global Decks
     try {
         await setupGlobalDecks();
@@ -59,8 +63,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateThaiDate();
     setupHomeGuideAndStreak();
 
-    // 4. Populate Expanded Homepage 78-Card Showcase Gallery
-    populateHomeGallery();
+    // 4. Refresh Homepage 78-Card Showcase Gallery with full Thai/English titles
+    populateHomeGallery(currentHomeSuitFilter);
 
     // 5. Carousel Logic for Hero (synced with today's drawn card if available)
     setupCarousel();
@@ -69,6 +73,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupModals();
     setupSearchInput();
 });
+
+let currentHomeSuitFilter = 'all';
+
+function setupHomeGalleryFilters() {
+    const btns = document.querySelectorAll('.home-suit-pill');
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            playCardTap();
+            currentHomeSuitFilter = btn.dataset.suit || 'all';
+            btns.forEach(b => {
+                const active = b === btn;
+                b.className = active
+                    ? 'home-suit-pill px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-700 text-white shadow-2xs shrink-0 cursor-pointer'
+                    : 'home-suit-pill px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/90 text-[#4A3B5C] border border-purple-200/80 shrink-0 cursor-pointer';
+            });
+            populateHomeGallery(currentHomeSuitFilter);
+        });
+    });
+}
 
 function setupHomeGuideAndStreak() {
     const streak = getStreakInfo();
@@ -118,27 +141,33 @@ function formatCardBadgeLabel(card) {
     return (card.name_en || card.name || '').toUpperCase();
 }
 
-function populateHomeGallery() {
+function populateHomeGallery(suitFilter = 'all') {
     const gallery = document.getElementById('home-cards-gallery');
-    if (!gallery || !allCardsCache.length) return;
+    if (!gallery) return;
 
-    // Show all 22 Major Arcana + 4 Suit Aces (26 iconic cards) in the horizontal scroll
-    const featuredIds = [
-        ...Array.from({ length: 22 }, (_, i) => `major-${i}`),
-        'wands-1', 'cups-1', 'swords-1', 'pentacles-1'
-    ];
+    const allIds = Object.keys(APPROVED_CARD_ASSETS);
+    const filteredIds = allIds.filter(id => {
+        if (suitFilter === 'all') return true;
+        return id.startsWith(`${suitFilter}-`);
+    });
 
-    const itemsHtml = featuredIds.map(id => {
+    const itemsHtml = filteredIds.map(id => {
         const card = allCardsCache.find(c => c.id === id);
-        if (!card) return '';
-        const imgSrc = APPROVED_CARD_ASSETS[card.id] || `assets/cards/standard/${card.id}.jpg`;
-        const shortLabel = card.arcana === 'major'
-            ? `${card.number === 0 ? '0' : toRoman(card.number)} ${(card.name_en || card.name).replace(/^The\s+/i, '').toUpperCase()}`
-            : (card.name_en || card.name).toUpperCase();
+        const imgSrc = APPROVED_CARD_ASSETS[id] || `assets/cards/standard/${id}.jpg`;
+        let shortLabel = id.replace('-', ' ').toUpperCase();
+        let titleText = shortLabel;
+
+        if (card) {
+            shortLabel = card.arcana === 'major'
+                ? `${card.number === 0 ? '0' : toRoman(card.number)} ${(card.name_en || card.name).replace(/^The\s+/i, '').toUpperCase()}`
+                : (card.name_th || card.name_en || card.name);
+            titleText = `${card.name_th} (${card.name_en})`;
+        }
+
         return `
-            <a href="cards-preview.html#card-${card.id}" class="gallery-card-item" title="${card.name_th} (${card.name_en})">
+            <a href="cards-preview.html#card-${id}" class="gallery-card-item" title="${titleText}">
                 <div class="gallery-card-img-wrap">
-                    <img src="${imgSrc}" alt="${card.name_th} (${card.name_en})" loading="lazy">
+                    <img src="${imgSrc}" alt="${titleText}" loading="lazy">
                 </div>
                 <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">${shortLabel}</span>
             </a>
@@ -147,6 +176,7 @@ function populateHomeGallery() {
 
     if (itemsHtml) {
         gallery.innerHTML = itemsHtml;
+        gallery.scrollLeft = 0;
     }
 }
 

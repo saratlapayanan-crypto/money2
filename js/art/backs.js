@@ -268,7 +268,7 @@ export function renderBack(deckId = 'standard') {
     const t = getTheme(deckId);
     const uid = `ttb_${deckId}`;
 
-    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="หลังไพ่ทาโรต์ ${t.label}">
+    return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="หลังไพ่ทาโรต์ ${t.label}">
 <defs>
     <!-- การไล่เฉดสีพื้นหลังมนตราพรีเมียม -->
     <linearGradient id="${uid}bg" x1="0" y1="0" x2="0" y2="1">

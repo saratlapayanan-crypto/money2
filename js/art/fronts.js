@@ -765,11 +765,10 @@ export function renderFront(card, deckId = 'standard') {
         numeralStr = card.number === 1 ? 'ACE' : String(card.number);
     }
 
-    // หากมีภาพ Masterpiece Artwork ของสำรับมาตรฐาน (27 ใบที่ได้รับการอนุมัติ)
-    // สวมกรอบและป้ายชื่อด้านล่างที่เหมือนกันกับทุกใบในสำรับ 100%
+    // ใช้ภาพวาด Masterpiece Artwork ทั้ง 78 ใบเสมอในทุกธีม โดยสวมกรอบ ลวดลายมุม และป้ายชื่อตามธีมที่เลือก
     const approvedSrc = APPROVED_CARD_ASSETS[card?.id];
-    if (approvedSrc && deckId === 'standard') {
-        return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.thai_name || card.name_th || card.name} (${card.name})">
+    if (approvedSrc) {
+        return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.thai_name || card.name_th || card.name} (${card.name})">
 <defs>
     <clipPath id="${uid}clip"><rect width="${W}" height="${H}" rx="14"/></clipPath>
     <linearGradient id="${uid}bg" x1="0" y1="0" x2="0" y2="1">
@@ -790,7 +789,7 @@ ${renderDeckCartouche(card, deckId, t, uid)}
 </svg>`;
     }
 
-    // สำหรับใบที่เหลือในสำรับมาตรฐาน และไพ่ทั้ง 78 ใบของทุกเทศกาล (Songkran, Loy Krathong, Christmas, Valentine, Halloween, Minimalist)
+    // สำหรับกรณีสำรองหากไม่พบไฟล์ภาพ
     let art;
     if (card.arcana === 'major') {
         const drawMajor = MAJORS[card.number] || MAJORS[0];
@@ -801,7 +800,7 @@ ${renderDeckCartouche(card, deckId, t, uid)}
         art = renderMinorScene(card.number, card.suit, t, deckId);
     }
 
-    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.thai_name || card.name_th || card.name} (${card.name})">
+    return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${card.thai_name || card.name_th || card.name} (${card.name})">
 <defs>
     <!-- การไล่เฉดสีพื้นหลังมนตราพรีเมียม -->
     <linearGradient id="${uid}bg" x1="0" y1="0" x2="0" y2="1">

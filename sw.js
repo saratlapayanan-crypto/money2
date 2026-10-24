@@ -1,4 +1,4 @@
-const CACHE_NAME = 'money2-thai-tarot-v2';
+const CACHE_NAME = 'money2-thai-tarot-v3';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -54,19 +54,17 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Stale-while-revalidate for HTML, JS, CSS, JSON
+  // Network-first for HTML, JS, CSS, JSON so latest updates always show immediately
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const networkFetch = fetch(event.request)
-        .then((res) => {
-          if (res && res.status === 200) {
-            const copy = res.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-          }
-          return res;
-        })
-        .catch(() => cached);
-      return cached || networkFetch;
-    })
+    fetch(event.request)
+      .then((res) => {
+        if (res && res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
+        return res;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
+

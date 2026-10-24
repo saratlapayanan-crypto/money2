@@ -99,20 +99,28 @@ test('all 78 standard Masterpiece card images are registered in APPROVED_CARD_AS
     }
 });
 
-test('SVG Art engine renders all 78 cards in standard and festival themes without throwing', async () => {
+test('SVG Art engine renders all 78 Masterpiece oil-painting cards in standard and festival themes without disappearing on seasonal dates', async () => {
     const { renderCardFront, renderCardBack } = await import('../js/art/tarot-art.js');
     const { THEMES } = await import('../js/art/themes.js');
+    const { getActiveDeck } = await import('../js/engines/deck-engine.js');
     const cards = JSON.parse(fs.readFileSync(path.join(projectRoot, 'data/cards.json'), 'utf8'));
+    const decks = JSON.parse(fs.readFileSync(path.join(projectRoot, 'data/decks.json'), 'utf8'));
+    const seasons = JSON.parse(fs.readFileSync(path.join(projectRoot, 'data/seasons.json'), 'utf8'));
 
     assert.equal(cards.length, 78);
+    assert.equal(getActiveDeck(decks, seasons), 'standard', 'Default active deck must be standard Masterpiece deck');
 
     for (const themeId of Object.keys(THEMES)) {
         const backSvg = renderCardBack(themeId);
-        assert.ok(backSvg.startsWith('<svg'), `Theme ${themeId} back must be valid SVG`);
+        assert.ok(backSvg.startsWith('<svg width="240" height="380"'), `Theme ${themeId} back must have explicit dimensions`);
 
         for (const card of cards) {
             const frontSvg = renderCardFront(card, themeId);
-            assert.ok(frontSvg.startsWith('<svg'), `Card ${card.id} in theme ${themeId} must be valid SVG`);
+            assert.ok(frontSvg.startsWith('<svg width="240" height="380"'), `Card ${card.id} in theme ${themeId} must be valid SVG with dimensions`);
+            assert.ok(
+                frontSvg.includes(`href="assets/cards/standard/${card.id}.jpg"`),
+                `Card ${card.id} in theme ${themeId} must embed its Masterpiece oil-painting image`
+            );
             assert.ok(!frontSvg.includes('undefined'), `Card ${card.id} in theme ${themeId} must not contain undefined`);
             assert.ok(!frontSvg.includes('NaN'), `Card ${card.id} in theme ${themeId} must not contain NaN`);
         }

@@ -321,18 +321,28 @@
 
         <!-- 5. 78 Cards Showcase ("สำรับไพ่ 78 ใบ") -->
         <section class="mb-4">
-            <div class="flex items-baseline justify-between mb-1 px-0.5">
+            <div class="flex items-baseline justify-between mb-1.5 px-0.5">
                 <div>
-                    <h2 class="font-bold text-sm sm:text-base text-[#231230]">สำรับไพ่ 78 ใบ</h2>
-                    <p class="text-[11px] text-[#7A6A8D]">ค้นหาความหมายของไพ่แต่ละใบ เพื่อเข้าใจตัวเองให้ลึกขึ้น</p>
+                    <h2 class="font-bold text-sm sm:text-base text-[#231230]">สำรับไพ่ครบทั้ง 78 ใบ ✨</h2>
+                    <p class="text-[11px] text-[#7A6A8D]">เลื่อนชมไพ่สีน้ำมัน Masterpiece ครบทั้ง 78 ใบ หรือแตะเพื่ออ่านความหมาย</p>
                 </div>
                 <a href="cards-preview.html" class="text-xs font-semibold text-[#7C3AED] hover:underline flex-shrink-0">
-                    ดูทั้งหมด →
+                    ดูตารางครบ 78 ใบ →
                 </a>
             </div>
 
+            <!-- Suit Quick Filter Pills on Home -->
+            <div id="home-gallery-filters" class="flex items-center gap-1.5 overflow-x-auto pb-1.5 mb-1 no-scrollbar">
+                <button type="button" data-suit="all" class="home-suit-pill px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-700 text-white shadow-2xs shrink-0 cursor-pointer">ทั้งหมด (78)</button>
+                <button type="button" data-suit="major" class="home-suit-pill px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/90 text-[#4A3B5C] border border-purple-200/80 shrink-0 cursor-pointer">👑 Major (22)</button>
+                <button type="button" data-suit="wands" class="home-suit-pill px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/90 text-[#4A3B5C] border border-purple-200/80 shrink-0 cursor-pointer">🔥 ไม้เท้า (14)</button>
+                <button type="button" data-suit="cups" class="home-suit-pill px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/90 text-[#4A3B5C] border border-purple-200/80 shrink-0 cursor-pointer">🏆 ถ้วย (14)</button>
+                <button type="button" data-suit="swords" class="home-suit-pill px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/90 text-[#4A3B5C] border border-purple-200/80 shrink-0 cursor-pointer">⚔️ ดาบ (14)</button>
+                <button type="button" data-suit="pentacles" class="home-suit-pill px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/90 text-[#4A3B5C] border border-purple-200/80 shrink-0 cursor-pointer">🪙 เหรียญ (14)</button>
+            </div>
+
             <!-- Horizontal Scroll Cards Gallery -->
-            <div id="home-cards-gallery" class="cards-horizontal-gallery mt-1.5">
+            <div id="home-cards-gallery" class="cards-horizontal-gallery mt-1">
                 <!-- 0 The Fool -->
                 <a href="cards-preview.html#card-major-0" class="gallery-card-item">
                     <div class="gallery-card-img-wrap">

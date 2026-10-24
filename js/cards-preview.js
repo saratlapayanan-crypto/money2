@@ -53,10 +53,9 @@ const THEME_INFO = {
 async function init() {
     initSoundAndPwa();
     try { await setupGlobalDecks(); } catch (_) { /* optional */ }
-    currentTheme = getActiveDeckId();
+    currentTheme = getActiveDeckId() || 'standard';
     allCards = await loadCards();
 
-    await loadManifest(currentTheme);
     buildThemePicker();
     setupTabs();
     setupSearch();
@@ -65,36 +64,8 @@ async function init() {
     renderGrid();
 }
 
-async function loadManifest(themeId = currentTheme) {
-    try {
-        const res = await fetch(`scripts/manifest_${themeId}.json`);
-        if (res.ok) {
-            const data = await res.json();
-            promptManifest = {};
-            data.forEach(item => {
-                promptManifest[item.id] = item;
-            });
-            return;
-        }
-    } catch (_) {}
-
-    try {
-        const res = await fetch('scripts/batch_generate_manifest.json');
-        if (res.ok) {
-            const data = await res.json();
-            promptManifest = {};
-            data.forEach(item => {
-                promptManifest[item.id] = item;
-            });
-        }
-    } catch (_) {}
-}
-
-function isApprovedMasterpiece(card, themeId) {
-    if (themeId === 'standard') {
-        return Boolean(APPROVED_CARD_ASSETS[card.id]);
-    }
-    return false;
+function isApprovedMasterpiece(card) {
+    return Boolean(APPROVED_CARD_ASSETS[card?.id]);
 }
 
 function buildThemePicker() {
@@ -105,9 +76,9 @@ function buildThemePicker() {
         const btn = document.createElement('button');
         btn.className = 'chip transition-all cursor-pointer' + (id === currentTheme ? ' !bg-gradient-to-r !from-purple-700 !to-amber-600 !text-white !border-amber-400 font-bold shadow-xs' : ' hover:bg-white/80');
         btn.textContent = t.label;
-        btn.addEventListener('click', async () => {
+        btn.addEventListener('click', () => {
+            playCardTap();
             currentTheme = id;
-            await loadManifest(currentTheme);
             buildThemePicker();
             updateHeaderStatus();
             renderGrid();

@@ -26,11 +26,12 @@ const MANUAL_DECK_KEY = 'tarot_manual_deck';
 export function getActiveDeck(decks, seasons) {
     let manual = null;
     try { manual = localStorage.getItem(MANUAL_DECK_KEY); } catch (_) { /* storage unavailable */ }
+    const effectiveManual = manual || 'standard';
     return resolveDeckId({
         decks,
         seasons,
         mmdd: getThaiDateString().substring(5, 10),
-        manualId: manual
+        manualId: effectiveManual
     });
 }
 
@@ -87,18 +88,21 @@ export function initDeckSelector(decks) {
         selector.appendChild(opt);
     });
 
-    // Set selected
+    // Set selected (default to 'standard' Masterpiece deck unless user chose 'auto' or another deck)
     let manual = null;
     try { manual = localStorage.getItem(MANUAL_DECK_KEY); } catch (_) { /* storage unavailable */ }
-    if (manual && manual !== 'auto' && decks.find(d => d.id === manual)) {
+    if (manual === 'auto') {
+        selector.value = 'auto';
+    } else if (manual && decks.find(d => d.id === manual)) {
         selector.value = manual;
     } else {
-        selector.value = 'auto';
+        selector.value = 'standard';
     }
 
     // Listen for changes
     selector.addEventListener('change', (e) => {
-        const selected = decks.some((deck) => deck.id === e.target.value) ? e.target.value : 'auto';
+        const val = e.target.value;
+        const selected = (val === 'auto' || decks.some((deck) => deck.id === val)) ? val : 'standard';
         try { localStorage.setItem(MANUAL_DECK_KEY, selected); } catch (_) { /* storage unavailable */ }
         window.location.reload(); // Apply changes immediately
     });

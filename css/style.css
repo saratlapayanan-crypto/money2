@@ -908,3 +908,12 @@ h1, h2, h3, h4, .font-display {
     transform: translateY(0) scale(1);
 }
 
+/* Ensure card SVGs across all grids, 3-card spreads, and modals always render at full size */
+.multi-card-art svg,
+.spread-slot-art svg,
+#modal-body svg,
+#cards-preview svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
