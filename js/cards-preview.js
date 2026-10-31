@@ -3,14 +3,15 @@ import { THEMES } from './art/themes.js';
 import { renderCardFront, renderCardBack } from './art/tarot-art.js';
 import { APPROVED_CARD_ASSETS } from './art/fronts.js';
 import { setupGlobalDecks, getActiveDeckId } from './engines/deck-engine.js';
-import { generateCardWallpaperDataUrl, showToast } from './utils/share-and-history.js';
+import { generateCardWallpaperDataUrl, getYesNoVerdict, showToast } from './utils/share-and-history.js';
 import { initSoundAndPwa, playCardTap } from './utils/sound-effects.js';
+import { getCardElementExplanation } from './utils/streak-and-guide.js';
+import { calculateLuckyNumbers, calculateAuspiciousTiming, toggleSpeakThaiReading } from './utils/mystic-extras.js';
 
 let allCards = [];
 let currentTheme = 'standard';
 let activeTab = 'all'; // 'all' | 'major' | 'wands' | 'cups' | 'swords' | 'pentacles'
 let searchQuery = '';
-let promptManifest = {};
 
 const THEME_INFO = {
     standard: {
@@ -59,6 +60,7 @@ async function init() {
     buildThemePicker();
     setupTabs();
     setupSearch();
+    setupRandomCardBtn();
     setupModal();
     updateHeaderStatus();
     renderGrid();
@@ -91,6 +93,7 @@ function setupTabs() {
     const tabBtns = document.querySelectorAll('.preview-tab');
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+            playCardTap();
             tabBtns.forEach(b => {
                 b.classList.remove('active', '!bg-gradient-to-r', '!from-purple-600', '!to-amber-600', '!text-white', 'shadow-md');
                 b.classList.add('bg-white/90', 'text-[#5C4A6F]');
@@ -126,6 +129,18 @@ function setupSearch() {
     }
 }
 
+function setupRandomCardBtn() {
+    const btn = document.getElementById('btn-random-preview-card');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+        if (!allCards.length) return;
+        playCardTap();
+        const randomCard = allCards[Math.floor(Math.random() * allCards.length)];
+        const cardSvg = renderCardFront(randomCard, currentTheme);
+        openCardModal(randomCard, cardSvg, isApprovedMasterpiece(randomCard), false);
+    });
+}
+
 function updateHeaderStatus() {
     const info = THEME_INFO[currentTheme] || THEME_INFO.standard;
     const titleEl = document.getElementById('deck-status-title');
@@ -139,7 +154,7 @@ function updateHeaderStatus() {
 
     const total = allCards.length || 78;
     const isStandard = currentTheme === 'standard';
-    const masterpieceCount = allCards.filter(c => isApprovedMasterpiece(c, currentTheme)).length;
+    const masterpieceCount = allCards.filter(c => isApprovedMasterpiece(c)).length;
 
     if (titleEl) titleEl.textContent = info.title;
     if (descEl) descEl.textContent = info.desc;
@@ -166,13 +181,13 @@ function updateHeaderStatus() {
         }
     } else {
         if (badgeEl) {
-            badgeEl.textContent = `🎨 สำรับเทศกาล 78 / 78 ใบ (100%)`;
+            badgeEl.textContent = `🎨 Masterpiece + กรอบเทศกาล 78 / 78 ใบ (100%)`;
         }
         if (progressBarFill) {
             progressBarFill.style.width = `100%`;
         }
         if (progressTextLeft) {
-            progressTextLeft.textContent = `🎨 งานศิลป์เวกเตอร์มนตราประจำเทศกาลครบ 78 ใบ (Major 22 + Wands 14 + Cups 14 + Swords 14 + Pentacles 14)`;
+            progressTextLeft.textContent = `🎨 ภาพวาดสีน้ำมัน Masterpiece สวมกรอบและลวดลายประจำเทศกาลครบ 78 ใบ (Major 22 + Wands 14 + Cups 14 + Swords 14 + Pentacles 14)`;
         }
         if (progressTextRight) {
             progressTextRight.textContent = `✨ พร้อมใช้งานครบ 78 ใบ`;
@@ -181,7 +196,7 @@ function updateHeaderStatus() {
             quotaCountdownEl.textContent = 'พร้อมใช้งาน 78 ใบ';
         }
         if (pillSubEl) {
-            pillSubEl.textContent = 'กรอบและลวดลายเฉพาะเทศกาล';
+            pillSubEl.textContent = 'ภาพ Masterpiece + กรอบเฉพาะเทศกาล';
         }
     }
 }
@@ -213,7 +228,6 @@ function renderGrid() {
     if (!grid) return;
     grid.innerHTML = '';
 
-    // แผ่นหลังไพ่ประจำธีม (แสดงเมื่อดูทั้งสำรับและไม่ได้พิมพ์ค้นหา)
     if ((activeTab === 'all' || activeTab === 'completed') && !searchQuery) {
         const backCell = document.createElement('div');
         backCell.className = 'flex flex-col items-center group transition-transform duration-200 hover:-translate-y-1 cursor-pointer';
@@ -259,7 +273,7 @@ function renderGrid() {
     }
 
     filteredCards.forEach(card => {
-        const isMasterpiece = isApprovedMasterpiece(card, currentTheme);
+        const isMasterpiece = isApprovedMasterpiece(card);
 
         const cell = document.createElement('div');
         cell.className = 'flex flex-col items-center group transition-transform duration-200 hover:-translate-y-1 cursor-pointer relative';
@@ -273,12 +287,9 @@ function renderGrid() {
             item.classList.add('w-full', 'h-auto', 'rounded-xl', 'shadow-md', 'border', 'border-amber-400/70', 'ring-1', 'ring-amber-200/50');
         }
 
-        // ป้ายสถานะและหมวดไพ่
         const statusPill = document.createElement('span');
         statusPill.className = 'text-[9.5px] font-bold px-2 py-0.5 mt-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 flex items-center gap-1';
-        statusPill.innerHTML = isMasterpiece
-            ? '<span>✨</span><span>Masterpiece</span>'
-            : '<span>🎨</span><span>Seasonal Art</span>';
+        statusPill.innerHTML = '<span>✨</span><span>Masterpiece</span>';
         cell.appendChild(statusPill);
 
         const caption = document.createElement('span');
@@ -293,7 +304,6 @@ function renderGrid() {
         grid.appendChild(cell);
     });
 
-    // Scroll to target card if hash is provided in URL
     if (window.location.hash && window.location.hash.startsWith('#card-')) {
         try {
             const targetEl = document.querySelector(window.location.hash);
@@ -334,11 +344,16 @@ function openCardModal(card, svgHtml, isMasterpiece, isBackCard = false) {
     const content = document.getElementById('card-modal-content');
     if (!modal || !modalBody) return;
 
+    const elemInfo = !isBackCard ? getCardElementExplanation(card) : null;
+    const verdict = !isBackCard ? getYesNoVerdict(card, 'neutral') : null;
+    const luckyNums = !isBackCard ? calculateLuckyNumbers(card) : null;
+    const timing = !isBackCard ? calculateAuspiciousTiming(card) : null;
+
     const keywordsHtml = Array.isArray(card.keywords_upright) && card.keywords_upright.length
         ? `<div class="bg-amber-50/70 rounded-xl p-3 border border-amber-200/70 text-xs">
                 <div class="font-bold text-[#8A5D0B] mb-1.5 flex items-center gap-1.5">
                     <span>🌟</span>
-                    <span>พลังงานสำคัญของไพ่ใบนี้</span>
+                    <span>คีย์เวิร์ดพลังงานหลัก</span>
                 </div>
                 <ul class="list-disc list-inside space-y-1 text-[#4A3B55] leading-relaxed">
                     ${card.keywords_upright.map(kw => `<li>${kw}</li>`).join('')}
@@ -366,23 +381,52 @@ function openCardModal(card, svgHtml, isMasterpiece, isBackCard = false) {
            </div>`
         : '';
 
+    const quickExtrasHtml = (!isBackCard && elemInfo && verdict && luckyNums && timing)
+        ? `<div class="bg-white rounded-xl p-3 border border-purple-200/80 text-xs space-y-2 shadow-2xs">
+                <div class="flex flex-wrap items-center justify-between gap-1.5 pb-1.5 border-b border-purple-100">
+                    <span class="font-bold text-purple-900">${elemInfo.badge}</span>
+                    <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900">${verdict.badge}</span>
+                </div>
+                <p class="text-[#4A3B55] leading-relaxed">${elemInfo.simpleMeaning}</p>
+                <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+                    <div class="bg-amber-50/80 rounded-lg p-2 border border-amber-200/70">
+                        <span class="font-bold text-[#8A5D0B] block">🔢 เลขมงคลประจำไพ่</span>
+                        <span class="font-extrabold text-[#231230]">เด่น ${luckyNums.primaryDigit} • ${luckyNums.twoDigits.join('/')}</span>
+                    </div>
+                    <div class="bg-purple-50/80 rounded-lg p-2 border border-purple-200/70">
+                        <span class="font-bold text-purple-900 block">🧭 ทิศเสริมดวง</span>
+                        <span class="font-semibold text-[#231230]">${timing.direction_th}</span>
+                    </div>
+                </div>
+           </div>`
+        : '';
+
     modalBody.innerHTML = `
-        <div class="w-48 sm:w-56 rounded-xl overflow-hidden shadow-xl border border-amber-400/80 mb-4 flex-shrink-0">
+        <div class="w-48 sm:w-56 rounded-xl overflow-hidden shadow-xl border border-amber-400/80 mb-3 flex-shrink-0">
             ${svgHtml}
         </div>
         <div class="w-full text-center">
-            <div class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 mb-2">
-                <span>${isMasterpiece ? '✨ Masterpiece Oil Painting' : '🎨 Seasonal Art Nouveau'}</span>
+            <div class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 mb-1.5">
+                <span>${isMasterpiece ? '✨ Masterpiece Oil Painting' : '🎨 Festive Tarot Art'}</span>
             </div>
             <h3 class="text-xl font-bold text-[#231230]">${card.name_th || card.thai_name || card.name}</h3>
             <p class="text-xs text-[#7A6A8D] font-mono tracking-wider uppercase">${card.name_en || card.name || ''}</p>
         </div>
 
-        <div class="w-full mt-4 space-y-2.5 text-left">
+        <div class="w-full mt-3.5 space-y-2.5 text-left">
+            ${quickExtrasHtml}
+
             <div class="bg-purple-50/70 rounded-xl p-3.5 border border-purple-200/60 text-xs">
-                <div class="font-bold text-[#6D28D9] mb-1 flex items-center gap-1.5">
-                    <span>🔮</span>
-                    <span>ความหมายหลัก (Upright Meaning)</span>
+                <div class="flex items-center justify-between gap-2 mb-1">
+                    <div class="font-bold text-[#6D28D9] flex items-center gap-1.5">
+                        <span>🔮</span>
+                        <span>ความหมายหลัก (Upright Meaning)</span>
+                    </div>
+                    ${!isBackCard ? `
+                    <button type="button" id="modal-tts-btn" class="text-[10px] font-bold text-purple-800 bg-white hover:bg-purple-100 border border-purple-300 px-2.5 py-0.5 rounded-full cursor-pointer">
+                        🔊 ฟังคำแปล
+                    </button>
+                    ` : ''}
                 </div>
                 <p class="text-[#3F2E52] leading-relaxed font-medium">${card.meaning_upright || card.description || 'ก้าวสำคัญแห่งสัจธรรมและการเรียนรู้'}</p>
             </div>
@@ -410,6 +454,20 @@ function openCardModal(card, svgHtml, isMasterpiece, isBackCard = false) {
             </div>
         </div>
     `;
+
+    const ttsBtn = document.getElementById('modal-tts-btn');
+    if (ttsBtn && !isBackCard) {
+        ttsBtn.addEventListener('click', () => {
+            const text = `${card.name_th || card.name}. ${card.meaning_upright || ''}. ${card.reflection || ''}`;
+            toggleSpeakThaiReading(text, (speaking, status) => {
+                if (status === 'unsupported') {
+                    showToast('เบราว์เซอร์นี้ไม่รองรับการอ่านออกเสียงภาษาไทย');
+                    return;
+                }
+                ttsBtn.textContent = speaking ? '⏹️ หยุดเสียง' : '🔊 ฟังคำแปล';
+            });
+        });
+    }
 
     const dlBtn = document.getElementById('modal-download-wp-btn');
     if (dlBtn && !isBackCard) {

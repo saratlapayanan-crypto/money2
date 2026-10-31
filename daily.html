@@ -6,11 +6,12 @@
     <title>ไพ่ประจำวัน (Daily Tarot) - Thai Tarot</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="ดูไพ่ยิปซีประจำวันฟรี รับข้อความแห่งความหวัง คำแนะนำด้านความรัก การเงิน และการงาน พร้อมชาร์จพลังบวกให้ทุกวันของคุณ">
-    <link rel="canonical" href="https://thaitarot.com/daily.html">
-    <meta property="og:title" content="ไพ่ประจำวัน - รับคำแนะนำและพลังบวก">
+    <meta name="description" content="ดูไพ่ยิปซีประจำวันฟรี รับข้อความแห่งความหวัง คำแนะนำด้านความรัก การเงิน การงาน เลขมงคล และสีมงคลประจำวัน">
+    <link rel="canonical" href="https://saratlapayanan-crypto.github.io/money2/daily.html">
+    <meta property="og:title" content="ไพ่ประจำวัน - รับคำแนะนำ สีมงคล และเลขนำโชค">
     <meta property="og:description" content="เปิดไพ่ยิปซี 1 ใบเพื่อเป็นเข็มทิศประจำวันของคุณ ฟรีทุกวัน">
-    <meta property="og:url" content="https://thaitarot.com/daily.html">
+    <meta property="og:url" content="https://saratlapayanan-crypto.github.io/money2/daily.html">
+    <meta property="og:image" content="https://saratlapayanan-crypto.github.io/money2/assets/cards/standard/major-19.jpg">
     <meta name="theme-color" content="#7E22CE">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="assets/icons/app-icon.svg">
@@ -197,12 +198,15 @@
                 <div class="w-full space-y-4 text-left">
                     <!-- ข้อความและบทวิเคราะห์ประจำวัน 3 มิติ -->
                     <div class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4 space-y-3">
-                        <div class="flex items-center justify-between pb-2 border-b border-purple-100/80">
+                        <div class="flex items-center justify-between gap-2 pb-2 border-b border-purple-100/80">
                             <div class="flex items-center gap-1.5">
                                 <span class="text-amber-500 text-sm">✨</span>
                                 <h2 class="text-sm font-bold text-[#231230]">ข้อความนำทางประจำวัน</h2>
                             </div>
-                            <span class="text-[10px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200 font-semibold">พลังใจวันนี้</span>
+                            <button type="button" id="btn-tts-daily" class="inline-flex items-center gap-1 text-[11px] font-bold text-purple-800 bg-purple-100 hover:bg-purple-200 border border-purple-300 px-2.5 py-1 rounded-full transition-all cursor-pointer shrink-0">
+                                <span>🔊</span>
+                                <span id="tts-daily-label">ฟังเสียงอ่าน</span>
+                            </button>
                         </div>
                         
                         <!-- 1. สะท้อนสภาวะใจวันนี้ -->
@@ -232,6 +236,56 @@
                         </div>
                         <div id="energy-container" class="space-y-3">
                             <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- เลขมงคล • ทิศนำโชค • ช่วงเวลาทอง & บทอธิษฐานประจำวัน -->
+                    <div id="daily-mystic-extras" class="bg-white/95 backdrop-blur-md rounded-2xl border border-amber-300/60 shadow-sm p-4 space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-amber-200/60">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-amber-500 text-sm">🔢</span>
+                                <h3 class="text-sm font-bold text-[#231230]">เลขมงคล • ช่วงเวลาทอง & บทอธิษฐานวันนี้</h3>
+                            </div>
+                            <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">เสริมดวงรายวัน</span>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-amber-50/90 via-[#FFFDF7] to-purple-50/70 rounded-xl p-3 border border-amber-200/80">
+                            <div class="flex items-center justify-between gap-2 mb-2">
+                                <span class="text-xs font-bold text-[#8A5D0B]">🎯 เลขนำโชคประจำไพ่วันนี้</span>
+                                <span id="daily-lucky-primary" class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500 text-white shadow-2xs">เลขเด่น -</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 text-center my-1.5">
+                                <div class="bg-white rounded-lg p-2 border border-amber-200/70">
+                                    <p class="text-[10px] text-[#7A6B85]">เลขมงคล 2 ตัว</p>
+                                    <p id="daily-lucky-2d" class="text-sm font-extrabold text-[#231230] tracking-wider mt-0.5">-- • -- • --</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-2 border border-purple-200/70">
+                                    <p class="text-[10px] text-[#7A6B85]">เลขมงคล 3 ตัว</p>
+                                    <p id="daily-lucky-3d" class="text-sm font-extrabold text-purple-800 tracking-wider mt-0.5">--- • ---</p>
+                                </div>
+                            </div>
+                            <p id="daily-lucky-meaning" class="text-[11px] text-[#5C4A6F] text-center mt-1"></p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                            <div class="bg-purple-50/60 rounded-xl p-2.5 border border-purple-100">
+                                <p class="font-bold text-purple-900 mb-0.5">🧭 ทิศมงคลวันนี้</p>
+                                <p id="daily-auspicious-dir" class="text-[#261633] font-medium"></p>
+                            </div>
+                            <div class="bg-emerald-50/60 rounded-xl p-2.5 border border-emerald-200/70">
+                                <p class="font-bold text-emerald-900 mb-0.5">⏰ ช่วงเวลานำโชค (Golden Hour)</p>
+                                <p id="daily-auspicious-hour" class="text-emerald-950 font-medium"></p>
+                            </div>
+                        </div>
+
+                        <div class="rounded-xl border border-amber-300/80 bg-gradient-to-br from-[#FFFBEB] to-white p-3">
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <p id="daily-mantra-title" class="text-xs font-bold text-[#8A5D0B]">☀️ บทอธิษฐานรับพลังมงคลประจำวัน</p>
+                                <button type="button" id="btn-daily-copy-mantra" class="text-[10px] font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-full transition-all cursor-pointer">
+                                    📋 คัดลอก
+                                </button>
+                            </div>
+                            <p id="daily-mantra-chant" class="text-xs text-[#261633] italic leading-relaxed font-medium"></p>
                         </div>
                     </div>
 

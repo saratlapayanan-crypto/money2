@@ -18,13 +18,61 @@ import { initSoundAndPwa, playCardTap } from './utils/sound-effects.js';
 import { recordReadingStreak, getCardElementExplanation } from './utils/streak-and-guide.js';
 import { renderTipBox } from './ui/monetization-ui.js';
 import { buildAffiliateSearchUrl } from './config/monetization-config.js';
+import {
+    calculateLuckyNumbers,
+    calculateAuspiciousTiming,
+    getMindfulMantra,
+    toggleSpeakThaiReading
+} from './utils/mystic-extras.js';
+import { getThaiDateString } from './utils/timezone.js';
+
+function resolveSessionOrDeepLink() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const cardsParam = params.get('cards');
+        if (cardsParam) {
+            const cardIds = cardsParam.split(',').map(s => s.trim()).filter(Boolean).slice(0, 3);
+            if (cardIds.length > 0) {
+                const spreadMode = params.get('mode') || (cardIds.length >= 3 ? 'three-time' : 'single');
+                const modeObj = SPREAD_MODES[spreadMode] || SPREAD_MODES.single;
+                return {
+                    sessionId: `deeplink_${cardIds.join('_')}`,
+                    category: params.get('cat') || 'work',
+                    subtopic: params.get('sub') || 'overall',
+                    spreadMode: modeObj.id,
+                    cardCount: cardIds.length,
+                    slots: modeObj.slots,
+                    cardId: cardIds[cardIds.length - 1],
+                    cardIds,
+                    locked: true,
+                    isDeepLink: true
+                };
+            }
+        }
+    } catch (_) {}
+
+    return getSession();
+}
+
+function buildDeepLinkUrl(session, rawCardIds) {
+    try {
+        const url = new URL('result.html', window.location.href);
+        url.searchParams.set('cards', rawCardIds.join(','));
+        url.searchParams.set('cat', session.category || 'work');
+        url.searchParams.set('sub', session.subtopic || 'overall');
+        url.searchParams.set('mode', session.spreadMode || 'single');
+        return url.href;
+    } catch (_) {
+        return window.location.href;
+    }
+}
 
 async function initResultPage() {
     initSoundAndPwa();
     try {
         await setupGlobalDecks();
 
-        const session = getSession();
+        const session = resolveSessionOrDeepLink();
         if (!session || !session.locked || !session.cardId) {
             window.location.href = 'index.html';
             return;
@@ -71,7 +119,52 @@ function resolveCardById(cards, cardId) {
     return cardData;
 }
 
-function renderCardDetailInspection(cardData, interp) {
+function renderMysticExtras(cardData, category) {
+    const todayStr = getThaiDateString();
+    const nums = calculateLuckyNumbers(cardData, todayStr);
+    const timing = calculateAuspiciousTiming(cardData);
+    const mantra = getMindfulMantra(category, cardData);
+
+    const primaryEl = document.getElementById('lucky-num-primary');
+    const twoDEl = document.getElementById('lucky-num-2d');
+    const threeDEl = document.getElementById('lucky-num-3d');
+    const numMeaningEl = document.getElementById('lucky-num-meaning');
+
+    if (primaryEl) primaryEl.textContent = `เลขเด่น ${nums.primaryDigit}`;
+    if (twoDEl) twoDEl.textContent = nums.twoDigits.join(' • ');
+    if (threeDEl) threeDEl.textContent = nums.threeDigits.join(' • ');
+    if (numMeaningEl) numMeaningEl.textContent = `✦ ${nums.meaning_th}`;
+
+    const dirEl = document.getElementById('auspicious-direction');
+    const hourEl = document.getElementById('auspicious-hour');
+    const actEl = document.getElementById('auspicious-activity');
+    if (dirEl) dirEl.textContent = timing.direction_th;
+    if (hourEl) hourEl.textContent = timing.powerHour_th;
+    if (actEl) actEl.textContent = `💡 ${timing.activity_th}`;
+
+    const mantraTitleEl = document.getElementById('mantra-title');
+    const mantraChantEl = document.getElementById('mantra-chant');
+    const mantraTipEl = document.getElementById('mantra-tip');
+    const copyMantraBtn = document.getElementById('btn-copy-mantra');
+
+    if (mantraTitleEl) mantraTitleEl.textContent = mantra.title_th;
+    if (mantraChantEl) mantraChantEl.textContent = mantra.chant_th;
+    if (mantraTipEl) mantraTipEl.textContent = `✨ ${mantra.tip_th}`;
+
+    if (copyMantraBtn) {
+        copyMantraBtn.onclick = async () => {
+            playCardTap();
+            try {
+                await navigator.clipboard.writeText(mantra.chant_th);
+                showToast('คัดลอกบทอธิษฐานเสริมดวงแล้ว ✨');
+            } catch (_) {
+                showToast('คัดลอกบทอธิษฐานเรียบร้อยแล้ว ✨');
+            }
+        };
+    }
+}
+
+function renderCardDetailInspection(cardData, interp, category = 'work') {
     const cardContainer = document.getElementById('card-display');
     if (cardContainer) {
         paintFront(cardContainer, cardData, getActiveDeckId());
@@ -109,6 +202,26 @@ function renderCardDetailInspection(cardData, interp) {
     // 3. Actionable Guidance
     const actionEl = document.getElementById('interp-action');
     if (actionEl) actionEl.textContent = interp.action || 'จัดลำดับความสำคัญและลงมือทำทีละก้าวอย่างมั่นใจ';
+
+    // 4. Mystic Extras (เลขมงคล, ทิศมงคล, ช่วงเวลาทอง, บทอธิษฐาน)
+    renderMysticExtras(cardData, category);
+
+    // 5. ปุ่มฟังเสียงคำทำนาย (Thai TTS)
+    const ttsBtn = document.getElementById('btn-tts-result');
+    const ttsLabel = document.getElementById('tts-result-label');
+    if (ttsBtn && ttsLabel) {
+        ttsBtn.onclick = () => {
+            const cardTitle = cardData.name_th || cardData.thai_name || cardData.name;
+            const speechText = `ไพ่ของคุณคือ ${cardTitle}. ${interp.summary}. ข้อควรระวัง: ${interp.warning || ''}. คำแนะนำก้าวต่อไป: ${interp.action || ''}`;
+            toggleSpeakThaiReading(speechText, (speaking, status) => {
+                if (status === 'unsupported') {
+                    showToast('เบราว์เซอร์นี้ไม่รองรับการอ่านออกเสียงภาษาไทย');
+                    return;
+                }
+                ttsLabel.textContent = speaking ? 'หยุดเสียงอ่าน' : 'ฟังเสียงคำทำนาย';
+            });
+        };
+    }
 }
 
 async function renderResult(session, cards, interpretations, questionsData, remedies, colors, wallpapers) {
@@ -129,6 +242,12 @@ async function renderResult(session, cards, interpretations, questionsData, reme
     const drawnCards = rawCardIds.map(id => resolveCardById(cards, id));
     const drawnInterps = rawCardIds.map(id => getInterpretation(interpretations, id, session.category, session.subtopic));
     const slots = session.slots || modeObj.slots || ['คำตอบฟันธง'];
+
+    // อัปเดต URL บนแถบเบราว์เซอร์ให้สามารถกดรีเฟรชหรือแชร์ลิงก์ผลลัพธ์นี้ได้ทันที
+    const deepLinkUrl = buildDeepLinkUrl(session, rawCardIds);
+    try {
+        window.history.replaceState(null, '', deepLinkUrl);
+    } catch (_) {}
 
     // ไพ่ใบสรุปหลัก (กรณี 3 ใบ ใช้ใบสุดท้ายซึ่งเป็นอนาคต/ทางออก หรือใบแรกในกรณี 1 ใบ)
     const headlineIdx = drawnCards.length >= 3 ? drawnCards.length - 1 : 0;
@@ -176,7 +295,7 @@ async function renderResult(session, cards, interpretations, questionsData, reme
                     b.className = 'spread-3-item flex flex-col items-center text-center p-2 rounded-xl border transition-all cursor-pointer border-purple-100 bg-white hover:border-purple-300';
                 });
                 cardBtn.className = 'spread-3-item flex flex-col items-center text-center p-2 rounded-xl border transition-all cursor-pointer border-2 border-purple-600 bg-purple-50/80 shadow-xs';
-                renderCardDetailInspection(cData, cInterp);
+                renderCardDetailInspection(cData, cInterp, session.category);
             });
 
             // สรุปคำทำนายรายตำแหน่งให้อ่านเข้าใจง่ายในที่เดียว
@@ -191,7 +310,7 @@ async function renderResult(session, cards, interpretations, questionsData, reme
     }
 
     // 5. Render Primary Card Inspection
-    renderCardDetailInspection(primaryCard, primaryInterp);
+    renderCardDetailInspection(primaryCard, primaryInterp, session.category);
 
     // 6. Remedy & Support
     const remedy = getRemedy(remedies, session.category, primaryInterp.status);
@@ -229,21 +348,24 @@ async function renderResult(session, cards, interpretations, questionsData, reme
         }
     }
 
-    // 8. Save to Reading History Journal
+    // 8. Save to Reading History Journal (เฉพาะเมื่อไม่ได้เปิดจากลิงก์ที่เพื่อนแชร์มา)
     const combinedNamesTh = drawnCards.map(c => c.name_th || c.thai_name || c.name).join(' • ');
     const combinedNamesEn = drawnCards.map(c => c.name_en || c.name).join(' / ');
-    saveReadingToHistory({
-        sessionId: session.sessionId,
-        type: 'personal',
-        spreadMode: session.spreadMode || 'single',
-        category: session.category,
-        questionText: questionLabel,
-        cardId: primaryCard.id,
-        cardIds: rawCardIds,
-        cardNameTh: combinedNamesTh,
-        cardNameEn: combinedNamesEn,
-        summary: primaryInterp.summary
-    });
+    if (!session.isDeepLink) {
+        saveReadingToHistory({
+            sessionId: session.sessionId,
+            type: 'personal',
+            spreadMode: session.spreadMode || 'single',
+            category: session.category,
+            subtopic: session.subtopic || 'overall',
+            questionText: questionLabel,
+            cardId: primaryCard.id,
+            cardIds: rawCardIds,
+            cardNameTh: combinedNamesTh,
+            cardNameEn: combinedNamesEn,
+            summary: primaryInterp.summary
+        });
+    }
 
     // 9. Generate Dual 1080x1920 Images: (A) IG Story Summary & (B) Lockscreen Talisman Wallpaper
     const wallpaper = getWallpaper(wallpapers, primaryCard.id, session.category, remedy ? remedy.group_id : null);
@@ -325,7 +447,7 @@ async function renderResult(session, cards, interpretations, questionsData, reme
         subtopic: session.subtopic
     });
 
-    // 10. Share result listener
+    // 10. Share result listener (แชร์ลิงก์ผลลัพธ์ตรงพร้อมการ์ดทุกใบให้เพื่อนเปิดดูได้ทันที)
     const shareBtn = document.getElementById('btn-share');
     if (shareBtn) {
         shareBtn.addEventListener('click', async () => {
@@ -333,7 +455,7 @@ async function renderResult(session, cards, interpretations, questionsData, reme
             await shareTarotReading({
                 title: `🔮 คำทำนายไพ่ทาโรต์: ${combinedNamesTh}`,
                 text: `คำถาม: ${questionLabel}\n✦ คำตอบฟันธง: ${verdict.label}\n✨ คำทำนาย: ${primaryInterp.summary}\n🧭 ก้าวต่อไป: ${primaryInterp.action || ''}`,
-                url: new URL('reading.html', window.location.href).href
+                url: deepLinkUrl
             });
         });
     }

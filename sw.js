@@ -1,4 +1,4 @@
-const CACHE_NAME = 'money2-thai-tarot-v3';
+const CACHE_NAME = 'money2-thai-tarot-v4';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -67,4 +67,3 @@ self.addEventListener('fetch', (event) => {
       .catch(() => caches.match(event.request))
   );
 });
-

@@ -5,7 +5,7 @@ import path from 'node:path';
 
 const projectRoot = path.resolve('C:/Users/frame/Desktop/Money');
 
-test('all required JSON data files and PWA manifest exist and are valid JSON', () => {
+test('all required JSON data files, SEO files, and PWA manifest exist and are valid', () => {
     const jsonFiles = [
         'data/cards.json',
         'data/interpretations.json',
@@ -27,9 +27,11 @@ test('all required JSON data files and PWA manifest exist and are valid JSON', (
 
     assert.ok(fs.existsSync(path.join(projectRoot, 'sw.js')), 'Service Worker sw.js must exist');
     assert.ok(fs.existsSync(path.join(projectRoot, 'assets/icons/app-icon.svg')), 'PWA app-icon.svg must exist');
+    assert.ok(fs.existsSync(path.join(projectRoot, 'robots.txt')), 'robots.txt must exist');
+    assert.ok(fs.existsSync(path.join(projectRoot, 'sitemap.xml')), 'sitemap.xml must exist');
 });
 
-test('all HTML files have Mitr + Outfit fonts, PWA manifest links, and no text-white on body', () => {
+test('all HTML files have Mitr + Outfit fonts, canonical GitHub Pages URLs, PWA manifest links, and no text-white on body', () => {
     const htmlFiles = [
         'index.html',
         'daily.html',
@@ -48,12 +50,13 @@ test('all HTML files have Mitr + Outfit fonts, PWA manifest links, and no text-w
         assert.ok(content.includes('text-[#261633]'), `${f} must have text-[#261633] on body`);
         assert.ok(content.includes('rel="manifest" href="manifest.json"'), `${f} must include PWA manifest link`);
         assert.ok(content.includes('assets/icons/app-icon.svg'), `${f} must include app icon link`);
+        assert.ok(content.includes('https://saratlapayanan-crypto.github.io/money2/'), `${f} must include production GitHub Pages URL`);
     }
 });
 
-test('HTTP server responds with 200 OK for all HTML pages and PWA files', async () => {
+test('HTTP server responds with 200 OK for all HTML pages, SEO files, and PWA files', async () => {
     const http = await import('node:http');
-    const filesToTest = ['index.html', 'daily.html', 'reading.html', 'result.html', 'cards-preview.html', 'manifest.json', 'sw.js'];
+    const filesToTest = ['index.html', 'daily.html', 'reading.html', 'result.html', 'cards-preview.html', 'manifest.json', 'sw.js', 'robots.txt', 'sitemap.xml'];
 
     const server = http.createServer((req, res) => {
         const cleanPath = (req.url || '/index.html').split('?')[0].replace(/^\/+/, '') || 'index.html';
@@ -76,7 +79,7 @@ test('HTTP server responds with 200 OK for all HTML pages and PWA files', async 
             const res = await fetch(url);
             assert.equal(res.status, 200, `Expected 200 for ${url}`);
             const text = await res.text();
-            assert.ok(text.length > 100, `Expected content length > 100 for ${url}`);
+            assert.ok(text.length > 20, `Expected content length > 20 for ${url}`);
         }
     } finally {
         await new Promise((resolve) => server.close(resolve));
@@ -210,9 +213,10 @@ test('Personal Reading Engine supports 1-card and 3-card spread modes correctly'
     assert.equal(new Set(c3.cardIds).size, 3, 'All 3 drawn cards must be distinct');
 });
 
-test('Yes/No Verdict, Plain-Language Card Explainer, and Monetization Config work for all 78 cards', async () => {
+test('Yes/No Verdict, Plain-Language Card Explainer, Mystic Extras, and Monetization Config work for all 78 cards', async () => {
     const { getYesNoVerdict } = await import('../js/utils/share-and-history.js');
     const { getCardElementExplanation, getMysticRank } = await import('../js/utils/streak-and-guide.js');
+    const { calculateLuckyNumbers, calculateAuspiciousTiming, getMindfulMantra } = await import('../js/utils/mystic-extras.js');
     const { MONETIZATION_CONFIG, buildAffiliateSearchUrl } = await import('../js/config/monetization-config.js');
 
     const cards = JSON.parse(fs.readFileSync(path.join(projectRoot, 'data/cards.json'), 'utf8'));
@@ -226,6 +230,19 @@ test('Yes/No Verdict, Plain-Language Card Explainer, and Monetization Config wor
         const exp = getCardElementExplanation(card);
         assert.ok(exp.badge && exp.element && exp.simpleMeaning);
         assert.ok(!exp.simpleMeaning.includes('undefined'));
+
+        const lucky = calculateLuckyNumbers(card, '2026-10-31');
+        assert.equal(lucky.twoDigits.length, 3, `Card ${card.id} must generate 3 2-digit lucky numbers`);
+        assert.equal(lucky.threeDigits.length, 2, `Card ${card.id} must generate 2 3-digit lucky numbers`);
+        assert.ok(lucky.meaning_th.length > 5);
+
+        const timing = calculateAuspiciousTiming(card);
+        assert.ok(timing.direction_th && timing.powerHour_th && timing.activity_th);
+
+        for (const cat of ['love', 'finance', 'work', 'daily']) {
+            const mantra = getMindfulMantra(cat, card);
+            assert.ok(mantra.title_th && mantra.chant_th && mantra.tip_th);
+        }
     }
 
     assert.equal(MONETIZATION_CONFIG.tipping.amounts.length, 3);

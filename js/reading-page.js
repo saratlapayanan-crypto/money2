@@ -8,6 +8,7 @@ import { initSoundAndPwa, playCardTap, playCrystalChime, playCardFlip } from './
 let questionsData = {};
 let mockCardsData = [];
 let selectedSpreadMode = 'single';
+let meditationInterval = null;
 
 // --- Initialization ---
 async function init() {
@@ -23,13 +24,13 @@ async function init() {
         questionsData = await qRes.json();
         mockCardsData = await loadCards();
 
-        setupCategoryListeners();
         setupSpreadModeListeners();
+        setupCategoryListeners();
         setupConfirmListener();
     } catch (e) {
         console.error('Initialization error', e);
-        try { setupCategoryListeners(); } catch (_) {}
         try { setupSpreadModeListeners(); } catch (_) {}
+        try { setupCategoryListeners(); } catch (_) {}
         try { setupConfirmListener(); } catch (_) {}
     }
 }
@@ -48,14 +49,28 @@ function setupCategoryListeners() {
         });
     });
 
-    // Auto-select category if passed in URL query param (?category=work|finance|love)
+    // Auto-select category, subtopic, and spread mode if passed in URL query params
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const catParam = urlParams.get('category');
+        const subParam = urlParams.get('subtopic');
+        const spreadParam = urlParams.get('spread');
+
+        if (spreadParam && SPREAD_MODES[spreadParam]) {
+            const matchingSpreadBtn = document.querySelector(`.spread-mode-btn[data-spread="${spreadParam}"]`);
+            if (matchingSpreadBtn) matchingSpreadBtn.click();
+        }
+
         if (catParam) {
             const matchingBtn = document.querySelector(`.cat-btn[data-category="${catParam}"]`);
             if (matchingBtn) {
                 matchingBtn.click();
+                if (subParam) {
+                    const select = document.getElementById('subtopic-select');
+                    if (select && Array.from(select.options).some(o => o.value === subParam)) {
+                        select.value = subParam;
+                    }
+                }
             }
         }
     } catch (_) {}
@@ -119,15 +134,31 @@ function startMeditation(category, subtopic, spreadMode = 'single') {
 
     let count = 5;
     const countdownEl = document.getElementById('countdown');
-    const interval = setInterval(() => {
+    if (countdownEl) countdownEl.textContent = count;
+
+    if (meditationInterval) clearInterval(meditationInterval);
+    meditationInterval = setInterval(() => {
         count--;
         if (count > 0) {
-            countdownEl.textContent = count;
+            if (countdownEl) countdownEl.textContent = count;
         } else {
-            clearInterval(interval);
+            clearInterval(meditationInterval);
+            meditationInterval = null;
             showCardSelection();
         }
     }, 1000);
+
+    const skipBtn = document.getElementById('btn-skip-meditation');
+    if (skipBtn) {
+        skipBtn.onclick = () => {
+            playCardTap();
+            if (meditationInterval) {
+                clearInterval(meditationInterval);
+                meditationInterval = null;
+            }
+            showCardSelection();
+        };
+    }
 }
 
 // --- Step 3: Card Selection ---

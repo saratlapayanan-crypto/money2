@@ -167,7 +167,7 @@ function populateHomeGallery(suitFilter = 'all') {
         return `
             <a href="cards-preview.html#card-${id}" class="gallery-card-item" title="${titleText}">
                 <div class="gallery-card-img-wrap">
-                    <img src="${imgSrc}" alt="${titleText}" loading="lazy">
+                    <img src="${imgSrc}" alt="${titleText}" width="240" height="380" loading="lazy">
                 </div>
                 <span class="text-[10px] font-semibold text-[#4A3B5C] mt-1.5 text-center truncate w-full">${shortLabel}</span>
             </a>
@@ -311,13 +311,16 @@ function updateProfileModalContent() {
         const cardTh = item.cardNameTh || card?.name_th || item.cardId;
         const cardEn = item.cardNameEn || card?.name_en || '';
         const imgSrc = APPROVED_CARD_ASSETS[item.cardId] || `assets/cards/standard/${item.cardId}.jpg`;
+        const cardIdsParam = Array.isArray(item.cardIds) && item.cardIds.length > 0
+            ? item.cardIds.join(',')
+            : item.cardId;
         const targetLink = item.type === 'daily'
             ? 'daily.html'
-            : `cards-preview.html#card-${item.cardId}`;
+            : `result.html?cards=${encodeURIComponent(cardIdsParam)}&cat=${encodeURIComponent(item.category || 'work')}&sub=${encodeURIComponent(item.subtopic || 'overall')}&mode=${encodeURIComponent(item.spreadMode || 'single')}`;
 
         return `
             <a href="${targetLink}" class="flex items-center gap-2.5 p-2 rounded-xl bg-white hover:bg-purple-50/80 border border-purple-100 transition-colors no-underline">
-                <img src="${imgSrc}" alt="${cardTh}" class="w-9 h-14 object-cover rounded-md border border-amber-300/70 shrink-0">
+                <img src="${imgSrc}" alt="${cardTh}" width="36" height="56" class="w-9 h-14 object-cover rounded-md border border-amber-300/70 shrink-0">
                 <div class="min-w-0 flex-1">
                     <div class="flex items-center justify-between gap-1">
                         <span class="text-[10px] font-bold text-purple-700 truncate">${item.categoryLabel || '🔮 ไพ่ทาโรต์'}</span>
@@ -415,24 +418,24 @@ function setupSearchInput() {
         let html = '';
 
         // Category direct shortcuts
-        if ('การงาน'.includes(query) || 'work'.includes(query) || 'งาน'.includes(query)) {
+        if ('การงาน'.includes(query) || 'work'.includes(query) || 'งาน'.includes(query) || 'เปลี่ยนงาน'.includes(query)) {
             html += `
-                <a href="reading.html?category=work" class="block p-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#4A3B5C] font-medium transition-colors">
-                    💼 ดูดวงด้านการงาน (เส้นทางอาชีพ และความก้าวหน้า) →
+                <a href="reading.html?category=work&subtopic=job-change&spread=three-time" class="block p-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#4A3B5C] font-medium transition-colors">
+                    💼 ดูดวงด้านการงาน & เปลี่ยนงาน (เปิด 3 ใบ) →
                 </a>
             `;
         }
-        if ('การเงิน'.includes(query) || 'finance'.includes(query) || 'เงิน'.includes(query) || 'โชค'.includes(query)) {
+        if ('การเงิน'.includes(query) || 'finance'.includes(query) || 'เงิน'.includes(query) || 'โชค'.includes(query) || 'หวย'.includes(query)) {
             html += `
-                <a href="reading.html?category=finance" class="block p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-[#8A5D0B] font-medium transition-colors">
-                    🪙 ดูดวงด้านการเงิน (รายได้ โอกาส และความมั่งคั่ง) →
+                <a href="reading.html?category=finance&subtopic=lump-sum&spread=single" class="block p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-[#8A5D0B] font-medium transition-colors">
+                    🪙 ดูดวงโชคลาภ & เงินก้อนเร็วๆ นี้ (ฟันธง 1 ใบ) →
                 </a>
             `;
         }
         if ('ความรัก'.includes(query) || 'love'.includes(query) || 'รัก'.includes(query) || 'แฟน'.includes(query)) {
             html += `
-                <a href="reading.html?category=love" class="block p-2.5 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 font-medium transition-colors">
-                    💖 ดูดวงด้านความรัก (คนโสด คนมีคู่ ความสัมพันธ์) →
+                <a href="reading.html?category=love&subtopic=what-do-they-think&spread=three-insight" class="block p-2.5 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 font-medium transition-colors">
+                    💖 ดูดวงความรัก: เขาคิดอย่างไรกับเรา? (เปิด 3 ใบ) →
                 </a>
             `;
         }

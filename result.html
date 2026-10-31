@@ -6,11 +6,12 @@
     <title>ผลลัพธ์คำทำนาย (Tarot Result) - Thai Tarot</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="ผลลัพธ์คำทำนายไพ่ยิปซีของคุณ พร้อมคำแนะนำเพิ่มเติมเพื่อเสริมพลังบวก สีมงคล และวอลเปเปอร์">
-    <link rel="canonical" href="https://thaitarot.com/result.html">
-    <meta property="og:title" content="ผลลัพธ์คำทำนาย - Thai Tarot">
-    <meta property="og:description" content="ตรวจดูคำทำนายของคุณและรับคำแนะนำเชิงบวกเพื่อชีวิตที่ดีขึ้น">
-    <meta property="og:url" content="https://thaitarot.com/result.html">
+    <meta name="description" content="ผลลัพธ์คำทำนายไพ่ยิปซีของคุณ พร้อมคำแนะนำเพิ่มเติมเพื่อเสริมพลังบวก สีมงคล เลขมงคล และวอลเปเปอร์">
+    <link rel="canonical" href="https://saratlapayanan-crypto.github.io/money2/result.html">
+    <meta property="og:title" content="ผลลัพธ์คำทำนายไพ่ทาโรต์ - money2 Thai Tarot">
+    <meta property="og:description" content="ตรวจดูคำทำนายไพ่ทาโรต์ 78 ใบ พร้อมคำตอบฟันธง สีมงคล เลขนำโชค และวอลเปเปอร์เสริมดวง">
+    <meta property="og:url" content="https://saratlapayanan-crypto.github.io/money2/result.html">
+    <meta property="og:image" content="https://saratlapayanan-crypto.github.io/money2/assets/cards/standard/major-19.jpg">
     <meta name="theme-color" content="#7E22CE">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="assets/icons/app-icon.svg">
@@ -137,12 +138,15 @@
 
             <!-- การตีความเชิงจิตวิทยา 3 ระดับ (Psychological Tarot Insights) -->
             <section class="bg-white/95 backdrop-blur-md rounded-2xl border border-purple-100/90 shadow-sm p-4 sm:p-5 w-full mb-4 space-y-4">
-                <div class="flex items-center justify-between pb-2 border-b border-purple-100/80">
+                <div class="flex items-center justify-between gap-2 pb-2 border-b border-purple-100/80">
                     <div class="flex items-center gap-1.5">
                         <span class="text-purple-600 text-base">🔮</span>
                         <h3 class="text-sm font-bold text-[#231230]">การวิเคราะห์คำทำนายและเสียงสะท้อนจิตใจ</h3>
                     </div>
-                    <span class="text-[10px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200 font-semibold">3 มิตินำทาง</span>
+                    <button type="button" id="btn-tts-result" class="inline-flex items-center gap-1 text-[11px] font-bold text-purple-800 bg-purple-100 hover:bg-purple-200 border border-purple-300 px-2.5 py-1 rounded-full transition-all cursor-pointer shrink-0">
+                        <span>🔊</span>
+                        <span id="tts-result-label">ฟังเสียงคำทำนาย</span>
+                    </button>
                 </div>
                 
                 <!-- 1. กระจกสะท้อนสภาวะใจ (Mirror of Mind) -->
@@ -171,6 +175,61 @@
                         <h4 class="text-xs text-[#8A5D0B] font-bold">ก้าวต่อไปที่ลงมือทำได้จริง</h4>
                     </div>
                     <p id="interp-action" class="text-xs sm:text-sm text-[#4A3B55] leading-relaxed font-medium">...</p>
+                </div>
+            </section>
+
+            <!-- เลขมงคล • ทิศนำโชค • ช่วงเวลาทอง & บทอธิษฐานเสริมดวง -->
+            <section id="mystic-extras-section" class="bg-white/95 backdrop-blur-md rounded-2xl border border-amber-300/60 shadow-sm p-4 sm:p-5 w-full mb-4 space-y-3.5">
+                <div class="flex items-center justify-between pb-2 border-b border-amber-200/60">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-amber-500 text-base">🔢</span>
+                        <h3 class="text-sm font-bold text-[#231230]">เลขมงคล • ช่วงเวลาทอง & บทอธิษฐาน</h3>
+                    </div>
+                    <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">ประจำหน้าไพ่</span>
+                </div>
+
+                <!-- เลขมงคลประจำไพ่ -->
+                <div class="bg-gradient-to-r from-amber-50/90 via-[#FFFDF7] to-purple-50/70 rounded-xl p-3.5 border border-amber-200/80">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <span class="text-xs font-bold text-[#8A5D0B]">🎯 เลขมงคลประจำไพ่ใบนี้</span>
+                        <span id="lucky-num-primary" class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500 text-white shadow-2xs">เลขเด่น -</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-center my-2">
+                        <div class="bg-white rounded-lg p-2 border border-amber-200/70 shadow-2xs">
+                            <p class="text-[10px] text-[#7A6B85]">เลขมงคล 2 ตัว</p>
+                            <p id="lucky-num-2d" class="text-sm sm:text-base font-extrabold text-[#231230] tracking-wider mt-0.5">-- • -- • --</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-2 border border-purple-200/70 shadow-2xs">
+                            <p class="text-[10px] text-[#7A6B85]">เลขมงคล 3 ตัว</p>
+                            <p id="lucky-num-3d" class="text-sm sm:text-base font-extrabold text-purple-800 tracking-wider mt-0.5">--- • ---</p>
+                        </div>
+                    </div>
+                    <p id="lucky-num-meaning" class="text-[11px] text-[#5C4A6F] text-center leading-relaxed"></p>
+                </div>
+
+                <!-- ทิศมงคล & ช่วงเวลาทอง (Power Hour) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                    <div class="bg-purple-50/60 rounded-xl p-3 border border-purple-100">
+                        <p class="font-bold text-purple-900 mb-0.5">🧭 ทิศมงคลเสริมดวง</p>
+                        <p id="auspicious-direction" class="text-[#261633] font-medium"></p>
+                    </div>
+                    <div class="bg-emerald-50/60 rounded-xl p-3 border border-emerald-200/70">
+                        <p class="font-bold text-emerald-900 mb-0.5">⏰ ช่วงเวลานำโชค (Golden Hour)</p>
+                        <p id="auspicious-hour" class="text-emerald-950 font-medium"></p>
+                    </div>
+                </div>
+                <p id="auspicious-activity" class="text-[11px] text-[#5C4A6F] bg-[#FAF8FC] px-3 py-2 rounded-lg border border-purple-100/80"></p>
+
+                <!-- บทอธิษฐานตั้งจิตเสริมดวง -->
+                <div class="rounded-xl border border-amber-300/80 bg-gradient-to-br from-[#FFFBEB] to-white p-3.5 shadow-2xs">
+                    <div class="flex items-center justify-between gap-2 mb-1.5">
+                        <p id="mantra-title" class="text-xs font-bold text-[#8A5D0B]">🙏 บทอธิษฐานตั้งจิตเสริมพลัง</p>
+                        <button type="button" id="btn-copy-mantra" class="text-[10px] font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-full transition-all cursor-pointer">
+                            📋 คัดลอกคำอธิษฐาน
+                        </button>
+                    </div>
+                    <p id="mantra-chant" class="text-xs text-[#261633] italic leading-relaxed font-medium"></p>
+                    <p id="mantra-tip" class="text-[10px] text-[#7A6B85] mt-1.5"></p>
                 </div>
             </section>
 
@@ -272,10 +331,10 @@
 
             <nav class="w-full flex flex-col gap-2.5 pt-1">
                 <button type="button" id="btn-share" class="w-full py-3 px-4 rounded-full bg-white hover:bg-purple-50 text-[#6D28D9] border border-purple-300 font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
-                    <span>✨ แชร์ผลลัพธ์คำทำนายให้เพื่อน</span>
+                    <span>✨ แชร์ลิงก์ผลคำทำนายนี้ให้เพื่อนดู</span>
                 </button>
                 <a href="reading.html" class="hero-pill-btn w-full text-center py-3">
-                    <span>เปิดไพ่ถามเรื่องอื่นต่อ</span>
+                    <span>🔮 เปิดไพ่ถามเรื่องอื่นต่อ</span>
                     <span>→</span>
                 </a>
             </nav>

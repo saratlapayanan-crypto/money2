@@ -23,6 +23,12 @@ import { initSoundAndPwa, playCardTap, playCardFlip } from './utils/sound-effect
 import { recordReadingStreak, getCardElementExplanation } from './utils/streak-and-guide.js';
 import { renderTipBox } from './ui/monetization-ui.js';
 import { buildAffiliateSearchUrl } from './config/monetization-config.js';
+import {
+    calculateLuckyNumbers,
+    calculateAuspiciousTiming,
+    getMindfulMantra,
+    toggleSpeakThaiReading
+} from './utils/mystic-extras.js';
 
 let countdownInterval = null;
 let selectedDailyPosition = null;
@@ -167,6 +173,44 @@ function handleSpreadCardClick(position) {
     if (confirmCont) confirmCont.classList.remove('hidden');
 }
 
+function renderDailyMysticExtras(card, thaiDateStr) {
+    const nums = calculateLuckyNumbers(card, thaiDateStr);
+    const timing = calculateAuspiciousTiming(card);
+    const mantra = getMindfulMantra('daily', card);
+
+    const primaryEl = document.getElementById('daily-lucky-primary');
+    const twoDEl = document.getElementById('daily-lucky-2d');
+    const threeDEl = document.getElementById('daily-lucky-3d');
+    const meaningEl = document.getElementById('daily-lucky-meaning');
+    if (primaryEl) primaryEl.textContent = `เลขเด่น ${nums.primaryDigit}`;
+    if (twoDEl) twoDEl.textContent = nums.twoDigits.join(' • ');
+    if (threeDEl) threeDEl.textContent = nums.threeDigits.join(' • ');
+    if (meaningEl) meaningEl.textContent = `✦ ${nums.meaning_th}`;
+
+    const dirEl = document.getElementById('daily-auspicious-dir');
+    const hourEl = document.getElementById('daily-auspicious-hour');
+    if (dirEl) dirEl.textContent = timing.direction_th;
+    if (hourEl) hourEl.textContent = timing.powerHour_th;
+
+    const mantraTitleEl = document.getElementById('daily-mantra-title');
+    const mantraChantEl = document.getElementById('daily-mantra-chant');
+    const copyBtn = document.getElementById('btn-daily-copy-mantra');
+    if (mantraTitleEl) mantraTitleEl.textContent = mantra.title_th;
+    if (mantraChantEl) mantraChantEl.textContent = mantra.chant_th;
+
+    if (copyBtn) {
+        copyBtn.onclick = async () => {
+            playCardTap();
+            try {
+                await navigator.clipboard.writeText(mantra.chant_th);
+                showToast('คัดลอกบทอธิษฐานประจำวันแล้ว ✨');
+            } catch (_) {
+                showToast('คัดลอกบทอธิษฐานเรียบร้อยแล้ว ✨');
+            }
+        };
+    }
+}
+
 function showDailyResult(card, interpretations, animateFlip = false) {
     const selectionSec = document.getElementById('daily-selection-section');
     const resultSec = document.getElementById('daily-result-section');
@@ -185,10 +229,12 @@ function showDailyResult(card, interpretations, animateFlip = false) {
     if (elemDesc) elemDesc.textContent = elemInfo.simpleMeaning;
 
     const energies = renderEnergies(card, interpretations);
+    const thaiDate = getThaiDateString();
+    renderDailyMysticExtras(card, thaiDate);
+
     let advice = null;
 
     if (energies) {
-        const thaiDate = getThaiDateString();
         const dayIndex = getDayOfWeekFromDateString(thaiDate);
         advice = calculateOutfitAdvice({
             dayIndex,
@@ -213,6 +259,24 @@ function showDailyResult(card, interpretations, animateFlip = false) {
         cardNameEn: card.name_en || card.name,
         summary: dailyMsgText
     });
+
+    // ปุ่มฟังเสียงอ่านคำทำนายประจำวัน
+    const ttsBtn = document.getElementById('btn-tts-daily');
+    const ttsLabel = document.getElementById('tts-daily-label');
+    if (ttsBtn && ttsLabel) {
+        ttsBtn.onclick = () => {
+            const cardTitle = card.name_th || card.thai_name || card.name;
+            const cautionText = document.getElementById('daily-caution')?.textContent || '';
+            const speechText = `ไพ่ประจำวันของคุณคือ ${cardTitle}. ${dailyMsgText}. จุดเตือนสติวันนี้: ${cautionText}`;
+            toggleSpeakThaiReading(speechText, (speaking, status) => {
+                if (status === 'unsupported') {
+                    showToast('เบราว์เซอร์นี้ไม่รองรับการอ่านออกเสียงภาษาไทย');
+                    return;
+                }
+                ttsLabel.textContent = speaking ? 'หยุดเสียงอ่าน' : 'ฟังเสียงอ่าน';
+            });
+        };
+    }
 
     setupDailyActionButtons(card, dailyMsgText, advice);
 
@@ -294,7 +358,6 @@ function startMidnightCountdown() {
         const time = getTimeUntilMidnightBangkok();
         countdownEl.textContent = time.formatted;
         if (time.isNextDay) {
-            // Date changed! Refresh page to let user pick today's new card
             window.location.reload();
         }
     }
@@ -320,12 +383,10 @@ function renderCard(card) {
 
 function renderEnergies(card, interpretations) {
     const cardId = card.id;
-    // Generate interpretations for all 3 categories
     const loveData = getInterpretation(interpretations, cardId, 'love');
     const financeData = getInterpretation(interpretations, cardId, 'finance');
     const workData = getInterpretation(interpretations, cardId, 'work');
     
-    // Attempt to get daily message (1. Mirror of Mind)
     const dailyData = getInterpretation(interpretations, cardId, 'daily', 'message');
     
     const dailyMsg = document.getElementById('daily-message');
@@ -339,7 +400,6 @@ function renderEnergies(card, interpretations) {
         }
     }
 
-    // 2. Daily Caution & Blindspot (จุดเตือนสติตลอดวัน)
     const dailyCaution = document.getElementById('daily-caution');
     if (dailyCaution) {
         const cautionText = workData.warning || loveData.warning || financeData.warning || card.meaning_reversed || "ระวังความเร่งรีบหรือความกดดันจากภายนอก ให้หายใจลึกๆ และรักษาสมดุลความสงบในใจ";
@@ -423,7 +483,6 @@ function renderOutfitAdvice(advice) {
                             <span class="text-[10px] px-2.5 py-0.5 rounded-full border border-amber-400/50 text-[#8A5D0B] bg-amber-50 font-semibold">${look.badge}</span>
                         </div>
                         
-                        <!-- Main Outfit Layout: Mannequin Frame on left, Details on right -->
                         <div class="flex items-center gap-3.5">
                             <div class="shrink-0 p-1.5 rounded-xl bg-gradient-to-b from-white to-[#F9F6FC] border border-purple-100 shadow-sm">
                                 ${renderOutfitMannequinSvg({
@@ -527,7 +586,6 @@ function renderOutfitAdvice(advice) {
     </div>`;
 }
 
-// ป้ายสถานะแบบไทย ใช้สำนวนแบบหมอดูไทย ๆ
 const STATUS_LABELS = {
     'positive': { th: 'ดวงเปิด', icon: '✦', badge: 'border-emerald-300 text-emerald-800 bg-emerald-50' },
     'neutral':  { th: 'รอจังหวะ', icon: '✦', badge: 'border-amber-300 text-amber-800 bg-amber-50' },
